@@ -1,0 +1,5 @@
+Modification sur les sources de C2I explorer
+
+Ajout d'icone differentes pour tous les dossiers
+(Odre de creation des dossiers Feuilles, Modules, Modules de Classe)
+Regroupement des methodes, api, contantes, variable de chaque feuille par dossier

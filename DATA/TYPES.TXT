@@ -1,0 +1,15 @@
+6
+o;Collections;m
+o;Objects;obj
+o;Form;frm
+o;Control;ctl
+o;Picture;pic
+v;Integer;i
+v;Long;lng
+v;Boolean;b
+v;String;s
+v;Single;sng
+v;Double;dbl
+v;Byte;bt
+v;Date;d
+v;Variant;v

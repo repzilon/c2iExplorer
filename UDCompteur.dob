@@ -1,0 +1,341 @@
+VERSION 5.00
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Begin VB.UserDocument UDCompteur 
+   ClientHeight    =   3600
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   4800
+   HScrollSmallChange=   15
+   ScaleHeight     =   240
+   ScaleMode       =   3  'Pixel
+   ScaleWidth      =   320
+   ScrollBars      =   0  'None
+   VScrollSmallChange=   15
+   Begin VB.Timer Timer1 
+      Interval        =   60000
+      Left            =   3360
+      Top             =   1920
+   End
+   Begin MSComctlLib.ListView lv 
+      Height          =   1695
+      Left            =   120
+      TabIndex        =   0
+      Top             =   1080
+      Width           =   3135
+      _ExtentX        =   5530
+      _ExtentY        =   2990
+      View            =   3
+      LabelEdit       =   1
+      LabelWrap       =   -1  'True
+      HideSelection   =   0   'False
+      GridLines       =   -1  'True
+      _Version        =   393217
+      ForeColor       =   -2147483640
+      BackColor       =   -2147483643
+      BorderStyle     =   1
+      Appearance      =   1
+      NumItems        =   3
+      BeginProperty ColumnHeader(1) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
+         Key             =   "projet"
+         Text            =   "Projets"
+         Object.Width           =   2540
+      EndProperty
+      BeginProperty ColumnHeader(2) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
+         SubItemIndex    =   1
+         Key             =   "duree"
+         Text            =   "Durées"
+         Object.Width           =   2540
+      EndProperty
+      BeginProperty ColumnHeader(3) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
+         SubItemIndex    =   2
+         Key             =   "fichier"
+         Text            =   "Fichiers"
+         Object.Width           =   38100
+      EndProperty
+   End
+   Begin MSComctlLib.Toolbar tb 
+      Align           =   1  'Align Top
+      Height          =   375
+      Left            =   0
+      TabIndex        =   1
+      Top             =   0
+      Width           =   4800
+      _ExtentX        =   8467
+      _ExtentY        =   661
+      ButtonWidth     =   847
+      ButtonHeight    =   609
+      Appearance      =   1
+      Style           =   1
+      ImageList       =   "imgTB"
+      HotImageList    =   "imgTB"
+      _Version        =   393216
+      BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
+         NumButtons      =   5
+         BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "actu"
+            Object.ToolTipText     =   "Actualiser"
+            ImageKey        =   "actu"
+         EndProperty
+         BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Style           =   3
+         EndProperty
+         BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "addprj"
+            Object.ToolTipText     =   "Ajouter les projets"
+            ImageKey        =   "addprj"
+         EndProperty
+         BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "prop"
+            Object.ToolTipText     =   "Modifier la durée"
+            ImageKey        =   "prop"
+         EndProperty
+         BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "delete"
+            Object.ToolTipText     =   "Supprimer"
+            ImageKey        =   "delete"
+         EndProperty
+      EndProperty
+   End
+   Begin MSComctlLib.ImageList imgTB 
+      Left            =   3000
+      Top             =   360
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      BackColor       =   -2147483643
+      ImageWidth      =   25
+      ImageHeight     =   17
+      MaskColor       =   128
+      _Version        =   393216
+      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
+         NumListImages   =   5
+         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":0000
+            Key             =   "actu"
+         EndProperty
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":01A4
+            Key             =   "prop"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":0704
+            Key             =   "addprj"
+         EndProperty
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":0C6C
+            Key             =   "delete"
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":11CC
+            Key             =   "print"
+         EndProperty
+      EndProperty
+   End
+End
+Attribute VB_Name = "UDCompteur"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+Private lngDureeSauve As Long
+Private bSauve As Boolean
+
+Private Function ExtraitFileTitle(ByVal sFileName As String) As String
+    Dim sM As String, iPos As Long, iDummy As Long
+    On Error GoTo GestErr
+    sM = sFileName
+    iPos = 1
+    Do Until iPos = 0
+        iPos = InStr(1, sM, "\")
+        If iPos = 0 Then Exit Do
+        sM = Right(sM, Len(sM) - iPos)
+    Loop
+    ExtraitFileTitle = sM
+    Exit Function
+
+GestErr:
+    ExtraitFileTitle = sFileName
+End Function
+
+Private Sub lv_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
+    lv.SortKey = ColumnHeader.Index - 1
+    lv.Sorted = True
+End Sub
+
+
+Private Sub tb_ButtonClick(ByVal Button As MSComctlLib.Button)
+    Select Case Button.Key
+        Case "actu"
+            ActuCompteur
+        Case "delete"
+            SupprimeCompteur
+        Case "addprj"
+            AjouteProjet
+        Case "prop"
+            ModifDuree
+    End Select
+End Sub
+
+Private Function ModifDuree()
+
+    On Error Resume Next
+    If lv.SelectedItem Is Nothing Then Exit Function
+    Load frmDuree
+    frmDuree.lblProjectName = lv.SelectedItem.SubItems(2)
+
+    Dim lngTime As String
+    Dim sH As String, sMn As String, sS As String
+    lngTime = GetDuree(lv.SelectedItem.SubItems(2))
+    sH = CStr(Int(lngTime / 3600))
+    lngTime = lngTime - CLng(sH) * 3600
+    sMn = CStr(Int(lngTime / 60))
+    lngTime = lngTime - CLng(sMn) * 60
+    sS = CStr(Int(lngTime))
+    frmDuree.txtH = sH
+    frmDuree.txtMn = sMn
+    frmDuree.txtS = sS
+
+    frmDuree.Show vbModal
+    ActuCompteur
+End Function
+Private Function AjouteProjet()
+    Dim objVBPrj As VBProject
+    Dim sc2iMsgBox As VbMsgBoxResult
+
+    For Each objVBPrj In VBInstance.VBProjects
+        If objVBPrj.FileName = "" Then
+            MsgBox "Impossible d'ajouter ce projet :" + vbCrLf + objVBPrj.Name + vbCrLf + "Sauvegardez-le avant", vbInformation
+        Else
+            sc2iMsgBox = MsgBox("Voulez-vous ajouter ce projet :" + vbCrLf + objVBPrj.Name + vbCrLf + "à vos compteurs ?", vbQuestion + vbYesNo, "c2iExplorer")
+            Select Case sc2iMsgBox
+                Case vbYes
+                    SaveSetting App.EXEName, "Durees", objVBPrj.FileName, 0
+                    ActuCompteur
+            End Select
+        End If
+    Next
+End Function
+
+Private Function SupprimeCompteur()
+    On Error Resume Next
+    If Not lv.SelectedItem Is Nothing Then
+        DeleteSetting App.EXEName, "Durees", lv.SelectedItem.Key
+        ActuCompteur
+    End If
+End Function
+
+Private Sub Timer1_Timer()
+    Static iNum As Long
+    Dim objVBPrj As VBProject
+
+    If Not bSauve Then Exit Sub
+
+    On Error GoTo Fin                                      'accès interdit à la collection de Projects
+    If iNum = lngDureeSauve Then
+        'sauve données
+        For Each objVBPrj In VBInstance.VBProjects
+            SauveDuree objVBPrj
+        Next
+        ActuCompteur
+        Set objVBPrj = Nothing
+        iNum = -1
+    End If
+    iNum = iNum + 1
+
+Fin:
+End Sub
+
+Private Sub UserDocument_Initialize()
+    ActuCompteur
+    ChargeInfos
+End Sub
+
+Private Sub UserDocument_Resize()
+    With lv
+        .Left = 0
+        .Width = ScaleWidth
+        .Top = tb.Height
+        .Height = ScaleHeight - .Top
+    End With
+End Sub
+
+Public Function ActuCompteur()
+    Dim tbSettings As Variant, i As Long, lItem As ListItem
+    Dim sFileName As String, objVBPrj As VBProject
+    Dim sFileTitle As String
+
+    On Error GoTo Fin
+    tbSettings = GetAllSettings(App.EXEName, "Durees")
+
+    lv.ListItems.Clear
+    For i = 0 To UBound(tbSettings)
+        sFileName = tbSettings(i, 0)
+        sFileTitle = ExtraitFileTitle(sFileName)
+        Set lItem = lv.ListItems.Add(, sFileName, sFileTitle)
+        lItem.SubItems(1) = ConvertHeuresMinutesSecondes(GetDuree(sFileName))
+        lItem.SubItems(2) = sFileName
+        Set objVBPrj = Nothing
+        For Each objVBPrj In VBInstance.VBProjects
+            If objVBPrj.FileName = sFileName Then
+                lItem.ForeColor = vbRed
+                Exit For
+            End If
+        Next
+    Next i
+Fin:
+    Set lItem = Nothing
+    Set objVBPrj = Nothing
+End Function
+
+Private Function ConvertHeuresMinutesSecondes(ByVal lngTime As Long) As String
+    Dim sH As String, sMn As String, sS As String
+
+    sH = CStr(Int(lngTime / 3600))
+    lngTime = lngTime - CLng(sH) * 3600
+    sMn = CStr(Int(lngTime / 60))
+    lngTime = lngTime - CLng(sMn) * 60
+    sS = CStr(Int(lngTime))
+
+    ConvertHeuresMinutesSecondes = sH + " h " + sMn + " mn " + sS + " s"
+End Function
+
+Private Sub UserDocument_Show()
+    ActuCompteur
+End Sub
+
+Private Function ChargeInfos()
+    Dim fso As FileSystemObject
+    Dim txtS As TextStream, sFile As String
+
+    sFile = App.Path + "\data\duree.txt"
+
+    On Error Resume Next
+    Err.Clear
+    Set fso = New FileSystemObject
+    If fso.FileExists(sFile) Then
+        Set txtS = fso.OpenTextFile(sFile)
+        bSauve = CBool(txtS.ReadLine)
+        If Err.Number <> 0 Then
+            bSauve = True
+            Err.Clear
+        End If
+        lngDureeSauve = CLng(txtS.ReadLine)
+        If Err.Number <> 0 Then
+            lngDureeSauve = 2                              'sauvegarde par defaut toutes les 2 minutes
+            Err.Clear
+        End If
+    Else                                                   'le fichier n'existe pas , on le crée
+        bSauve = True
+        lngDureeSauve = 2
+        Set txtS = fso.CreateTextFile(sFile)
+        txtS.WriteLine CStr(bSauve)
+        txtS.WriteLine CStr(lngDureeSauve)
+    End If
+    txtS.Close
+    Set txtS = Nothing
+    Set fso = Nothing
+    If Not bSauve Then
+        Timer1.Enabled = False
+    End If
+End Function
+

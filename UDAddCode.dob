@@ -1,0 +1,677 @@
+VERSION 5.00
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Begin VB.UserDocument UDAddCode 
+   ClientHeight    =   8550
+   ClientLeft      =   210
+   ClientTop       =   495
+   ClientWidth     =   9990
+   HScrollSmallChange=   225
+   ScaleHeight     =   8550
+   ScaleWidth      =   9990
+   ScrollBars      =   0  'None
+   VScrollSmallChange=   225
+   Begin VB.ComboBox cmbObjV 
+      Height          =   315
+      Left            =   600
+      TabIndex        =   15
+      Text            =   "Combo1"
+      Top             =   840
+      Visible         =   0   'False
+      Width           =   2535
+   End
+   Begin VB.ComboBox cmbLstDeb 
+      Height          =   315
+      Left            =   600
+      Style           =   2  'Dropdown List
+      TabIndex        =   14
+      Top             =   360
+      Visible         =   0   'False
+      Width           =   2535
+   End
+   Begin MSComctlLib.ImageList imgTB 
+      Left            =   6240
+      Top             =   5760
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      BackColor       =   -2147483643
+      ImageWidth      =   25
+      ImageHeight     =   17
+      MaskColor       =   128
+      _Version        =   393216
+      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
+         NumListImages   =   6
+         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":0000
+            Key             =   "copie"
+         EndProperty
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":055E
+            Key             =   "addprop"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":0ABC
+            Key             =   "delprop"
+         EndProperty
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":101A
+            Key             =   "delete"
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":1578
+            Key             =   "voir"
+         EndProperty
+         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":1AD6
+            Key             =   "quit"
+         EndProperty
+      EndProperty
+   End
+   Begin MSComctlLib.Toolbar tbMain 
+      Align           =   1  'Align Top
+      Height          =   360
+      Left            =   0
+      TabIndex        =   13
+      Top             =   0
+      Width           =   9990
+      _ExtentX        =   17621
+      _ExtentY        =   635
+      ButtonWidth     =   609
+      ButtonHeight    =   582
+      Appearance      =   1
+      Style           =   1
+      _Version        =   393216
+      BorderStyle     =   1
+   End
+   Begin VB.Frame FrameCode 
+      Caption         =   "Code généré"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   4575
+      Left            =   3480
+      TabIndex        =   8
+      Top             =   480
+      Width           =   4935
+      Begin VB.TextBox txtCodeDeclarationView 
+         Height          =   1455
+         Left            =   120
+         MultiLine       =   -1  'True
+         ScrollBars      =   3  'Both
+         TabIndex        =   10
+         Top             =   600
+         Width           =   4695
+      End
+      Begin VB.TextBox txtCodeView 
+         Height          =   2055
+         Left            =   120
+         MultiLine       =   -1  'True
+         ScrollBars      =   3  'Both
+         TabIndex        =   9
+         Top             =   2400
+         Width           =   4695
+      End
+      Begin VB.Label Label1 
+         AutoSize        =   -1  'True
+         Caption         =   "Declare"
+         Height          =   195
+         Left            =   120
+         TabIndex        =   12
+         Top             =   360
+         Width           =   555
+      End
+      Begin VB.Label Label2 
+         AutoSize        =   -1  'True
+         Caption         =   "Code"
+         Height          =   195
+         Left            =   120
+         TabIndex        =   11
+         Top             =   2160
+         Width           =   375
+      End
+   End
+   Begin VB.Frame frameLstProp 
+      Caption         =   "Liste des propriétés"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   2775
+      Left            =   120
+      TabIndex        =   6
+      Top             =   2280
+      Width           =   3255
+      Begin MSComctlLib.TreeView tvCode 
+         Height          =   2295
+         Left            =   120
+         TabIndex        =   7
+         Top             =   360
+         Width           =   3015
+         _ExtentX        =   5318
+         _ExtentY        =   4048
+         _Version        =   393217
+         Indentation     =   4
+         LabelEdit       =   1
+         LineStyle       =   1
+         Style           =   7
+         ImageList       =   "ImgLst"
+         Appearance      =   1
+      End
+   End
+   Begin VB.Frame FrameProp 
+      Caption         =   "Propriété"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      Height          =   1695
+      Left            =   120
+      TabIndex        =   1
+      Top             =   480
+      Width           =   3255
+      Begin VB.ComboBox cmbLstType 
+         Height          =   315
+         Left            =   720
+         Style           =   2  'Dropdown List
+         TabIndex        =   5
+         Top             =   720
+         Width           =   2295
+      End
+      Begin MSComctlLib.Toolbar tb 
+         Height          =   420
+         Left            =   120
+         TabIndex        =   3
+         Top             =   1200
+         Width           =   2955
+         _ExtentX        =   5212
+         _ExtentY        =   741
+         ButtonWidth     =   820
+         ButtonHeight    =   688
+         Appearance      =   1
+         Style           =   1
+         ImageList       =   "imgPortée"
+         DisabledImageList=   "imgPortée"
+         HotImageList    =   "imgPortée"
+         _Version        =   393216
+         BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
+            NumButtons      =   7
+            BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "pub"
+               Object.ToolTipText     =   "Public"
+               ImageKey        =   "pub"
+               Style           =   2
+               Value           =   1
+            EndProperty
+            BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "priv"
+               Object.ToolTipText     =   "Private"
+               ImageKey        =   "priv"
+               Style           =   2
+            EndProperty
+            BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "frie"
+               Object.ToolTipText     =   "Friend"
+               ImageKey        =   "frie"
+               Style           =   2
+            EndProperty
+            BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "nul0"
+               Style           =   3
+            EndProperty
+            BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "ecriture"
+               Object.ToolTipText     =   "Let (or Set)"
+               ImageKey        =   "ecriture"
+               Style           =   2
+            EndProperty
+            BeginProperty Button6 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "lecture"
+               Object.ToolTipText     =   "Get"
+               ImageKey        =   "lecture"
+               Style           =   2
+            EndProperty
+            BeginProperty Button7 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+               Key             =   "lectureecriture"
+               Object.ToolTipText     =   "Let (Set) & Get"
+               ImageKey        =   "lectureecriture"
+               Style           =   2
+               Value           =   1
+            EndProperty
+         EndProperty
+         BorderStyle     =   1
+      End
+      Begin VB.TextBox txtName 
+         Height          =   285
+         Left            =   720
+         TabIndex        =   0
+         Top             =   360
+         Width           =   2295
+      End
+      Begin VB.Label lblType 
+         Caption         =   "Type :"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   4
+         Top             =   720
+         Width           =   495
+      End
+      Begin VB.Label lblNom 
+         Caption         =   "Nom :"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   2
+         Top             =   360
+         Width           =   495
+      End
+   End
+   Begin MSComctlLib.ImageList imgPortée 
+      Left            =   4440
+      Top             =   6720
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      BackColor       =   -2147483643
+      ImageWidth      =   24
+      ImageHeight     =   20
+      MaskColor       =   128
+      _Version        =   393216
+      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
+         NumListImages   =   6
+         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":2034
+            Key             =   "pub"
+         EndProperty
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":2626
+            Key             =   "priv"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":2C18
+            Key             =   "frie"
+         EndProperty
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":320A
+            Key             =   "ecriture"
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":37FC
+            Key             =   "lectureecriture"
+         EndProperty
+         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":3DEE
+            Key             =   "lecture"
+         EndProperty
+      EndProperty
+   End
+   Begin MSComctlLib.ImageList ImgLst 
+      Left            =   3600
+      Top             =   6840
+      _ExtentX        =   1005
+      _ExtentY        =   1005
+      BackColor       =   -2147483643
+      ImageWidth      =   21
+      ImageHeight     =   21
+      MaskColor       =   128
+      _Version        =   393216
+      BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
+         NumListImages   =   5
+         BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":43E0
+            Key             =   "prop"
+         EndProperty
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":4972
+            Key             =   "objet"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":4F04
+            Key             =   "let"
+         EndProperty
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":5092
+            Key             =   "get"
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDAddCode.dox":5220
+            Key             =   "set"
+         EndProperty
+      EndProperty
+   End
+End
+Attribute VB_Name = "UDAddCode"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+Option Explicit
+
+Private c2iTypeFile As String
+
+Private Sub UserDocument_Initialize()
+    Dim fso As FileSystemObject, txtFile  As TextStream
+    Dim lngDeb As Long
+    Dim sObj As String, sName As String, sType As String
+
+    On Error GoTo Fin
+    c2iTypeFile = App.Path + "\data\types.txt"
+
+    Set fso = New FileSystemObject
+    Set txtFile = fso.OpenTextFile(c2iTypeFile)
+    lngDeb = CLng(txtFile.ReadLine)
+
+    With cmbLstType
+        Do Until txtFile.AtEndOfStream
+            LectureLigne sObj, sName, sType, txtFile.ReadLine
+            .AddItem sName
+            cmbLstDeb.AddItem sType
+            cmbObjV.AddItem sObj
+        Loop
+        txtFile.Close
+
+        .ListIndex = lngDeb
+    End With
+
+    MakeToolBar
+
+    Set txtFile = Nothing
+    Set fso = Nothing
+
+    If lngLanguage = c2i_Langue_Français Then
+        FrameProp.Caption = "Propriété :"
+        lblNom = "Nom :"
+        frameLstProp.Caption = "Liste des propriétés"
+        Framecode.Caption = "Code généré"
+    Else
+        FrameProp.Caption = "Property :"
+        lblNom = "Name :"
+        frameLstProp.Caption = "Properties list"
+        Framecode.Caption = "Generated code"
+    End If
+
+    Exit Sub
+Fin:
+    If lngLanguage = c2i_Langue_Français Then
+        MsgBox "Erreur au chargement de " + c2iTypeFile, vbInformation
+    Else
+        MsgBox "Error in loading document" + c2iTypeFile, vbInformation
+    End If
+    Set txtFile = Nothing
+    Set fso = Nothing
+
+End Sub
+
+
+Private Function ExtractName(ByVal sText As String) As String
+    Dim lDeb As Long
+
+    lDeb = InStr(1, sText, "(")
+
+    ExtractName = Trim(Left(sText, lDeb - 1))
+
+End Function
+
+Private Function ExtractType(ByVal sText As String) As String
+    Dim lDeb As Long
+
+    lDeb = InStr(1, sText, "(")
+
+    ExtractType = Mid(sText, lDeb + 1, Len(sText) - lDeb - 1)
+End Function
+Private Sub AjouteProp()
+    If txtName = "" Then Exit Sub
+    If cmbLstType.ListIndex = -1 Then Exit Sub
+
+    Dim mN As Node, mNFils As Node
+    Dim sType As String
+
+    On Error GoTo GestErr
+    'ajoute la nouvelle propriété au treeview, si elle existe ->GestErr
+
+    sType = txtName + " (" + cmbLstType.List(cmbLstType.ListIndex) + ")"
+    If cmbObjV.List(cmbLstType.ListIndex) = "o" Then
+        Set mN = tvCode.Nodes.Add(, , txtName, sType, "objet")
+    Else
+        Set mN = tvCode.Nodes.Add(, , txtName, sType, "prop")
+    End If
+    mN.Tag = cmbLstDeb.List(cmbLstType.ListIndex)
+
+    'couleur suivant la portée
+    If tb.Buttons("pub").Value = tbrPressed Then mN.ForeColor = vbBlue
+    If tb.Buttons("priv").Value = tbrPressed Then mN.ForeColor = vbBlack
+    If tb.Buttons("frie").Value = tbrPressed Then mN.ForeColor = vbRed
+
+    'Lecture ecriture
+    If tb.Buttons("lectureecriture").Value = tbrPressed Then
+        If cmbObjV.List(cmbLstType.ListIndex) = "o" Then
+            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Set", "set")
+        Else
+            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Let", "let")
+        End If
+        mNFils.ForeColor = mNFils.Parent.ForeColor
+
+        Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Get", "get")
+        mNFils.ForeColor = mNFils.Parent.ForeColor
+        Set mNFils = Nothing
+        Set mN = Nothing
+        VoirCode
+        Exit Sub
+    End If
+
+    'lecture
+    If tb.Buttons("lecture").Value = tbrPressed Then
+        Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Get", "get")
+        mNFils.ForeColor = mNFils.Parent.ForeColor
+        Set mNFils = Nothing
+        Set mN = Nothing
+        VoirCode
+        Exit Sub
+    End If
+
+    'Lecture ecriture
+    If tb.Buttons("ecriture").Value = tbrPressed Then
+        If cmbObjV.List(cmbLstType.ListIndex) = "o" Then
+            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Set", "set")
+        Else
+            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Let", "let")
+        End If
+        mNFils.ForeColor = mNFils.Parent.ForeColor
+        Set mNFils = Nothing
+        Set mN = Nothing
+        VoirCode
+        Exit Sub
+    End If
+
+GestErr:
+    If Err.Number = 35602 Then
+        MsgBox "Cette propriété existe déjà", vbInformation
+    Else
+        MsgBox "Erreur inconnue : " + CStr(Err.Description), vbCritical
+    End If
+End Sub
+
+Private Sub Effacer()
+    tvCode.Nodes.Clear
+    VoirCode
+End Sub
+
+Private Sub DelProp()
+    If tvCode.SelectedItem Is Nothing Then Exit Sub
+    'vérif que ce n'est pas le dernier child
+    If Not tvCode.SelectedItem.Parent Is Nothing Then
+        If tvCode.SelectedItem.Parent.Children = 1 Then
+            tvCode.Nodes.Remove tvCode.SelectedItem.Parent.Index
+            VoirCode
+            Exit Sub
+        End If
+    End If
+    tvCode.Nodes.Remove tvCode.SelectedItem.Index
+    VoirCode
+End Sub
+
+Private Sub VoirCode()
+    Dim sDeclaration As String, sCode As String
+    Dim mN As Node, mNFils As Node
+
+    txtCodeDeclarationView = ""
+    txtCodeView = ""
+
+    If tvCode.Nodes.Count = 0 Then Exit Sub
+
+    Set mN = tvCode.Nodes(1)
+    Do Until mN Is Nothing
+        'dans la zone déclaration
+        sDeclaration = sDeclaration + "Private " + _
+                mN.Tag + ExtractName(mN.Text) + _
+                " As " + ExtractType(mN.Text) + vbCrLf
+        'dans la zone code
+        Set mNFils = mN.Child
+        Do Until mNFils Is Nothing
+            'détermination de la portée
+            Select Case mN.ForeColor
+                Case vbBlue                                'public
+                    sCode = sCode + "Public Property "
+                Case vbBlack                               'private
+                    sCode = sCode + "Private Property "
+                Case vbRed                                 'friend
+                    sCode = sCode + "Friend Property "
+            End Select
+            Select Case mNFils.Text
+                Case "Get"
+                    sCode = sCode + mNFils.Text + " " + ExtractName(mN.Text) + "()"
+                    sCode = sCode + " As " + ExtractType(mN.Text) + vbCrLf
+                    If mN.Image = "prop" Then
+                        sCode = sCode + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + vbCrLf
+                    Else
+                        sCode = sCode + "Set " + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + vbCrLf
+                    End If
+                Case "Set"
+                    sCode = sCode + mNFils.Text + " " + ExtractName(mN.Text) + "(ByVal " + mN.Tag + ExtractName(mN.Text) + "A As " + ExtractType(mN.Text) + ")" + vbCrLf
+                    sCode = sCode + "Set " + mN.Tag + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + "A" + vbCrLf
+                Case "Let"
+                    sCode = sCode + mNFils.Text + " " + ExtractName(mN.Text) + "(ByVal " + mN.Tag + ExtractName(mN.Text) + "A As " + ExtractType(mN.Text) + ")" + vbCrLf
+                    sCode = sCode + mN.Tag + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + "A" + vbCrLf
+            End Select
+            sCode = sCode + "End Property" + vbCrLf + vbCrLf
+            Set mNFils = mNFils.Next
+        Loop
+
+        Set mN = mN.Next
+    Loop
+
+    Dim sTotal As String
+    sDeclaration = "'//************Généré par c2iExplorer*******************" + vbCrLf + sDeclaration
+
+    txtCodeDeclarationView = sDeclaration
+    txtCodeView = sCode
+    Set mNFils = Nothing
+    Set mN = Nothing
+
+    On Error Resume Next
+    txtName = ""
+    txtName.SetFocus
+
+End Sub
+
+Private Function LectureLigne(sObj As String, sName As String, sType As String, ByVal sLigne As String)
+    Dim iPos As Long, iPos2 As Long
+    iPos = InStr(1, sLigne, ";")
+    'sObj = Trim(Left(sLigne, iPos - 1))
+    iPos2 = InStr(iPos + 1, sLigne, ";")
+    'sName = Trim(Mid(sLigne, iPos + 1, iPos2 - iPos - 1))
+    'sType = Trim(Right(sLigne, Len(sLigne) - iPos2))
+End Function
+
+Private Function MakeToolBar()
+    Dim objButton As Button
+
+    With tbMain
+        Set .ImageList = imgTB
+        Set .HotImageList = imgTB
+
+        Set objButton = .Buttons.Add(, "addprop", , , "addprop")
+        Set objButton = .Buttons.Add(, "delprop", , , "delprop")
+        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Buttons.Add(, "delete", , , "delete")
+        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Buttons.Add(, "copie", , , "copie")
+        Set objButton = .Buttons.Add(, , , tbrSeparator)
+
+
+        Select Case lngLanguage
+            Case c2i_Langue_Français
+                .Buttons("addprop").ToolTipText = "Ajouter une propriétée"
+                .Buttons("delprop").ToolTipText = "Supprimer la propriété"
+                .Buttons("delete").ToolTipText = "Remise à zéro"
+                .Buttons("copie").ToolTipText = "Copier le code généré"
+
+            Case Else
+                .Buttons("addprop").ToolTipText = "Add a property"
+                .Buttons("delprop").ToolTipText = "Delete property"
+                .Buttons("delete").ToolTipText = "Delete all"
+                .Buttons("copie").ToolTipText = "Copy generated code"
+        End Select
+    End With
+
+    Set objButton = Nothing
+End Function
+
+Private Sub UserDocument_Paint()
+    On Error Resume Next
+    txtName.SetFocus
+End Sub
+
+Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
+    Select Case Button.Key
+        Case "addprop"
+            AjouteProp
+        Case "delprop"
+            DelProp
+        Case "delete"
+            Effacer
+        Case "copie"
+            CopieCode
+    End Select
+End Sub
+
+Private Sub CopieCode()
+    If VBInstance.ActiveCodePane Is Nothing Then
+        MsgBox "Aucune fenêtre active", vbInformation
+    Else
+        With VBInstance.ActiveCodePane.CodeModule
+            .AddFromString txtCodeDeclarationView
+            .InsertLines .CountOfLines + 1, txtCodeView
+        End With
+        Effacer
+    End If
+
+End Sub
+
+
+
+Private Sub UserDocument_Resize()
+    On Error Resume Next
+    frameLstProp.Height = ScaleHeight - frameLstProp.Top - 120
+    tvCode.Height = frameLstProp.Height - tvCode.Top - 120
+
+    Framecode.Height = ScaleHeight - Framecode.Top - 120
+    Framecode.Width = ScaleWidth - Framecode.Left - 120
+    txtCodeDeclarationView.Width = Framecode.Width - txtCodeDeclarationView.Left - 120
+    txtCodeView.Width = txtCodeDeclarationView.Width
+    txtCodeView.Height = Framecode.Height - txtCodeView.Top - 120
+End Sub
+
+
