@@ -283,7 +283,7 @@ End Sub
 ' ============================ PROCÉDURE ============================
 Private Sub GestionLostFocus(ByRef txtTemps As TextBox, Optional ByVal lngMax As Long = 60)
     ' -------------------- DÉCLARATION CONSTANTES --------------------
-    Const conZeroANum As String = "0"
+    Const conZeroANum As String = conAZero
     ' -------------------- DÉCLARATION VARIABLES ---------------------
     Dim lngVal As Long
     Dim strTemps As String

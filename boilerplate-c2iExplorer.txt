@@ -19,8 +19,9 @@
 ' the Initial Developer. All Rights Reserved.
 ' 
 ' Contributor(s):
-' Fred Just
-' René Rhéaume (rener@mediom.qc.ca)
-' Joël Guelluy (jguelluy@belgacom.net)
+' Fred Just     (contact@fredjust.com)
+' René Rhéaume  (rener@mediom.qc.ca)
+' Joël Guelluy  (jguelluy@belgacom.net)
+' Pascal Martin (pmartin@stolz-sequipag.fr)
 ' 
 ' ***** END LICENSE BLOCK *****

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDCompteur 
    ClientHeight    =   3600
    ClientLeft      =   0
@@ -254,7 +254,7 @@ Private Function AjouteProjet()
             sc2iMsgBox = MsgBox("Voulez-vous ajouter ce projet :" & vbCrLf & objVBPrj.Name & vbCrLf & "à vos compteurs ?", vbQuestion + vbYesNo, conNomApp)
             If (sc2iMsgBox = vbYes) Then
                 'Modification par René Rhéaume 2 août 2001
-                Call WritePrivateProfileString(conSecDurees, objVBPrj.Filename, "0", c2iINIFile)
+                Call WritePrivateProfileString(conSecDurees, objVBPrj.Filename, conAZero, c2iINIFile)
                 '                SaveSetting App.EXEName, conSecDurees, objVBPrj.Filename, 0
                 ActuCompteur
             End If
@@ -468,3 +468,63 @@ GestErr:
         Resume Fin
     End Function
 #End If
+
+'Déplacé de MExtraitIcone par René Rhéaume le 18 mai 2002
+' Optimisation de taille mémoire indiquée dans les manuels en ligne
+' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
+Public Function GetDuree(ByVal sFileName As String) As Long
+    Dim sM As String
+    Dim I As Long, iNumPrj As Long
+
+    iNumPrj = -1
+
+    If (sFileName = vbNullString) Then
+        GetDuree = -1
+        Exit Function
+    End If
+
+    On Error GoTo Suivant
+    For I = 0 To UBound(DuréePrj)
+        If (DuréePrj(I).Filename = sFileName) Then
+            iNumPrj = I
+            Exit For
+        End If
+    Next I
+
+Suivant:
+    On Error GoTo Fin
+
+    ' Modification par René Rhéaume 2 août 2001
+    '    sM = GetSetting(App.EXEName, conSecDurees, sFileName, vbNullString)
+    sM = LireChaineFichierINI(conSecDurees, sFileName, vbNullString, c2iINIFile)
+    If (sM <> vbNullString) Then                           'on la trouvé dans le fichier INI
+        If (iNumPrj = -1) Then
+            GetDuree = CLng(sM)
+        Else
+            GetDuree = timeGetTime / 1000 - DuréePrj(iNumPrj).Durée + CLng(sM)
+        End If
+    Else                                                   'il n'est pas dans le fichier INI
+        GetDuree = -1
+    End If
+    Exit Function
+
+Fin:
+    GetDuree = -1
+End Function
+
+'Déplacé de MExtraitIcone par René Rhéaume le 18 mai 2002
+' Optimisation de taille mémoire indiquée dans les manuels en ligne
+' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
+Public Sub SauveDuree(objPrj As VBProject)
+    Dim lngDuree As Long
+
+    On Error GoTo Fin
+    lngDuree = GetDuree(objPrj.Filename)
+    If (lngDuree <> -1) Then
+        ' Modification par René Rhéaume 2 août 2001
+        Call WritePrivateProfileString(conSecDurees, CStr(objPrj.Filename), CStr(lngDuree), c2iINIFile)
+        '        SaveSetting App.EXEName, conSecDurees, objPrj.Filename, lngDuree
+    End If
+
+Fin:
+End Sub

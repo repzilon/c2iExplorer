@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form frmPrint 
    BorderStyle     =   4  'Fixed ToolWindow
    ClientHeight    =   4830
@@ -189,7 +189,8 @@ Attribute VB_Exposed = False
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
-' René Rhéaume (rener@mediom.qc.ca)
+' René Rhéaume  (rener@mediom.qc.ca)
+' Pascal Martin (pmartin@stolz-sequipag.fr)
 '
 ' ***** END LICENSE BLOCK *****
 
@@ -312,27 +313,61 @@ End Sub
 '// les fonctions d'entrée/sortie par défaut de Visual Basic ---//
 '//-------------------------------------------------------------//
 
-Private Sub AnalyseHTMLCmp(ByVal objVBCmp As VBIDE.VBComponent, sM As String)
-    Call RemplaceString(sM, "Component-Name", objVBCmp.Name)
-    Call RemplaceString(sM, "Component-Description", objVBCmp.Description)
-    Call RemplaceString(sM, "Component-Img", conBaliseImg + ExtraitIconeComponent(objVBCmp) + conAttribImg)
+' Procédure modifiée par René Rhéaume le 3 mai 2002
+' Arrimage du correctif de Pascal Martin
+Private Sub AnalyseHTMLCmp(ByVal objVBCmp As VBIDE.VBComponent, ByRef sM As String)
+    Const conComponentName As String = "Component-Name"
+    Const conComponentDescription As String = "Component-Description"
+    Const conComponentNbrMember As String = "Component-NbrMember"
+    Const conComponentNbrLines As String = "Component-NbrLines"
+    
+    Call RemplaceString(sM, "Component-Img", conBaliseImg & ExtraitIconeComponent(objVBCmp) & conAttribImg)
     Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
-    Call RemplaceString(sM, "Component-NbrMember", CStr(objVBCmp.CodeModule.Members.Count))
-    Call RemplaceString(sM, "Component-NbrLines", CStr(objVBCmp.CodeModule.CountOfLines))
+    If (objVBCmp.Type = vbext_ct_ResFile) Then
+        'Les fichiers de ressource ne possédent pas toutes les propriétés des autres composants
+        Call RemplaceString(sM, conComponentName, objVBCmp.FileNames(1))
+        Call RemplaceString(sM, conComponentDescription, vbNullString)
+        Call RemplaceString(sM, conComponentNbrMember, conAZero)
+        Call RemplaceString(sM, conComponentNbrLines, conAZero)
+    Else
+        Call RemplaceString(sM, conComponentName, objVBCmp.Name)
+        Call RemplaceString(sM, conComponentDescription, objVBCmp.Description)
+        Call RemplaceString(sM, conComponentNbrMember, CStr(objVBCmp.CodeModule.Members.Count))
+        Call RemplaceString(sM, conComponentNbrLines, CStr(objVBCmp.CodeModule.CountOfLines))
+    End If
 End Sub
 
-Private Sub AnalyseHTMLMember(ByVal objVBMember As VBIDE.Member, sM As String)
-    Dim lngC As Long
-
+' Procédure modifiée par René Rhéaume le 4 mai 2002
+' Élimination du message d'erreur pour une description
+Private Sub AnalyseHTMLMember(ByVal objVBMember As VBIDE.Member, ByRef sM As String)
+    Dim lngC As Long, strDescription As String
+    
     On Error Resume Next
+    strDescription = objVBMember.Description
+    Select Case (Err.Number)
+        Case 32811
+            strDescription = vbNullString
+'        Case 0
+'            'on ne fait rien
+'        Case Else
+'            GoTo AffichErr
+    End Select
+    Err.Clear
+    
+'    On Error GoTo AffichErr
     Call RemplaceString(sM, "Member-Name", objVBMember.Name)
-    Call RemplaceString(sM, "Member-Description", objVBMember.Description)
+    Call RemplaceString(sM, "Member-Description", strDescription)
     Call RemplaceString(sM, "Member-Img", conBaliseImg & ExtraitIconeMembre(objVBMember, lngC) & conAttribImg)
     Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
-
+    Exit Sub
+    
+'AffichErr:
+'    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source _
+'            & vbCrLf & objVBMember.Name, vbExclamation, "AnalyseHTMLMember"
+'    Resume Next
 End Sub
 
-Private Sub AnalyseHTMLPrj(ByVal objVBPrj As VBIDE.VBProject, sM As String)
+Private Sub AnalyseHTMLPrj(ByVal objVBPrj As VBIDE.VBProject, ByRef sM As String)
     On Error GoTo AffichErr
     Call RemplaceString(sM, "Project-Name", objVBPrj.Name)
     Call RemplaceString(sM, "Project-FileName", objVBPrj.Filename)
@@ -594,8 +629,10 @@ Private Sub AddProject(ByVal objVBPrj As VBIDE.VBProject, ByVal sMiddle As Strin
     Set objVBCmp = Nothing
 End Sub
 
-'Modifié par René Rhéaume 1er août 2001
-'Retrait du paramètre TextStream et nouvel appel pour écriture de fichier
+' Modifié par René Rhéaume 1er août 2001
+' Retrait du paramètre TextStream et nouvel appel pour écriture de fichier
+' Procédure modifiée par René Rhéaume le 3 mai 2002
+' Arrimage du correctif de Pascal Martin
 Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As String)
     Dim objVBMember As VBIDE.Member
     Dim sTete As String, sFin As String
@@ -605,9 +642,11 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
         AnalyseHTMLCmp objVBCmp, sTete
         Call EcrireFichier(sTete, c2iHTMLFile)
-        For Each objVBMember In objVBCmp.CodeModule.Members
-            AddMember objVBMember, sMiddle
-        Next
+        If (objVBCmp.Type <> vbext_ct_ResFile) Then 'les fichiers de ressource ne peuvent pas contenir de code
+            For Each objVBMember In objVBCmp.CodeModule.Members
+                AddMember objVBMember, sMiddle
+            Next
+        End If
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
         AnalyseHTMLCmp objVBCmp, sFin
         Call EcrireFichier(sFin, c2iHTMLFile)
@@ -662,14 +701,70 @@ End Function
 ' Transformation de la fonction en Sub
 Private Sub RemplaceString(ByRef sString As String, ByVal sSearch As String, ByVal sValeur As String)
     Dim iPos As Long
+    Dim lngLenSearch As String
     sSearch = "[c2i" & sSearch & "]"
+    lngLenSearch = Len(sSearch)
 
     iPos = InStr(1, sString, sSearch)
     Do Until iPos = 0
         iPos = InStr(1, sString, sSearch)
         If (iPos > 0) Then
-            sString = Left$(sString, iPos - 1) & sValeur & Right$(sString, Len(sString) - iPos - Len(sSearch) + 1)
+            sString = Left$(sString, iPos - 1) & sValeur & Right$(sString, Len(sString) - iPos - lngLenSearch + 1)
         End If
     Loop
     '    RemplaceString = sString
 End Sub
+
+'Déplacé de GestFichier par René Rhéaume le 18 mai 2002
+' Optimisation de taille mémoire indiquée dans les manuels en ligne
+' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
+'Ajout par René Rhéaume le 1er août 2001
+' Retourne 0 s'il n'y a pas eu d'erreur et -1 s'il y en a eu une.
+' Retourne le contenu du fichier dans le 2e argument
+Private Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFichier As String) As Integer
+    On Error Resume Next
+    LireFichierTexte = 0
+    Screen.MousePointer = 11
+
+    ' Ouvre le fichier indiqué.
+    Open chnNomFichier For Input As #1
+    ContenuFichier = Input(LOF(1), 1)
+    Close #1
+    Screen.MousePointer = 0
+
+    If (Err) Then
+        MsgBox "Impossible d'ouvrir le fichier: " & chnNomFichier, vbExclamation
+        LireFichierTexte = -1
+        Exit Function
+    End If
+End Function
+
+'Déplacé de GestFichier par René Rhéaume le 18 mai 2002
+' Optimisation de taille mémoire indiquée dans les manuels en ligne
+' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
+' Ajout par René Rhéaume le 1er août 2001
+' Retourne 0 s'il n'y a pas eu d'erreur et -1 s'il y en a eu une.
+Private Function EcrireFichier(ByVal chnContenu As String, ByVal chnNomFichier As String) As Integer
+    ' Instructions d'entrée/sortie de VB
+    On Error GoTo GestErr
+    ' Ouvre le fichier.
+    Open chnNomFichier For Append As #1
+
+    ' Écrit le contenu du paramètre dans le fichier enregistré.
+    ' Le caractère point-virgule (;) supprime le retour de chariot à la fin.
+    Print #1, chnContenu;
+    Close #1
+    EcrireFichier = 0
+
+SortieProc:
+    Exit Function
+GestErr:
+    Select Case Err.Number
+        Case 52
+            MsgBox "Le fichier vers lequel vous essayez de sauvegarder est verrouillé par une autre application. Fermez ce fichier dans cette application et recommencez.", vbExclamation
+            Resume
+        Case Else
+            MsgBox conErrNo & Err.Number & vbCrLf & "Description : " & Err.Description, 48, App.Title
+            EcrireFichier = -1
+    End Select
+End Function

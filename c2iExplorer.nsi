@@ -19,7 +19,6 @@
 ; the Initial Developer. All Rights Reserved.
 ; 
 ; Contributor(s):
-; Fred Just
 ; René Rhéaume (rener@mediom.qc.ca)
 ; 
 ; ***** END LICENSE BLOCK *****
@@ -33,7 +32,7 @@
 !ifndef VersionVB
 !define VersionVB 5
 !endif
-!define Revision 129
+!define Revision 134
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
 
@@ -148,6 +147,7 @@ Section Uninstall
 	Delete "$INSTDIR\Wizards\DATA\c2iExplorer.ini"
 	Delete "$INSTDIR\Wizards\DATA\BASE.C2I"
 	Delete "$INSTDIR\Wizards\DATA\C2I.MDB"
+	Delete "$INSTDIR\Wizards\DATA\c2ifr.mdb"
 	Delete "$INSTDIR\Wizards\HTML\c2i Description complète.htm"
 	Delete "$INSTDIR\Wizards\HTML\c2i Liste des components avec descriptions.htm"
 	Delete "$INSTDIR\Wizards\HTML\c2i Liste des components avec nbr lignes de code.htm"
@@ -233,6 +233,10 @@ Section Uninstall
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\images.zip"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\RapportModificationsRR.*"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\InsertCode.txt"
+	Delete "$INSTDIR\Wizards\c2iexplorer-source\InsertCode.doc"
+	Delete "$INSTDIR\Wizards\c2iexplorer-source\MiseAJourCode.doc"
+	Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frm"
+	Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frx"
 	RmDir "$INSTDIR\Wizards\Data"
 	RmDir "$INSTDIR\Wizards\Html\Img"
 	RmDir "$INSTDIR\Wizards\Html"

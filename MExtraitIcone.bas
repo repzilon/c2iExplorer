@@ -50,7 +50,8 @@ Public Const Mem_Friend As Long = vbRed
 
 Public Const conFaux As Boolean = False
 Public Const conVrai As Boolean = True
-Public Const conCheminRelatifINI  As String = "\data\c2iExplorer.ini"
+Public Const conCheminRelatifINI  As String = "\DATA\c2iExplorer.ini"
+Public Const conDossierData As String = "\DATA"
 Public Const conSecGen As String = "General"
 Public Const conSecDurees As String = "Durees"
 Public Const conValData As String = "Data"
@@ -82,6 +83,9 @@ Public Const conLet As String = "Let"
 Public Const conSet As String = "Set"
 Public Const conLibelDescrpt As String = "Description"
 Public Const conGlmt As String = """"
+Public Const conMsgAucuneFenetreCodeActive As String = "Il n'y a pas de fenêtre de code active"
+Public Const conFanionsOuvrir As Long = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
+Public Const conAZero As String = "0"
 
 'l'objet contenant notre UserControl
 Public objUD As UDExplorer                                 'objet contenant le document créé
@@ -241,46 +245,6 @@ Public Function ExtraitIconeComponent(ByVal VBCmp As VBIDE.VBComponent) As Strin
 
 End Function
 
-Public Function GetDuree(ByVal sFileName As String) As Long
-    Dim sM As String
-    Dim I As Long, iNumPrj As Long
-
-    iNumPrj = -1
-
-    If (sFileName = vbNullString) Then
-        GetDuree = -1
-        Exit Function
-    End If
-
-    On Error GoTo Suivant
-    For I = 0 To UBound(DuréePrj)
-        If (DuréePrj(I).Filename = sFileName) Then
-            iNumPrj = I
-            Exit For
-        End If
-    Next I
-
-Suivant:
-    On Error GoTo Fin
-
-    ' Modification par René Rhéaume 2 août 2001
-    '    sM = GetSetting(App.EXEName, conSecDurees, sFileName, vbNullString)
-    sM = LireChaineFichierINI(conSecDurees, sFileName, vbNullString, c2iINIFile)
-    If (sM <> vbNullString) Then                           'on la trouvé dans le fichier INI
-        If (iNumPrj = -1) Then
-            GetDuree = CLng(sM)
-        Else
-            GetDuree = timeGetTime / 1000 - DuréePrj(iNumPrj).Durée + CLng(sM)
-        End If
-    Else                                                   'il n'est pas dans le fichier INI
-        GetDuree = -1
-    End If
-    Exit Function
-
-Fin:
-    GetDuree = -1
-End Function
-
 'Public Function PositionForm(ByVal frmA As Form, Optional bDevant As Boolean = conVrai) As Long
 '    If bDevant Then
 '        PositionForm = SetWindowPos(frmA.hwnd, HWND_TOPMOST, frmA.Left \ Screen.TwipsPerPixelX, frmA.Top \ Screen.TwipsPerPixelY, frmA.Width \ Screen.TwipsPerPixelX, frmA.Height \ Screen.TwipsPerPixelY, 0)
@@ -289,31 +253,26 @@ End Function
 '    End If
 'End Function
 
-Public Sub ConnectionInternet(ByVal sURL As String)
+' Procédure modifiée par René Rhéaume le 24 avril 2002
+' Support des adresses de courrier électronique
+' en remplacement de UDBiblio.MailInternet
+Public Sub ConnectionInternet(ByVal strAdresse As String, _
+                                Optional ByVal blnCourriel As Boolean = conFaux)
+    Const conOpen As String = "open"
     Dim lngRep As Long
-    lngRep = ShellExecute(0, "open", sURL, vbNullString, vbNullString, SW_NORMAL)
-    If lngRep = 0 Then
+    If (blnCourriel) Then
+        lngRep = ShellExecute(0, conOpen, "mailto:" & strAdresse, vbNullString, vbNullString, SW_NORMAL)
+    Else
+        lngRep = ShellExecute(0, conOpen, strAdresse, vbNullString, vbNullString, SW_NORMAL)
+    End If
+    If (lngRep = 0) Then
         Select Case lngLanguage
-            Case c2i_Langue_Français
-                MsgBox "Impossible d'établir la connection Internet", vbInformation
-            Case Else
+            Case c2i_Langue_Anglais
                 MsgBox "Impossible to connect to Internet", vbInformation
+            Case Else
+                MsgBox "Impossible d'établir la connection Internet", vbInformation
         End Select
     End If
-End Sub
-
-Public Sub SauveDuree(objPrj As VBProject)
-    Dim lngDuree As Long
-
-    On Error GoTo Fin
-    lngDuree = GetDuree(objPrj.Filename)
-    If (lngDuree <> -1) Then
-        ' Modification par René Rhéaume 2 août 2001
-        Call WritePrivateProfileString(conSecDurees, CStr(objPrj.Filename), CStr(lngDuree), c2iINIFile)
-        '        SaveSetting App.EXEName, conSecDurees, objPrj.Filename, lngDuree
-    End If
-
-Fin:
 End Sub
 
 'Ajout par René Rhéaume en décembre 2001

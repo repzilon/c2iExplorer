@@ -197,7 +197,8 @@ Attribute VB_Exposed = True
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
-' René Rhéaume (rener@mediom.qc.ca)
+' René Rhéaume  (rener@mediom.qc.ca)
+' Pascal Martin (pmartin@stolz-sequipag.fr)
 '
 ' ***** END LICENSE BLOCK *****
 
@@ -220,7 +221,6 @@ Private Const conVoir As String = "voir"
 Private Const conCopie As String = "copie"
 Private Const conExtBD As String = ".mdb"
 Private Const conFiltreBD As String = "Bases de données (*.mdb)|*.mdb"
-Private Const conDossierData As String = "\data"
 Private Const conRSElements As String = "Elements"
 Private Enum TypePosition
     posDeclarations = 1
@@ -237,54 +237,55 @@ End Enum
 Public bFrmBiblio As Boolean
 Public TVEx As TreeView
 
+' Procédure modifiée par René Rhéaume le 24 avril 2002
+' Regroupement des opérations du Select Case
+' Procédure modifiée par René Rhéaume le 2 mai 2002
+' Vérification de l'existence de base.c2i
 Private Sub Enregistrement(ByVal sFile As String)
     Const conExtBak As String = ".bak"
     Dim db As Database, rs As Recordset
     Dim mNode As Node, objE As cElement
 
-    On Error GoTo RestaurerSauvegarde
-    'Modifié par René Rhéaume, 29 juillet 2001
-    If (FichierExiste(sFile)) Then
-        'Copie de sauvegarde du fichier
-        FileCopy sFile, sFile & conExtBak
-        'destruction du fichier
-        Kill sFile
+    If (FichierExiste(c2iDataFileNameOrigine)) Then
+        On Error GoTo RestaurerSauvegarde
+        'Modifié par René Rhéaume, 29 juillet 2001
+        If (FichierExiste(sFile)) Then
+            'Copie de sauvegarde du fichier
+            FileCopy sFile, sFile & conExtBak
+            'destruction du fichier
+            Kill sFile
+        End If
+        'copie du fichier de base
+        FileCopy c2iDataFileNameOrigine, sFile
+    
+        On Error GoTo Fin
+        Set db = OpenDatabase(sFile)
+        Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
+        For Each mNode In tv.Nodes
+            Select Case mNode.Image
+                Case conElement, conWeb, conMail
+                    rs.AddNew
+                    Set objE = Explorer.Elements(mNode.FullPath)
+                    rs.Fields(conNom) = objE.Nom
+                    rs.Fields(conDescription) = objE.Description
+                    If (mNode.Image = conElement) Then
+                        rs.Fields(conDeclareProc) = objE.DeclareProc
+                        rs.Fields(conHeadProc) = objE.HeadProc
+                        rs.Fields(conInLineProc) = objE.InLineProc
+                        rs.Fields(conEndProc) = objE.EndProc
+                    End If
+                    rs.Update
+            End Select
+        Next
+        If FichierExiste(sFile & conExtBak) Then Kill sFile & conExtBak
+    Else
+        MsgBox "Le fichier «" & c2iDataFileNameOrigine & "» n'existe pas." & vbNewLine & _
+                "Ce fichier est le modèle de structure de bibliothèque de code." & vbNewLine & _
+                "Veuillez réinstaller l'application.", vbCritical
     End If
-    'copie du fichier de base
-    FileCopy c2iDataFileNameOrigine, sFile
-
-    On Error GoTo Fin
-    Set db = OpenDatabase(sFile)
-    Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
-    For Each mNode In tv.Nodes
-        Select Case mNode.Image
-            Case conElement
-                rs.AddNew
-                Set objE = Explorer.Elements(mNode.FullPath)
-                rs.Fields(conNom) = objE.Nom
-                rs.Fields(conDescription) = objE.Description
-                rs.Fields(conDeclareProc) = objE.DeclareProc
-                rs.Fields(conHeadProc) = objE.HeadProc
-                rs.Fields(conInLineProc) = objE.InLineProc
-                rs.Fields(conEndProc) = objE.EndProc
-                rs.Update
-            Case conWeb
-                rs.AddNew
-                Set objE = Explorer.Elements(mNode.FullPath)
-                rs.Fields(conNom) = objE.Nom
-                rs.Fields(conDescription) = objE.Description
-                rs.Update
-            Case conMail
-                rs.AddNew
-                Set objE = Explorer.Elements(mNode.FullPath)
-                rs.Fields(conNom) = objE.Nom
-                rs.Fields(conDescription) = objE.Description
-                rs.Update
-        End Select
-    Next
-    If FichierExiste(sFile & conExtBak) Then Kill sFile & conExtBak
 
 SortieFunc:
+    'On Error Resume Next
     rs.Close
     db.Close
     Set rs = Nothing
@@ -297,7 +298,7 @@ RestaurerSauvegarde:
             conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
     Resume SortieFunc
 Fin:
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbCritical
     Resume SortieFunc
 End Sub
 
@@ -363,15 +364,18 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     End Select
 End Sub
 
+' Procédure modifiée par René Rhéaume le 29 juillet 2001
+' Lecture du fichier INI
+' Procédure modifiée par René Rhéaume le 3 mai 2002
+' Retrait du message d'erreur si le fichier de base de
+' données spécifié dans le fichier INI n'existe pas
 Private Sub UserDocument_Initialize()
-    'Modifié par René Rhéaume 29 juillet 2001
     c2iCurrentDataFileName = LireChaineFichierINI(conSecGen, conValData, vbNullString, c2iINIFile)
-    'Fin de modification
 
     MakeToolBar
     bFrmBiblio = conFaux
 
-    If (c2iCurrentDataFileName <> vbNullString) Then
+    If (FichierExiste(c2iCurrentDataFileName)) Then
         ChargeBase c2iCurrentDataFileName
     End If
 
@@ -433,7 +437,6 @@ End Sub
 ' nouvel algorithme développé par René Rhéaume (voir InsertCode.doc)
 Private Sub InsertCode(ByVal strDeclaration As String, ByVal strEnTete As String, _
                         ByVal strContenu As String, ByVal strPied As String)
-    Const conMsgAucuneFenetreCodeActive As String = "Il n'y a pas de fenêtre de code active"
     Dim objCodeModule As VBIDE.CodeModule
     Dim lngNbLignesDeclar As Long
     Dim blnEnTetePresent As Boolean, blnContenuPresent As Boolean, blnPiedPresent As Boolean
@@ -608,12 +611,10 @@ Private Sub MakeToolBar()
         Set objButton = .Buttons.Add(, conEndProc, , tbrCheck, conEndProc)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
 
-
         'Set objButton = .Buttons.Add(, , , tbrSeparator)
         'Set objButton = .Buttons.Add(, "export", , , "export")
         'Set objButton = .Buttons.Add(, "import", , , "import")
         'Set objButton = .Buttons.Add(, , , tbrSeparator)
-
 
         Select Case lngLanguage
             Case c2i_Langue_Anglais
@@ -662,21 +663,13 @@ Private Sub MakeToolBar()
     Set objButton = Nothing
 End Sub
 
+' Procédure modifiée par René Rhéaume le 24 avril 2002
+' Plus d'appels de procédure pour clarifier
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
-    Dim objE As cElement
-
     On Error Resume Next
     Select Case Button.Key
         Case conNewdata
-            If (tv.Nodes.Count > 0) Then
-                If (LenB(c2iCurrentDataFileName) > 0) Then
-                    Enregistrement c2iCurrentDataFileName
-                Else
-                    SaveLibrary
-                End If
-            End If
-            tv.Nodes.Clear
-            c2iCurrentDataFileName = vbNullString
+            GererBoutonNouvBD
         Case conBiblio
             OpenBiblio
         Case conNewbiblio
@@ -684,57 +677,20 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
         Case conNewcategorie
             AddCategorie
         Case conDelete
-            If tv.SelectedItem Is Nothing Then Exit Sub
-            DeleteNode
+            If (Not tv.SelectedItem Is Nothing) Then
+                DeleteNode
+            End If
         Case conCopie
             If (Not tv.SelectedItem Is Nothing) Then
-                Select Case tv.SelectedItem.Image
-                    Case conElement
-                        Set objE = Explorer.Elements(tv.SelectedItem.FullPath)
-                        ValideInsertion objE
-                        Set objE = Nothing
-                    Case conWeb
-                        ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
-                    Case conMail
-                        MailInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
-                End Select
+                GererBoutonCopie
             End If
         Case conVoir
             If (Not tv.SelectedItem Is Nothing) Then
-                Select Case tv.SelectedItem.Image
-                    Case conElement
-                        Load frmBiblio
-                        Set frmBiblio.Element = Explorer.Elements(tv.SelectedItem.FullPath)
-                        bFrmBiblio = conVrai
-                        frmBiblio.Show
-                    Case conWeb                            'connexion Internet
-                        ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
-                    Case conMail
-                        MailInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
-                    Case Else
-                        Load frmBiblio
-                        Set frmBiblio.Element = Nothing
-                        bFrmBiblio = conVrai
-                        frmBiblio.Show
-                End Select
+                GererBoutonVoir
             End If
         Case conSave
             SaveLibrary
     End Select
-End Sub
-
-Private Sub MailInternet(ByVal sMail As String)
-    Dim lngRep As Long
-    lngRep = ShellExecute(0, "open", "mailto:" + sMail, vbNullString, vbNullString, SW_NORMAL)
-    If (lngRep = 0) Then
-        Select Case lngLanguage
-            Case c2i_Langue_Anglais
-                MsgBox "Impossible to connect to Internet", vbInformation
-            Case Else
-                MsgBox "Impossible d'établir la connection Internet", vbInformation
-        End Select
-    End If
-
 End Sub
 
 'Fonction modifiée par René Rhéaume, 29 juillet 2001
@@ -787,7 +743,7 @@ Private Function OpenBiblio() As Byte
         .Filter = conFiltreBD
         .FilterIndex = 1
         .Filename = c2iCurrentDataFileName
-        .Flags = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
+        .Flags = conFanionsOuvrir
         .InitDir = strCheminApp & conDossierData
         .ShowOpen
         If .Filename = vbNullString Then
@@ -951,4 +907,54 @@ End Sub
 
 Private Sub UserDocument_Terminate()
     Set TVEx = Nothing
+End Sub
+
+' Procédure ajoutée par René Rhéaume le 24 avril 2002
+' Pour alléger UDBiblio.tbMain_ButtonClick
+Public Sub GererBoutonNouvBD()
+    If (tv.Nodes.Count > 0) Then
+        If (LenB(c2iCurrentDataFileName) > 0) Then
+            Enregistrement c2iCurrentDataFileName
+        Else
+            SaveLibrary
+        End If
+    End If
+    tv.Nodes.Clear
+    c2iCurrentDataFileName = vbNullString
+End Sub
+
+' Procédure ajoutée par René Rhéaume le 24 avril 2002
+' Pour alléger UDBiblio.tbMain_ButtonClick
+Public Sub GererBoutonCopie()
+    Dim objE As cElement
+    Dim strImage As String
+    strImage = tv.SelectedItem.Image
+    Select Case (strImage)
+        Case conElement
+            Set objE = Explorer.Elements(tv.SelectedItem.FullPath)
+            ValideInsertion objE
+            Set objE = Nothing
+        Case conWeb, conMail
+            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, (tv.SelectedItem.Image = conMail)
+    End Select
+End Sub
+
+' Procédure ajoutée par René Rhéaume le 24 avril 2002
+' Pour alléger UDBiblio.tbMain_ButtonClick
+Public Sub GererBoutonVoir()
+    Dim strImage As String
+    strImage = tv.SelectedItem.Image
+    Select Case (strImage)
+        Case conWeb, conMail
+            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, (tv.SelectedItem.Image = conMail)
+        Case Else
+            Load frmBiblio
+            If (strImage = conElement) Then
+                Set frmBiblio.Element = Explorer.Elements(tv.SelectedItem.FullPath)
+            Else
+                Set frmBiblio.Element = Nothing
+            End If
+            bFrmBiblio = conVrai
+            frmBiblio.Show
+    End Select
 End Sub

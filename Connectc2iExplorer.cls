@@ -63,56 +63,70 @@ Private Sub IDTExtensibility_OnAddInsUpdate(custom() As Variant)
     ' commentaire pour que la procédure soit compilée
 End Sub
 
+' Procédure modifiée par René Rhéaume le 29 avril 2002
+' Meilleure conditions et vérification de l'existence
+' de c2iExplorer.ini
 Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectMode As vbext_ConnectMode, ByVal AddInInst As VBIDE.AddIn, custom() As Variant)
     '=================================================
     'connection du complément
     'on crée l'objet window et usrcomm
     '=================================================
+    Const conErrFichIntrouvable As Long = 53
     On Error GoTo GestErr
-
     ' Enregistre l'instance vb
     Set VBInstance = VBInst
 
     If (Not objWindow Is Nothing) Then
-        ' En cours d'exécution, affiche seulement
-        Show
+        Show ' En cours d'exécution, affiche seulement
         If (ConnectMode = vbext_cm_AfterStartup) Then
             ' Démarre à partir du Gestionaire de Compléments
             AddToAddInCommandBar
         End If
-        Exit Sub
+    Else
+        strCheminApp = App.Path
+        'Ajout par René Rhéaume, 28 juillet 2001
+        c2iINIFile = strCheminApp & conCheminRelatifINI
+        Select Case conVrai
+            Case FichierExiste(c2iINIFile), frmErreurINI.ObtenirActionINIAbsent
+                ' Initialisation des variables globales
+                c2iHTMLFile = strCheminApp & "\html\prev.htm"
+                c2iDataFileNameOrigine = strCheminApp & "\data\base.c2i"
+                
+                'pour stocker les durées
+                ReDim DuréePrj(0)
+            
+                'création de la fenêtre
+                'objWindow est l'objet Window de vbe
+                'objUD est le 'contenu' de la fenêtre
+                With VBInstance.Windows
+                    Set objWindow = .CreateToolWindow(AddInInst, "c2iExplorer.UDExplorer", conNomApp, sGuid, objUD)
+                    Set objWindowBiblio = .CreateToolWindow(AddInInst, "c2iExplorer.UDBiblio", conNomApp, sGuidBiblio, objUDBiblio)
+                    Set objWindowAddCode = .CreateToolWindow(AddInInst, "c2iExplorer.UDAddCode", conNomApp, sGuidAddCode, objUDAddCode)
+                    Set objWindowClassViewer = .CreateToolWindow(AddInInst, "c2iExplorer.UDClassViewer", conNomApp, sGuidClassViewer, objUDClassViewer)
+                    Set objWindowMsgBox = .CreateToolWindow(AddInInst, "c2iExplorer.UDMsgBox", conNomApp, sGuidMsgBox, objUDMsgBox)
+                    Set objWindowCompteur = .CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", conNomApp, sGuidCompteur, objUDCompteur)
+                End With
+                Set Connection = Me
+            
+                AddToAddInCommandBar
+            Case Else ' Abandon
+                Err.Raise conErrFichIntrouvable, "c2iExplorer.Connectc2iExplorer.IDTExtensibility_OnConnection", "c2iExplorer.ini est introuvable malgré l'intervention de l'utilsateur."
+                'IDTExtensibility.OnDisconnection vbext_dm_UserClosed, Null
+                Set Connection = Nothing
+        End Select
     End If
-
-    ' Initialisation des variables globales
-    strCheminApp = App.Path
-    c2iHTMLFile = strCheminApp & "\html\prev.htm"
-    c2iDataFileNameOrigine = strCheminApp & "\data\base.c2i"
-    'Ajout par René Rhéaume, 28 juillet 2001
-    c2iINIFile = strCheminApp & conCheminRelatifINI
-    'pour stocker les durées
-    ReDim DuréePrj(0)
-
-    'création de la fenêtre
-    'objWindow est l'objet Window de vbe
-    'objUD est le 'contenu' de la fenêtre
-    With VBInstance.Windows
-        Set objWindow = .CreateToolWindow(AddInInst, "c2iExplorer.UDExplorer", conNomApp, sGuid, objUD)
-        Set objWindowBiblio = .CreateToolWindow(AddInInst, "c2iExplorer.UDBiblio", conNomApp, sGuidBiblio, objUDBiblio)
-        Set objWindowAddCode = .CreateToolWindow(AddInInst, "c2iExplorer.UDAddCode", conNomApp, sGuidAddCode, objUDAddCode)
-        Set objWindowClassViewer = .CreateToolWindow(AddInInst, "c2iExplorer.UDClassViewer", conNomApp, sGuidClassViewer, objUDClassViewer)
-        Set objWindowMsgBox = .CreateToolWindow(AddInInst, "c2iExplorer.UDMsgBox", conNomApp, sGuidMsgBox, objUDMsgBox)
-        Set objWindowCompteur = .CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", conNomApp, sGuidCompteur, objUDCompteur)
-    End With
-    Set Connection = Me
-
-    AddToAddInCommandBar
-
+    
     Exit Sub
 
 GestErr:
-    MsgBox "IDTExtensibility_OnConnection : " & Err.Description & " : " & CStr(Err.Number)    ' & vbCrLf & CStr(lngLigneOK)
+    If (Err.Number <> conErrFichIntrouvable) Then
+        MsgBox "IDTExtensibility_OnConnection : " & Err.Description & " (" & Err.Number & ") " & vbNewLine & Err.Source, vbCritical     '& vbCrLf & CStr(lngLigneOK)
+    End If
 End Sub
 
+' Procédure modifiée par René Rhéaume le 29 avril 2002
+' Élimination du message d'erreur si c2iExplorer.ini
+' n'existe pas
 '------------------------------------------------------
 ' Cette méthode supprime le complément de VB
 '------------------------------------------------------
@@ -120,37 +134,41 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
     '=================================================
     'on se déconnecte, on supprime les objets inintéressants
     '=================================================
-    On Error GoTo GestErr
+    On Error Resume Next
+    If (Not objWindow Is Nothing) Then
+        On Error GoTo GestErr
+        If (objWindow.Visible) Then                            'sauvegarde de la visibilité
+            WritePrivateProfileString conSecGen, conClefVisible, "1", c2iINIFile
+        Else
+            WritePrivateProfileString conSecGen, conClefVisible, conAZero, c2iINIFile
+        End If
 
-    If (objWindow.Visible) Then                            'sauvegarde de la visibilité
-        WritePrivateProfileString conSecGen, conClefVisible, "1", c2iINIFile
-    Else
-        WritePrivateProfileString conSecGen, conClefVisible, "0", c2iINIFile
+        objBouton.Delete
+        'objBoutonPropriété.Delete
+    
+        Set Connection = Nothing
+        Set objBouton = Nothing
+        'Set objBoutonPropriété = Nothing
+        Set objUD = Nothing
+        Set objUDBiblio = Nothing
+        Set objUDAddCode = Nothing
+        Set objUDMsgBox = Nothing
+        Set objUDCompteur = Nothing
+
+        Set objWindow = Nothing
+        Set objWindowBiblio = Nothing
+        Set objWindowAddCode = Nothing
+        Set objWindowMsgBox = Nothing
+        Set objWindowCompteur = Nothing
+        Set VBPrjSelected = Nothing
+        Set VBInstance = Nothing
     End If
-
-    objBouton.Delete
-    'objBoutonPropriété.Delete
-
-    Set Connection = Nothing
-    Set objBouton = Nothing
-    'Set objBoutonPropriété = Nothing
-    Set objUD = Nothing
-    Set objUDBiblio = Nothing
-    Set objUDAddCode = Nothing
-    Set objUDMsgBox = Nothing
-    Set objUDCompteur = Nothing
-
-    Set objWindow = Nothing
-    Set objWindowBiblio = Nothing
-    Set objWindowAddCode = Nothing
-    Set objWindowMsgBox = Nothing
-    Set objWindowCompteur = Nothing
-    Set VBPrjSelected = Nothing
-    Set VBInstance = Nothing
-
+    On Error GoTo GestErr
     Exit Sub
+    
 GestErr:
-    MsgBox "IDTExtensibility_OnDisconnection : " + Err.Description, vbInformation
+    MsgBox "IDTExtensibility_OnDisconnection : " & Err.Description & " (" & Err.Number & ") " & vbNewLine & Err.Source, vbExclamation
+    Resume Next
 End Sub
 
 Private Function AddToAddInCommandBar() As Office.CommandBarControl
@@ -194,7 +212,7 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
             Show
             objUD.Init
         Case Else
-            WritePrivateProfileString conSecGen, conClefVisible, "0", strCheminApp & conCheminRelatifINI
+            WritePrivateProfileString conSecGen, conClefVisible, conAZero, strCheminApp & conCheminRelatifINI
     End Select
 
     Exit Function
@@ -233,9 +251,9 @@ Private Sub CmpEvent_ItemRenamed(ByVal VBComponent As VBIDE.VBComponent, ByVal O
     objUD.AjouteComponent VBComponent
 End Sub
 
-Private Sub CmpEvent_ItemSelected(ByVal VBComponent As VBIDE.VBComponent)
-    Debug.Print VBComponent.Name
-End Sub
+'Private Sub CmpEvent_ItemSelected(ByVal VBComponent As VBIDE.VBComponent)
+'    Debug.Print VBComponent.Name
+'End Sub
 
 Private Sub IDTExtensibility_OnStartupComplete(custom() As Variant)
     '    AddToAddInCommandBar
@@ -271,7 +289,7 @@ Private Sub prjEvent_ItemRemoved(ByVal VBProject As VBIDE.VBProject)
     lngFinTabDurees = UBound(DuréePrj)
 
     objUD.RetireProjet VBProject
-    SauveDuree VBProject
+    objUDCompteur.SauveDuree VBProject
 
     'suppression dans le tableau des projects pour la session
     For I = 0 To lngFinTabDurees
@@ -284,6 +302,12 @@ Private Sub prjEvent_ItemRemoved(ByVal VBProject As VBIDE.VBProject)
     Next I
 End Sub
 
+'Ajouté par René Rhéaume le 18 mai 2002
+' Synchronise l'explorateur lorsque le projet est renommé
+Private Sub prjEvent_ItemRenamed(ByVal VBProject As VBIDE.VBProject, ByVal OldName As String)
+    objUD.Init conVrai
+End Sub
+
 Private Sub refEvent_ItemAdded(ByVal Reference As VBIDE.Reference)
     objUD.AjouteReference VBInstance.ActiveVBProject, Reference
 End Sub
@@ -291,5 +315,5 @@ End Sub
 'Sub AddToINI()
 '  ' Ce code ajoute une entrée au fichier VbAddin.ini.
 '  ' Ceci doit être exécuté depuis la fenêtre Exécution.
-'  Debug.Print WritePrivateProfileString("Add-Ins32", "c2iexplorer.Connectc2iExplorer", "0", "vbaddin.ini")
+'  Debug.Print WritePrivateProfileString("Add-Ins32", "c2iexplorer.Connectc2iExplorer", conAZero, "vbaddin.ini")
 'End Sub
