@@ -453,6 +453,7 @@ Public Sub ChargerChainesGlobales()
     StrArray mlgarUniteTemps, "h", "m", "s"
     StrArray mlgarFichExistePas, "Le fichier «", "» n'existe pas."
     'Ces tableaux ne se font pas traduire
+    'Ce tableau doit être trié
     StrArray conarClefTypeModule, _
             "ActiveXDesigner", "ClassModule", "DocObject", "MSForm", "PropPage", _
             "RelatedDocument", "ResFile", "StdModule", "UserControl", "VBChildForm", _

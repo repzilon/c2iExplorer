@@ -32,7 +32,7 @@
 !ifndef VersionVB
 !define VersionVB 5
 !endif
-!define Revision 145+
+!define Revision 146
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
 

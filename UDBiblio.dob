@@ -446,6 +446,7 @@ Public Sub AddElement(ByVal objElement As cElement)
     Next
     'Optimisation par René Rhéaume 2 septembre 2001
     'Optimisation par René Rhéaume 5 juillet 2002
+    'Modification par René Rhéaume 1er août 2002
     Select Case objElement.Titre
         Case "[Web Site]"
             strClefImg = conWeb
@@ -454,7 +455,7 @@ Public Sub AddElement(ByVal objElement As cElement)
         Case Else
             strClefImg = conElement
     End Select
-    tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, conElement
+    tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, strClefImg
     
     Set mNodeParent = Nothing
     Set mNodeNewRep = Nothing

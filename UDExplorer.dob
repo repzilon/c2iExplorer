@@ -707,7 +707,7 @@ Private Sub AnalyseNode(ByVal Node As Node)
 
             txtDescription = objMember.Description
     End Select
-
+    
 GestErr:
     Select Case Err.Number
         Case ccElemNotFound, ccNonUniqueKey, conErrVarObjIndefinie
@@ -1126,6 +1126,9 @@ End Sub
 ' Modification par René Rhéaume le 23 février 2002
 '   Le «visualiseur de classes» s'affiche sur un Ctrl+Clic,
 '   comme il devait l'être à l'origine.
+' Modification par René Rhéaume le 1er août 2002
+'   Correction du bogue «la liste des méthodes, variables, constantes, etc.
+'   se rétractait après avoir cliqué sur le + pour la dérouler».
 Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 #If (JGuelluyRightMenu = 1) Then
     #If (VersionVB = 6) Then
@@ -1141,48 +1144,55 @@ Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Si
 
     Dim objPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim strTag As String
+    Dim nodActif As Node
     
 #If (JGuelluyRightMenu = 1) Then
     Dim strComponentName As String
     Dim lngTypeComponent As VBIDE.vbext_ComponentType
     Dim strClefNoeud As String
 #End If
+
+    On Error Resume Next
+    Set nodActif = tv.HitTest(X, Y)
     
-    AnalyseNode SelectedNode
-    strTag = SelectedNode.Tag
-    Select Case Button
-        Case vbLeftButton
-            Select Case conFaux
-                Case Shift = vbCtrlMask, strTag = conTagComponent
-                Case Else
-                    Analyse_Component SelectedNode, objPrj, objCmp
-                    On Error Resume Next
-                    objWindowClassViewer.Visible = conVrai
-                    objUDClassViewer.Init objCmp
-            End Select
+    If (Not nodActif Is Nothing) Then
+        On Error GoTo Fin
+        AnalyseNode nodActif
+        strTag = nodActif.Tag
+        Select Case Button
+            Case vbLeftButton
+                Select Case conFaux
+                    Case Shift = vbCtrlMask, strTag = conTagComponent
+                    Case Else
+                        Analyse_Component nodActif, objPrj, objCmp
+                        On Error Resume Next
+                        objWindowClassViewer.Visible = conVrai
+                        objUDClassViewer.Init objCmp
+                End Select
 #If (JGuelluyRightMenu = 1) Then
-        Case vbRightButton
-            On Error GoTo Fin
-            Select Case strTag
-                Case conTagComponent
-                    strClefNoeud = SelectedNode.Key
-                    strComponentName = Mid$(strClefNoeud, InStr(1, strClefNoeud, conBS, _
-                                        vbBinaryCompare) + 1)
-                    Set objCmp = VBInstance.ActiveVBProject.VBComponents(strComponentName)
-                    lngTypeComponent = objCmp.Type
-                    Select Case lngTypeComponent
-                        Case vbext_ct_VBForm, vbext_ct_UserControl, vbext_ct_DocObject, _
-                            vbext_ct_VBMDIForm
-                            AfficherMenuComposant objCmp, conIdxMnuForm
-                        Case vbext_ct_StdModule, vbext_ct_ClassModule
-                            AfficherMenuComposant objCmp, conIdxMnuModule
-                    End Select
-                'Case conTagMethode
-                Case conTagProjet
-                    VBInstance.CommandBars(conIdxMnuProj).ShowPopup
-            End Select
+            Case vbRightButton
+'                On Error GoTo Fin
+                Select Case strTag
+                    Case conTagComponent
+                        strClefNoeud = nodActif.Key
+                        strComponentName = Mid$(strClefNoeud, InStr(1, strClefNoeud, conBS, _
+                                            vbBinaryCompare) + 1)
+                        Set objCmp = VBInstance.ActiveVBProject.VBComponents(strComponentName)
+                        lngTypeComponent = objCmp.Type
+                        Select Case lngTypeComponent
+                            Case vbext_ct_VBForm, vbext_ct_UserControl, vbext_ct_DocObject, _
+                                vbext_ct_VBMDIForm
+                                AfficherMenuComposant objCmp, conIdxMnuForm
+                            Case vbext_ct_StdModule, vbext_ct_ClassModule
+                                AfficherMenuComposant objCmp, conIdxMnuModule
+                        End Select
+                    'Case conTagMethode
+                    Case conTagProjet
+                        VBInstance.CommandBars(conIdxMnuProj).ShowPopup
+                End Select
 #End If
-    End Select
+        End Select
+    End If
 
 Fin:
     Select Case Err.Number
@@ -1192,14 +1202,44 @@ Fin:
     End Select
     Set objCmp = Nothing
     Set objPrj = Nothing
+    Set nodActif = Nothing
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 16 juillet 2002
 ' Affiche le menu contextuel de VB du composant
 ' Problème : je ne suis pas capable de fermer le composant
+'Procédure modifiée par René Rhéaume le 5 août 2002
+' J'ai finalement trouvé le moyen de fermer la fenêtre de code.
+' Il peut y avoir des petits accrocs parfois.
 Private Sub AfficherMenuComposant(ByVal vbcComposant As VBIDE.VBComponent, ByVal lngIndiceMenu As Long)
-    vbcComposant.Activate
+    Dim blnDejaVisible As Boolean
+    Dim strTitreFenetre As String
+    Dim blnTrouve As Boolean
+    Dim I As Long, lngNbFenetres As Long
+
+    ' Est-ce que la fenêtre de code était déjà visible ?
+    strTitreFenetre = vbcComposant.Name & " (Code)"
+    I = 1
+    With VBInstance.Windows
+        lngNbFenetres = .Count
+
+        Do Until ((blnTrouve) Or (I > lngNbFenetres))
+            If (InStr(.Item(I).Caption, strTitreFenetre) > 0) Then
+                blnTrouve = conVrai
+            Else
+                I = I + 1
+            End If
+        Loop
+        If (blnTrouve) Then
+            blnDejaVisible = .Item(I).Visible
+        End If
+    End With
+
+    OuvrirFenetreCode vbcComposant.Collection.Parent, vbcComposant
     VBInstance.CommandBars(lngIndiceMenu).ShowPopup
+    If (Not blnDejaVisible) Then
+        vbcComposant.CodeModule.CodePane.Window.Close
+    End If
 End Sub
 
 Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
@@ -1669,10 +1709,10 @@ GestErr:
     Dim blnTrouve As Boolean
     'blnTrouve = conFaux 'auto-initialisation de VB
     'lngIdxInf = 0 'auto-initialisation de VB
-    lngIdxSup = UBound(conarClefTypeModule)
+    lngIdxSup = UBound(conarClefTypeModule) + 1
     lngIdxMed = ((lngIdxInf + lngIdxSup) \ 2)
     
-    Do Until ((blnTrouve) Or ((lngIdxSup - lngIdxInf) = 1))
+    Do Until ((blnTrouve) Or ((lngIdxSup - lngIdxInf) < 1))
         Select Case (sImageKey)
             Case conarClefTypeModule(lngIdxMed)
                 blnTrouve = conVrai
