@@ -47,7 +47,7 @@ Begin VB.UserDocument UDMsgBox
       Align           =   1  'Align Top
       Height          =   375
       Left            =   0
-      TabIndex        =   39
+      TabIndex        =   36
       Top             =   0
       Width           =   7470
       _ExtentX        =   13176
@@ -63,12 +63,14 @@ Begin VB.UserDocument UDMsgBox
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
          NumButtons      =   3
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "voir"
             ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "copie"
             ImageIndex      =   2
          EndProperty
       EndProperty
@@ -93,7 +95,7 @@ Begin VB.UserDocument UDMsgBox
          _ExtentX        =   5106
          _ExtentY        =   423
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Icônes"
          Ouvert          =   0   'False
          Hauteur         =   2295
          ImgOuvert0      =   "UDMsgBox.dox":034A
@@ -127,7 +129,7 @@ Begin VB.UserDocument UDMsgBox
             Picture         =   "UDMsgBox.dox":03F2
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   44
+            TabIndex        =   41
             Top             =   1800
             Width           =   240
          End
@@ -142,7 +144,7 @@ Begin VB.UserDocument UDMsgBox
             Picture         =   "UDMsgBox.dox":066A
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   43
+            TabIndex        =   40
             Top             =   1440
             Width           =   240
          End
@@ -157,7 +159,7 @@ Begin VB.UserDocument UDMsgBox
             Picture         =   "UDMsgBox.dox":08C7
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   42
+            TabIndex        =   39
             Top             =   1080
             Width           =   240
          End
@@ -172,7 +174,7 @@ Begin VB.UserDocument UDMsgBox
             Picture         =   "UDMsgBox.dox":0B3A
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   41
+            TabIndex        =   38
             Top             =   720
             Width           =   240
          End
@@ -186,7 +188,7 @@ Begin VB.UserDocument UDMsgBox
             Picture         =   "UDMsgBox.dox":0DCD
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   40
+            TabIndex        =   37
             Top             =   360
             Width           =   270
          End
@@ -274,7 +276,7 @@ Begin VB.UserDocument UDMsgBox
          _ExtentX        =   5106
          _ExtentY        =   423
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Boutons"
          Ouvert          =   0   'False
          Hauteur         =   2415
          ImgOuvert0      =   "UDMsgBox.dox":0E66
@@ -401,7 +403,7 @@ Begin VB.UserDocument UDMsgBox
          _ExtentX        =   5106
          _ExtentY        =   423
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Bouton par défaut"
          Ouvert          =   0   'False
          Hauteur         =   1815
          ImgOuvert0      =   "UDMsgBox.dox":0F0E
@@ -496,7 +498,7 @@ Begin VB.UserDocument UDMsgBox
          _ExtentX        =   5106
          _ExtentY        =   423
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Modalité"
          Ouvert          =   0   'False
          Hauteur         =   1095
          ImgOuvert0      =   "UDMsgBox.dox":0FB6
@@ -565,7 +567,7 @@ Begin VB.UserDocument UDMsgBox
          _ExtentX        =   5106
          _ExtentY        =   423
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Aide"
          Ouvert          =   0   'False
          Hauteur         =   1455
          ImgOuvert0      =   "UDMsgBox.dox":105E
@@ -650,7 +652,7 @@ Begin VB.UserDocument UDMsgBox
          _ExtentX        =   5106
          _ExtentY        =   423
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Divers"
          Ouvert          =   0   'False
          Hauteur         =   1455
          ImgOuvert0      =   "UDMsgBox.dox":1106
@@ -673,42 +675,39 @@ Begin VB.UserDocument UDMsgBox
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Begin VB.CheckBox chkTextAlign 
-            Caption         =   "Texte aligné à droite"
+         Begin VB.CheckBox chkHelpButton 
             Height          =   255
             Left            =   360
-            TabIndex        =   33
-            Top             =   1080
+            TabIndex        =   44
+            Top             =   360
             Width           =   1935
          End
          Begin VB.CheckBox chk1Plan 
-            Caption         =   "Fenêtre de 1er plan"
             Height          =   255
             Left            =   360
-            TabIndex        =   32
+            TabIndex        =   43
             Top             =   720
             Width           =   1935
          End
-         Begin VB.CheckBox chkHelpButton 
-            Caption         =   "Bouton d'aide"
+         Begin VB.CheckBox chkTextAlign 
             Height          =   255
             Left            =   360
-            TabIndex        =   31
-            Top             =   360
-            Width           =   1575
+            TabIndex        =   42
+            Top             =   1080
+            Width           =   1935
          End
       End
       Begin c2iExplorer.c2iContainerInt c2iContainerIntMsg 
          Height          =   3015
          Index           =   6
          Left            =   0
-         TabIndex        =   34
+         TabIndex        =   31
          Top             =   1440
          Width           =   2895
          _ExtentX        =   5106
          _ExtentY        =   5318
          Alignement      =   2
-         Caption         =   ""
+         Caption         =   "Message - Titre"
          Hauteur         =   3015
          ImgOuvert0      =   "UDMsgBox.dox":11AE
          ImgOuvert1      =   "UDMsgBox.dox":11CA
@@ -735,33 +734,34 @@ Begin VB.UserDocument UDMsgBox
             Left            =   240
             MultiLine       =   -1  'True
             ScrollBars      =   3  'Both
-            TabIndex        =   35
+            TabIndex        =   32
             Top             =   1200
             Width           =   2535
          End
          Begin VB.TextBox txtTitle 
             Height          =   285
             Left            =   240
-            TabIndex        =   36
+            TabIndex        =   33
             Top             =   600
             Width           =   2535
          End
          Begin VB.Label lblInvite 
             BackStyle       =   0  'Transparent
+            Caption         =   "Titre"
             Height          =   255
             Index           =   0
             Left            =   240
-            TabIndex        =   38
+            TabIndex        =   35
             Top             =   360
             Width           =   1215
          End
          Begin VB.Label lblInvite 
             BackStyle       =   0  'Transparent
-            Caption         =   "Message "
+            Caption         =   "Message"
             Height          =   255
             Index           =   1
             Left            =   240
-            TabIndex        =   37
+            TabIndex        =   34
             Top             =   960
             Width           =   1215
          End
@@ -840,6 +840,7 @@ Private Const conVbYesNoCancel As String = "vbYesNoCancel"
 Private Const conVbYesNo As String = "vbYesNo"
 Private Const conVbRetryCancel As String = "vbRetryCancel"
 Private Const conV As String = ", "
+Private Const conNomUD As String = "UDMsgBox"
 
 Private lngIdxButtons As Long
 Private lngIdxDefaultButton As Long
@@ -868,7 +869,6 @@ Private Sub c2iContainerIntMsg_OuvertureChange(Index As Integer)
         c2iContainerIntMsg(iNum).Top = c2iContainerIntMsg(iNum - 1).Top + c2iContainerIntMsg(iNum - 1).Height
         c2iContainerIntMsg(iNum).Left = sngGaucheCont
     Next
-
 End Sub
 
 Private Sub c2iContainerIntMsg_TitleDblClick(Index As Integer)
@@ -906,19 +906,20 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                     .CodeModule.InsertLines lngStartLine, txtCode
                 End With
             Else
-                MsgBox conMsgAucuneFenetreCodeActive, vbInformation
+                MsgBox mlgMsgAucuneFenetreCodeActive, vbInformation
 '                Exit Sub
             End If
     End Select
 End Sub
 
+'Modifié par René Rhéaume le 19 juin 2002
 Private Sub UserDocument_Initialize()
     Dim iNum As Long
     Dim lngCompte As Long
     Dim oleFermee As IPictureDisp, oleOuvert As IPictureDisp
     lngCompte = c2iContainerIntMsg.UBound
     Set oleFermee = imgFermee.Picture
-    Set oleOuvert = ImgOuvert.Picture
+    Set oleOuvert = imgOuvert.Picture
     For iNum = 0 To lngCompte
         With c2iContainerIntMsg(iNum)
             Set .PictureFerméeDown = oleFermee
@@ -929,30 +930,9 @@ Private Sub UserDocument_Initialize()
     Next iNum
     Set oleFermee = Nothing
     Set oleOuvert = Nothing
-
-    Select Case lngLanguage
-        Case c2i_Langue_Anglais
-            c2iContainerIntMsg(0).Caption = "Icons"
-            c2iContainerIntMsg(1).Caption = "Buttons"
-            c2iContainerIntMsg(2).Caption = "Default button"
-            c2iContainerIntMsg(3).Caption = "Modal"
-            c2iContainerIntMsg(4).Caption = "Help"
-            c2iContainerIntMsg(5).Caption = "Miscellaneous"
-            c2iContainerIntMsg(6).Caption = "Message - Title"
-            lblInvite(0).Caption = "Title"
-            txtMessage.Text = "Your message"
-        Case Else
-            c2iContainerIntMsg(0).Caption = "Icônes"
-            c2iContainerIntMsg(1).Caption = "Boutons"
-            c2iContainerIntMsg(2).Caption = "Bouton par défaut"
-            c2iContainerIntMsg(3).Caption = "Modalité"
-            c2iContainerIntMsg(4).Caption = "Aide"
-            c2iContainerIntMsg(5).Caption = "Divers"
-            c2iContainerIntMsg(6).Caption = "Message - Titre"
-            lblInvite(0).Caption = "Titre"
-            txtMessage.Text = "Votre message"
-    End Select
-
+            
+    ChargerChainesLocales
+    
     picIcones_Click 0
     lblButtons_Click 0
     lblDefaultButton_Click 0
@@ -977,72 +957,43 @@ Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String
 End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
+'Optimisé par René Rhéaume le 19 juin 2002
 Private Function RetourneIcones() As String
-    '    Dim iNum As Long
-    '
-    '    For iNum = 0 To 4 'lblIconesInfos.UBound
-    '        If (lblIconesInfos(iNum).FontBold) Then
-    '            Exit For
-    '        End If
-    '    Next iNum
-    Select Case lngIdxIcones
-        Case 0                                             'aucune
-            RetourneIcones = vbNullString
-        Case 1                                             'critique
-            RetourneIcones = "vbCritical"
-        Case 2                                             'question
-            RetourneIcones = "vbQuestion"
-        Case 3
-            RetourneIcones = "vbExclamation"
-        Case 4
-            RetourneIcones = "vbInformation"
-    End Select
+    Static strarIcones() As String
+    Static blnTabCree As Boolean
+    If (Not blnTabCree) Then
+        StrArray strarIcones, _
+            vbNullString, "vbCritical", "vbQuestion", "vbExclamation", "vbInformation"
+        blnTabCree = conVrai
+    End If
+    RetourneIcones = strarIcones(lngIdxIcones)
 End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
+'Optimisé par René Rhéaume le 19 juin 2002
 Private Function RetourneBoutons() As String
-    '    Dim iNum As Long
-    '
-    '    For iNum = 0 To 5 'lblButtons.UBound
-    '        If lblButtons(iNum).FontBold Then
-    '            Exit For
-    '        End If
-    '    Next iNum
-    Select Case lngIdxButtons
-        Case 0
-            RetourneBoutons = vbNullString
-        Case 1
-            RetourneBoutons = conVbOKCancel
-        Case 2
-            RetourneBoutons = conVbAbortRetryIgnore
-        Case 3
-            RetourneBoutons = conVbYesNoCancel
-        Case 4
-            RetourneBoutons = conVbYesNo
-        Case 5
-            RetourneBoutons = conVbRetryCancel
-    End Select
+    Static strarBoutons() As String
+    Static blnTabCree As Boolean
+    If (Not blnTabCree) Then
+        StrArray strarBoutons, _
+            vbNullString, conVbOKCancel, conVbAbortRetryIgnore, _
+            conVbYesNoCancel, conVbYesNo, conVbRetryCancel
+        blnTabCree = conVrai
+    End If
+    RetourneBoutons = strarBoutons(lngIdxButtons)
 End Function
 
-' Optimisé par René Rhéaume 2 septembre 2001
+'Optimisé par René Rhéaume 2 septembre 2001
+'Optimisé par René Rhéaume le 19 juin 2002
 Private Function RetourneDefaultBoutons() As String
-    '    Dim iNum As Long
-    '
-    '    For iNum = 0 To 3 'lblDefaultButton.UBound
-    '        If lblDefaultButton(iNum).FontBold Then
-    '            Exit For
-    '        End If
-    '    Next iNum
-    Select Case lngIdxDefaultButton
-        Case 0
-            RetourneDefaultBoutons = vbNullString
-        Case 1
-            RetourneDefaultBoutons = "vbDefaultButton2"
-        Case 2
-            RetourneDefaultBoutons = "vbDefaultButton3"
-        Case 3
-            RetourneDefaultBoutons = "vbDefaultButton4"
-    End Select
+    Static strarDefaultBoutons() As String
+    Static blnTabCree As Boolean
+    If (Not blnTabCree) Then
+        StrArray strarDefaultBoutons, _
+            vbNullString, "vbDefaultButton2", "vbDefaultButton3", "vbDefaultButton4"
+        blnTabCree = conVrai
+    End If
+    RetourneDefaultBoutons = strarDefaultBoutons(lngIdxDefaultButton)
 End Function
 
 Private Sub chk1Plan_Click()
@@ -1057,14 +1008,27 @@ Private Sub chkTextAlign_Click()
     MiseAJourCode
 End Sub
 
+'Procédure modifiée par René Rhéaume le 21 juin 2002
+' Support multilingue
 Private Sub cmdParcoursFile_Click()
+    Dim strFiltreAide As String
+    Dim strFiltreTout As String
+    Static strFiltre As String
+    If (strFiltre = vbNullString) Then
+        strFiltreAide = LireChaineLocalisee(conNomUD, _
+            "Code.cmdParcoursFile_Click.strFiltreAide", "Fichiers d'aide")
+        strFiltreTout = LireChaineLocalisee(conNomUD, _
+            "Code.cmdParcoursFile_Click.strFiltreTout", "Tous les fichiers")
+        strFiltre = strFiltreAide & " (*.chm;*.hlp)|*.chm;*.hlp|" & strFiltreTout & " (*.*)|*.*"
+    End If
+
     On Error GoTo Fin
     Dim cCommonDialog As cDlgCom
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = ".hlp"
         .Flags = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
-        .Filter = "Fichiers d'aide (*.chm;*.hlp)|*.chm;*.hlp|Tous les fichiers (*.*)|*.*"
+        .Filter = strFiltre
         .FilterIndex = 1
         .Filename = txtHelpFile.Text
         .ShowOpen
@@ -1075,12 +1039,20 @@ Fin:
     Set cCommonDialog = Nothing
 End Sub
 
-' Procédure modifiée par René Rhéaume le 23 avril 2002
+'Procédure modifiée par René Rhéaume le 23 avril 2002
 ' Élimination de variables inutiles
-' Procédure modifiée par René Rhéaume le 27 avril 2002
+'Procédure modifiée par René Rhéaume le 27 avril 2002
 ' Élimination de lngRetourneBoutons, lngRetourneDefaultBoutons
 ' et de lngRetourneIcones
+'Procédure modifiée par René Rhéaume le 21 juin 2002
+' Support multilingue
 Private Sub ShowMsgBox()
+    Static mlgMsgErrCode As String
+    If (mlgMsgErrCode = vbNullString) Then
+        mlgMsgErrCode = LireChaineLocalisee(conNomUD, _
+            "Code.ShowMsgBox.mlgMsgErrCode", "Erreur dans le code")
+    End If
+
     Dim sTitre As String, sMessage As String
     'le titre et le message
     sTitre = txtTitle.Text
@@ -1125,7 +1097,7 @@ Private Sub ShowMsgBox()
 
     Exit Sub
 Fin:
-    MsgBox "Erreur dans le code", vbExclamation
+    MsgBox mlgMsgErrCode, vbExclamation
 End Sub
 
 Private Sub lblButtons_Click(Index As Integer)
@@ -1318,4 +1290,56 @@ End Sub
 ' Procédure ajoutée par René Rhéaume le 28 avril 2002
 Private Sub ConcatenerCas(ByRef strCode As String, ByVal strCasAjout As String)
     strCode = strCode & ((vbTab & "Case ") & (strCasAjout & vbCrLf))
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 19 juin 2002
+' Support multilingue
+Private Sub ChargerChainesLocales()
+    Const conClefL10nProc As String = "Code.ChargerChainesLocales."
+    Const conCaption As String = ").Caption"
+    Dim I As Long
+    Dim strarRangs() As String
+    Dim strBouton As String
+    Dim strIdTexte As String
+    Dim strarModality() As String
+    Dim strModal As String
+    
+    StrArray strarRangs, "er", "e", "e", "e"
+    StrArray strarModality, "Application", "Système"
+    
+    strBouton = LireChaineLocalisee(conNomUD, conClefL10nProc & "strBouton", "bouton")
+    strModal = LireChaineLocalisee(conNomUD, conClefL10nProc & "strModal", "Modal")
+    chkHelpButton.Caption = LireChaineLocalisee(conNomUD, _
+            "Obj.chkHelpButton.Caption", "Bouton d'aide")
+    chk1Plan.Caption = LireChaineLocalisee(conNomUD, _
+            "Obj.chk1Plan.Caption", "Fenêtre de 1er plan")
+    chkTextAlign.Caption = LireChaineLocalisee(conNomUD, _
+            "Obj.chkTextAlign.Caption", "Texte aligné à droite")
+    txtMessage.Text = LireChaineLocalisee(conNomUD, "Obj.txtMessage.Text", "Votre message")
+    
+    If (blnMultilingueActive) Then
+        For I = 0 To 6
+            c2iContainerIntMsg(I).Caption = LireChaineLocalisee(conNomUD, _
+                    "Obj.c2iContainerIntMsg(" & I & conCaption, c2iContainerIntMsg(I).Caption)
+        Next I
+        For I = 0 To 4
+            lblIconesInfos(I).Caption = LireChaineLocalisee(conNomUD, _
+                    "Obj.lblIconesInfos(" & I & conCaption, lblIconesInfos(I).Caption)
+        Next I
+        For I = 0 To 4
+            lblInvite(I).Caption = LireChaineLocalisee(conNomUD, _
+                    "Obj.lblInvite(" & I & conCaption, lblInvite(I).Caption)
+        Next I
+        For I = 0 To 3
+            strIdTexte = CStr(I + 1)
+            strarRangs(I) = LireChaineLocalisee(conNomUD, _
+                    conClefL10nProc & "strarRangs(" & strIdTexte & ")", strarRangs(I))
+            lblDefaultButton(I).Caption = strIdTexte & strarRangs(I) & " " & strBouton
+        Next I
+        For I = 0 To 1
+            strarModality(I) = LireChaineLocalisee(conNomUD, _
+                    conClefL10nProc & "strarModality(" & I & ")", strarRangs(I))
+            lblModal(I).Caption = strModal & " / " & strarModality(I)
+        Next I
+    End If
 End Sub

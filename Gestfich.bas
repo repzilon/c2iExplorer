@@ -149,3 +149,31 @@ Public Function LireSectionFichierINI(ByVal chnSection As String, _
     lngLongueurChaine = GetPrivateProfileSection(chnSection, chnTemp, Len(chnTemp), chnFichierIni)
     LireSectionFichierINI = Left$(chnTemp, lngLongueurChaine)
 End Function
+
+'Fonction ajoutée par René Rhéaume le 18 juin 2002
+' Fait partie du système multilingue
+Public Function ValiderFichierLangue(ByVal strFichierLangue As String) As Boolean
+    Const conSecInfo As String = "@Info"
+    Dim strVersion As String
+    If (FichierExiste(strFichierLangue)) Then
+        If (IsSameString(LireChaineFichierINI(conSecInfo, "ProgramName", vbNullString, strFichierLangue), conNomApp)) Then
+            strVersion = App.Major & "." & App.Minor & "." & App.Revision
+            If (IsSameString(LireChaineFichierINI(conSecInfo, "ProgramVer", vbNullString, strFichierLangue), strVersion)) Then
+                ValiderFichierLangue = conVrai
+             End If
+        End If
+    End If
+End Function
+
+'Ajouté par René Rhéaume le le 18 juin 2002
+' Fait partie du système multilingue
+Public Function LireChaineLocalisee(ByVal strModule As String, _
+        ByVal strClef As String, ByVal strValeurDefaut As String) As String
+
+    Dim chnTemp As String, lngLongueurChaine As Long
+    chnTemp = String$(512, 0)
+    lngLongueurChaine = GetPrivateProfileString(strModule, strClef, strValeurDefaut, chnTemp, _
+                            Len(chnTemp), strFichLangueActuel)
+    LireChaineLocalisee = Left$(chnTemp, lngLongueurChaine)
+End Function
+

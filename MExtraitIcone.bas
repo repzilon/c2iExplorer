@@ -55,36 +55,24 @@ Public Const conDossierData As String = "\DATA"
 Public Const conSecGen As String = "General"
 Public Const conSecDurees As String = "Durees"
 Public Const conValData As String = "Data"
+Public Const conValSauveDur As String = "SaveDurations"
+Public Const conValDurSavNtrv As String = "DurationSaveInterval"
+Public Const conValLang As String = "Language"
 Public Const conNomApp As String = "c2iExplorer"
 Public Const conBS As String = "\"
 Public Const conElement As String = "element"
-Public Const conInconnu As String = "Inconnu"
-Public Const conVariable As String = "variable"
-Public Const conConstante As String = "constante"
-Public Const conEvenement As String = "evenement"
-Public Const conAPI As String = "api"
-Public Const conMethode As String = "methode"
-Public Const conPropriete As String = "propriete"
-Public Const conActiveXDesigner As String = "ActiveXDesigner"
-Public Const conClassModule As String = "ClassModule"
-Public Const conDocObject As String = "DocObject"
-Public Const conMSForm As String = "MSForm"
-Public Const conPropPage As String = "PropPage"
-Public Const conRelatedDocument As String = "RelatedDocument"
-Public Const conResFile As String = "ResFile"
-Public Const conStdModule As String = "StdModule"
-Public Const conUserControl As String = "UserControl"
-Public Const conVBChildForm As String = "VBChildForm"
-Public Const conVBForm As String = "VBForm"
-Public Const conVBMDIForm As String = "VBMDIForm"
 Public Const conGet As String = "Get"
 Public Const conLet As String = "Let"
 Public Const conSet As String = "Set"
-Public Const conLibelDescrpt As String = "Description"
 Public Const conGlmt As String = """"
-Public Const conMsgAucuneFenetreCodeActive As String = "Il n'y a pas de fenêtre de code active"
 Public Const conFanionsOuvrir As Long = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
 Public Const conAZero As String = "0"
+Public Const conOpen As String = "open"
+Public Const conPF As String = ")"
+Public Const conL10nWCap As String = "WProp.Caption"
+
+Public conarClefTypeModule() As String
+Public conarClefTypeMembre() As String
 
 'l'objet contenant notre UserControl
 Public objUD As UDExplorer                                 'objet contenant le document créé
@@ -117,6 +105,10 @@ Public c2iHTMLFile As String
 Public c2iINIFile As String                                'Ajout par René Rhéaume, 28 juillet 2001
 Public c2iDataFileNameOrigine As String
 Public c2iCurrentDataFileName As String
+Public strFichLangueActuel As String
+Public blnMultilingueActive As Boolean
+Public lngDureeSauve As Long
+Public bSauve As Boolean
 
 'variables d'affichage dans le listview et le treeview
 Public bAfficheConstante As Boolean
@@ -131,11 +123,17 @@ Public bAfficheFriend As Boolean
 
 Public Explorer As cExplorer
 
-Public lngLanguage As c2iLanguage
-Public Enum c2iLanguage
-    c2i_Langue_Français = 1
-    c2i_Langue_Anglais = 2
-End Enum
+' ************* Chaînes localisées *************
+Public mlgLibelDescrpt As String
+Public mlgLibelActu As String
+Public mlgLibelDelete As String
+Public mlgLibelPrint As String
+Public mlgMsgAucuneFenetreCodeActive As String
+Public mlgarTypeMembres() As String
+Public mlgTitreInconnu As String
+Public mlgarUniteTemps() As String
+Public mlgarFichExistePas() As String
+' *********** Fin Chaînes localisées ***********
 
 Public Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
 Public Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
@@ -159,44 +157,34 @@ Public Declare Function GetInputState Lib "user32" () As Long
 '
 'Private Const HWND_TOPMOST = -1
 'Private Const HWND_NOTOPMOST = -2
+Private Const conInconnu As String = "Inconnu"
+Private Const conModGlob As String = "MExtraitIcone"
+Private Const conDecl As String = "Code.Declarations."
 
+'Procédure modifiée par René Rhéaume le 19 juin 2002
 Public Function ExtraitIconeProjet(ByVal objVBPrj As VBIDE.VBProject) As String
-
-    Select Case objVBPrj.Type                              'image du projet
-        Case vbext_pt_ActiveXControl
-            ExtraitIconeProjet = "ActiveXControl"
-        Case vbext_pt_ActiveXDll
-            ExtraitIconeProjet = "ActiveXDll"
-        Case vbext_pt_ActiveXExe
-            ExtraitIconeProjet = "ActiveXExe"
-        Case vbext_pt_StandardExe
-            ExtraitIconeProjet = "VBproject"
-        Case Else
+    Dim strarIconesProjet() As String
+    Dim lngTypePrj As vbext_ProjectType
+    lngTypePrj = objVBPrj.Type
+    
+    Select Case (conFaux)
+        Case (lngTypePrj >= vbext_pt_StandardExe), (lngTypePrj <= vbext_pt_ActiveXControl)
             ExtraitIconeProjet = conInconnu
+        Case Else
+            StrArray strarIconesProjet, "VBproject", "ActiveXExe", "ActiveXDll", "ActiveXControl"
+            ExtraitIconeProjet = strarIconesProjet(lngTypePrj)
     End Select
-
 End Function
 
+'Fonction modifiée par René Rhéaume le 20 juin 2002
 Public Function ExtraitIconeMembre(ByVal objMember As VBIDE.Member, ByRef CouleurPortee As Long) As String
-    Select Case objMember.Type
-        Case vbext_mt_Const
-            ExtraitIconeMembre = conConstante
-        Case vbext_mt_Event
-            ExtraitIconeMembre = conEvenement
-        Case vbext_mt_Method
-            'extraction de la ligne de code
-            If objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1 Then
-                ExtraitIconeMembre = conMethode
-            Else
-                ExtraitIconeMembre = conAPI
-            End If
-        Case vbext_mt_Property
-            ExtraitIconeMembre = conPropriete
-        Case vbext_mt_Variable
-            ExtraitIconeMembre = conVariable
-        Case Else
-            ExtraitIconeMembre = conInconnu
-    End Select
+    Dim lngNoIcone As Long
+    lngNoIcone = ExtraireNoIconeMembre(objMember)
+    If (lngNoIcone = -1) Then
+        ExtraitIconeMembre = conInconnu
+    Else
+        ExtraitIconeMembre = conarClefTypeMembre(lngNoIcone)
+    End If
 
     'détermination de la couleur suivant le type de membre
     Select Case objMember.Scope
@@ -209,39 +197,48 @@ Public Function ExtraitIconeMembre(ByVal objMember As VBIDE.Member, ByRef Couleu
     End Select
 End Function
 
-Public Function ExtraitIconeComponent(ByVal VBCmp As VBIDE.VBComponent) As String
-
-    Select Case VBCmp.Type
-        Case vbext_ct_ActiveXDesigner
-            ExtraitIconeComponent = conActiveXDesigner
-        Case vbext_ct_ClassModule
-            ExtraitIconeComponent = conClassModule
-        Case vbext_ct_DocObject
-            ExtraitIconeComponent = conDocObject
-        Case vbext_ct_MSForm
-            ExtraitIconeComponent = conMSForm
-        Case vbext_ct_PropPage
-            ExtraitIconeComponent = conPropPage
-        Case vbext_ct_RelatedDocument
-            ExtraitIconeComponent = conRelatedDocument
-        Case vbext_ct_ResFile
-            ExtraitIconeComponent = conResFile
-        Case vbext_ct_StdModule
-            ExtraitIconeComponent = conStdModule
-        Case vbext_ct_UserControl
-            ExtraitIconeComponent = conUserControl
-        Case vbext_ct_VBForm
-            If (VBCmp.Properties("MDIChild")) Then
-                ExtraitIconeComponent = conVBChildForm
+'Fonction ajoutée par René Rhéaume le 20 juin 2002
+Public Function ExtraireNoIconeMembre(ByVal objMember As VBIDE.Member) As Long
+    Select Case objMember.Type
+        Case vbext_mt_Const
+            ExtraireNoIconeMembre = 1
+        Case vbext_mt_Event
+            ExtraireNoIconeMembre = 3
+        Case vbext_mt_Method
+            'extraction de la ligne de code
+            If objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1 Then
+                ExtraireNoIconeMembre = 2
             Else
-                ExtraitIconeComponent = conVBForm
+                ExtraireNoIconeMembre = 5
             End If
-        Case vbext_ct_VBMDIForm
-            ExtraitIconeComponent = conVBMDIForm
+        Case vbext_mt_Property
+            ExtraireNoIconeMembre = 4
+        Case vbext_mt_Variable
+            ExtraireNoIconeMembre = 0
         Case Else
-            ExtraitIconeComponent = conInconnu
+            ExtraireNoIconeMembre = -1
     End Select
+End Function
 
+'Procédure modifiée par René Rhéaume le le 19 juin 2002
+Public Function ExtraitIconeComponent(ByVal VBCmp As VBIDE.VBComponent) As String
+    Dim lngarTabCorrespondance() As Long
+    Dim lngTypeCmp As vbext_ComponentType
+    
+    IntArray lngarTabCorrespondance, 7, 1, 3, 6, 10, 11, 4, 8, 2, 5, 0
+    lngTypeCmp = VBCmp.Type
+    
+    Select Case (conFaux)
+        Case (lngTypeCmp >= 1), (lngTypeCmp <= 12)
+            ExtraitIconeComponent = conInconnu
+        Case Else
+            ExtraitIconeComponent = conarClefTypeModule(lngarTabCorrespondance(lngTypeCmp - 1))
+    End Select
+    If (lngTypeCmp = vbext_ct_VBForm) Then
+        If (VBCmp.Properties("MDIChild")) Then
+            ExtraitIconeComponent = conarClefTypeModule(9)
+        End If
+    End If
 End Function
 
 'Public Function PositionForm(ByVal frmA As Form, Optional bDevant As Boolean = conVrai) As Long
@@ -252,25 +249,27 @@ End Function
 '    End If
 'End Function
 
-' Procédure modifiée par René Rhéaume le 24 avril 2002
+'Procédure modifiée par René Rhéaume le 24 avril 2002
 ' Support des adresses de courrier électronique
 ' en remplacement de UDBiblio.MailInternet
+'Procédure optimisée par René Rhéaume le 19 juin 2002
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Public Sub ConnectionInternet(ByVal strAdresse As String, _
                                 Optional ByVal blnCourriel As Boolean = conFaux)
-    Const conOpen As String = "open"
+    Static mlgMsgPasConnInternet As String
+    If (mlgMsgPasConnInternet = vbNullString) Then
+        mlgMsgPasConnInternet = LireChaineLocalisee(conModGlob, conDecl & "mlgMsgPasConnInternet", _
+            "Impossible de lancer le navigateur Internet")
+    End If
+    
     Dim lngRep As Long
     If (blnCourriel) Then
-        lngRep = ShellExecute(0, conOpen, "mailto:" & strAdresse, vbNullString, vbNullString, SW_NORMAL)
-    Else
-        lngRep = ShellExecute(0, conOpen, strAdresse, vbNullString, vbNullString, SW_NORMAL)
+        strAdresse = "mailto:" & strAdresse
     End If
+    lngRep = ShellExecute(0, conOpen, strAdresse, vbNullString, vbNullString, SW_NORMAL)
     If (lngRep = 0) Then
-        Select Case lngLanguage
-            Case c2i_Langue_Anglais
-                MsgBox "Impossible to connect to Internet", vbInformation
-            Case Else
-                MsgBox "Impossible d'établir la connection Internet", vbInformation
-        End Select
+        MsgBox mlgMsgPasConnInternet, vbInformation
     End If
 End Sub
 
@@ -396,3 +395,79 @@ End Function
 '    Next
 '    Set lsiExtract = Nothing
 'End Sub
+
+'Fonction ajoutée par René Rhéaume le 18 juin 2002
+' Tiré de VBSpeed http://www.xbeat.net/vbspeed
+Public Function IsSameString(String1 As String, String2 As String) As Boolean
+  If (LenB(String1) = LenB(String2)) Then
+    IsSameString = (InStrB(1, String1, String2, vbBinaryCompare) <> 0)
+  End If
+End Function
+
+'Procédure ajoutée par René Rhéaume le 18 juin 2002
+' Environ 12% plus rapide qu'Array
+Public Sub StrArray(ByRef strarDest() As String, ParamArray vntarChaines() As Variant)
+    Dim lngIdxFin As Long, I As Long
+    lngIdxFin = UBound(vntarChaines)
+    ReDim strarDest(0 To lngIdxFin) As String
+    For I = 0 To lngIdxFin
+        strarDest(I) = vntarChaines(I)
+    Next I
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 18 juin 2002
+' Environ 28% plus rapide qu'Array
+Private Sub IntArray(ByRef lngarDest() As Long, ParamArray vntarNombres() As Variant)
+    Dim lngIdxFin As Long, I As Long
+    lngIdxFin = UBound(vntarNombres)
+    ReDim lngarDest(0 To lngIdxFin) As Long
+    For I = 0 To lngIdxFin
+        lngarDest(I) = vntarNombres(I)
+    Next I
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 18 juin 2002
+Public Sub ChargerChainesGlobales()
+    Const conChemTypeMembres As String = conDecl & "mlgarTypeMembres("
+    Const conChemUniteTemps As String = conDecl & "mlgarUniteTemps("
+    Const conChemFichExistePas As String = conDecl & "mlgarFichExistePas("
+    Dim I As Long
+      
+    mlgLibelDescrpt = LireChaineLocalisee(conModGlob, conDecl & "mlgLibelDescrpt", "Description")
+    mlgLibelActu = LireChaineLocalisee(conModGlob, conDecl & "mlgLibelActu", "Actualiser")
+    mlgLibelDelete = LireChaineLocalisee(conModGlob, conDecl & "mlgLibelDelete", "Supprimer")
+    mlgLibelPrint = LireChaineLocalisee(conModGlob, conDecl & "mlgLibelPrint", "Imprimer")
+    mlgMsgAucuneFenetreCodeActive = LireChaineLocalisee(conModGlob, _
+            conDecl & mlgMsgAucuneFenetreCodeActive, "Il n'y a pas de fenêtre de code active.")
+    mlgTitreInconnu = LireChaineLocalisee(conModGlob, conDecl & "mlgTitreInconnu", "Inconnu")
+
+    
+    StrArray mlgarTypeMembres, _
+            "Objets", "Variables", "Constantes", "Méthodes", "Événements", _
+            "Propriétés", "API", "Public", "Private", "Friend"
+    StrArray mlgarUniteTemps, "h", "m", "s"
+    StrArray mlgarFichExistePas, "Le fichier «", "» n'existe pas."
+    'Ces tableaux ne se font pas traduire
+    StrArray conarClefTypeModule, _
+            "ActiveXDesigner", "ClassModule", "DocObject", "MSForm", "PropPage", _
+            "RelatedDocument", "ResFile", "StdModule", "UserControl", "VBChildForm", _
+            "VBForm", "VBMDIForm"
+    StrArray conarClefTypeMembre, _
+            "variable", "constante", "methode", "evenement", "propriete", "api", _
+            "public", "prive", "friend"
+    
+    If (blnMultilingueActive) Then
+        For I = 0 To 9
+            mlgarTypeMembres(I) = LireChaineLocalisee(conModGlob, conChemTypeMembres & I & conPF, _
+                    mlgarTypeMembres(I))
+        Next I
+        For I = 0 To 2
+            mlgarUniteTemps(I) = LireChaineLocalisee(conModGlob, conChemUniteTemps & I & conPF, _
+                    mlgarUniteTemps(I))
+        Next I
+        For I = 0 To 1
+            mlgarFichExistePas(I) = LireChaineLocalisee(conModGlob, conChemFichExistePas & I & conPF, _
+                    mlgarFichExistePas(I))
+        Next I
+    End If
+End Sub

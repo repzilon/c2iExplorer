@@ -22,11 +22,10 @@ Begin VB.Form frmErreurINI
    MinButton       =   0   'False
    ScaleHeight     =   2370
    ScaleWidth      =   8610
-   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton cmdAbandonner 
       Cancel          =   -1  'True
-      Caption         =   "Abandonner"
+      Caption         =   "&Abandonner"
       Height          =   375
       Left            =   5018
       TabIndex        =   3
@@ -34,7 +33,7 @@ Begin VB.Form frmErreurINI
       Width           =   1215
    End
    Begin VB.CommandButton cmdRegenerer 
-      Caption         =   "&Regénérer"
+      Caption         =   "&Recréer"
       Default         =   -1  'True
       Height          =   375
       Left            =   3698
@@ -106,10 +105,15 @@ End Sub
 
 Private Sub cmdChercher_Click()
     On Error GoTo Fin
+'    Const conTitreDialogue As String = "Sélectionner"
+'    Const conDebutFiltre As String = "Paramètres de c2iExplorer"
+
     Dim cCommonDialog As cDlgCom
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = ".ini"
+'        .DialogTitle = conTitreDialogue & " c2iExplorer.ini"
+'        .Filter = conDebutFiltre & " (c2iExplorer.ini)|c2iExplorer.ini"
         .DialogTitle = "Sélectionner c2iExplorer.ini"
         .Filter = "Paramètres de c2iExplorer (c2iExplorer.ini)|c2iExplorer.ini"
         .FilterIndex = 1
@@ -137,7 +141,7 @@ Private Sub cmdRegenerer_Click()
     Print #1, "Data="
     Print #1, "SaveDurations=1"
     Print #1, "DurationSaveInterval=2"
-    Print #1, "Language=1"
+    Print #1, "Language="
     Print #1, "DisplayOnConnect=0"
     Print #1, vbNullString
     Print #1, "[Types]"
@@ -164,18 +168,18 @@ Private Sub cmdRegenerer_Click()
 End Sub
 
 Private Sub Form_Load()
+    Const conMessage_0 As String = "c2iExplorer n'a pas trouvé le fichier «c2iExplorer.ini» dans le dossier «"
+    Const conMessage_1 As String = "»."
+    Const conMessage_2 As String = "- Si vous avez une copie de ce fichier sur votre système, cliquez sur «Chercher» afin de la localiser et de la copier au bon endroit."
+    Const conMessage_3 As String = "- Vous pouvez également regénérer le fichier INI par défaut en cliquant sur «Recréer»."
+    Const conMessage_4 As String = "- Finalement, cliquez sur «Abandonner» si vous ne souhaitez pas démarrer c2iExplorer. Une fois sorti de Visual Basic, vous pourrez réinstaller le complément."
     intRetourMessage = 0
     strCheminData = strCheminApp & conDossierData
-    lblMessage.Caption = "c2iExplorer n'a pas trouvé le fichier «c2iExplorer.ini» dans le dossier «" _
-                            & strCheminData & "»." & (vbCrLf & vbCrLf) & _
-                            "- Si vous avez une copie de ce fichier sur votre système, cliquez sur «Chercher» afin de la localiser et de la copier au bon endroit." & vbCrLf & _
-                            "- Vous pouvez également regénérer le fichier INI par défaut en cliquant sur «Regénérer»." & vbCrLf & _
-                            "- Finalement, cliquez sur «Abandonner» si vous ne souhaitez pas démarrer c2iExplorer. Une fois sorti de Visual Basic, vous pourrez réinstaller le complément."
-    
+    lblMessage.Caption = conMessage_0 & strCheminData & conMessage_1 & (vbCrLf & vbCrLf) & _
+                            conMessage_2 & vbCrLf & conMessage_3 & vbCrLf & conMessage_4
 End Sub
 
 Public Function ObtenirActionINIAbsent() As Integer
     Me.Show vbModal
     ObtenirActionINIAbsent = intRetourMessage
 End Function
-

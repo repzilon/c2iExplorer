@@ -73,7 +73,6 @@ Private sFolder As String                                  'le dossier du fichie
 '//*********************************
 'Déclarations pour boite open et save
 '//*********************************
-
 Private Declare Function GetOpenFileName Lib "comdlg32.dll" Alias "GetOpenFileNameA" (pOpenfilename As OPENFILENAME) As Long
 Private Declare Function GetSaveFileName Lib "comdlg32.dll" Alias "GetSaveFileNameA" (pOpenfilename As OPENFILENAME) As Long
 
@@ -148,14 +147,22 @@ End Enum
 Public Function ShowOpen() As Boolean
     ShowOpen = ShowOpenSave(conVrai)
 End Function
-Private Function ShowOpenSave(bOpen As Boolean) As Boolean
 
+'Fonction modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
+Private Function ShowOpenSave(bOpen As Boolean) As Boolean
+    Static mlgDebutDefaultFilter As String
+    If (mlgDebutDefaultFilter = vbNullString) Then
+        mlgDebutDefaultFilter = LireChaineLocalisee("cDlgCom", _
+            "Code.ShowOpenSave.mlgDebutDefaultFilter", "Tous")
+    End If
+    
     Dim tOpFile As OPENFILENAME, s As String
 
     With tOpFile
         .lStructSize = Len(tOpFile)
         If sFileTitle = vbNullString Then sFileTitle = vbNullChar
-        If sFilter = vbNullString Then sFilter = "Tous(*.*)|*.*"
+        If sFilter = vbNullString Then sFilter = mlgDebutDefaultFilter & " (*.*)|*.*"
         If lngFilterIndex = 0 Then lngFilterIndex = 1
         .hwndOwner = lnghdcOwner
         .lpstrInitialDir = sInitDir

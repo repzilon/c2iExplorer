@@ -86,7 +86,6 @@ Begin VB.UserDocument UDCompteur
          NumButtons      =   5
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "actu"
-            Object.ToolTipText     =   "Actualiser"
             ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -94,17 +93,14 @@ Begin VB.UserDocument UDCompteur
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "addprj"
-            Object.ToolTipText     =   "Ajouter les projets"
             ImageIndex      =   2
          EndProperty
          BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "prop"
-            Object.ToolTipText     =   "Modifier la durée"
             ImageIndex      =   3
          EndProperty
          BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "delete"
-            Object.ToolTipText     =   "Supprimer"
             ImageIndex      =   4
          EndProperty
       EndProperty
@@ -173,8 +169,11 @@ Attribute VB_Exposed = True
 Option Explicit
 Private Const conSecH As Long = 3600
 Private Const conSecMn As Long = 60
-Private lngDureeSauve As Long
-Private bSauve As Boolean
+Private Const conActu As String = "actu"
+Private Const conDelete As String = "delete"
+Private Const conAddprj As String = "addprj"
+Private Const conProp As String = "prop"
+Private Const conNomUD As String = "UDCompteur"
 
 ' Note par René Rhaume, 7 janvier 2002
 ' Il semble y avoir une ou des erreurs algorithmiques
@@ -202,18 +201,18 @@ End Sub
 
 Private Sub tb_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
-        Case "actu"
+        Case conActu
             ActuCompteur
-        Case "delete"
+        Case conDelete
             SupprimeCompteur
-        Case "addprj"
+        Case conAddprj
             AjouteProjet
-        Case "prop"
+        Case conProp
             ModifDuree
     End Select
 End Sub
 
-Private Function ModifDuree()
+Private Sub ModifDuree()
     Dim strNomProjet As String
     Dim lngTime As Long
     Dim lngH As Long, lngMn As Long, lngS As Long
@@ -237,17 +236,43 @@ Private Function ModifDuree()
         End With
         ActuCompteur
     End If
-End Function
+End Sub
 
-Private Function AjouteProjet()
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
+Private Sub AjouteProjet()
+    Const conL10nAjoutPrj As String = "Code.AjouteProjet."
+    Static mlgarMsgImpossibleAjouterPrj() As String
+    Static mlgarQuestionAjouterPrj() As String
+    Static blnLangOK As Boolean
+    Dim I As Long
+    If (Not blnLangOK) Then
+        StrArray mlgarMsgImpossibleAjouterPrj, _
+            "Impossible d'ajouter le projet", "Sauvegardez-le avant."
+        StrArray mlgarQuestionAjouterPrj, "Voulez-vous ajouter le projet ", "à vos compteurs ?"
+        If (blnMultilingueActive) Then
+            For I = 0 To 1
+                mlgarMsgImpossibleAjouterPrj(I) = LireChaineLocalisee(conNomUD, _
+                    conL10nAjoutPrj & "mlgarMsgImpossibleAjouterPrj(" & I & conPF, _
+                    mlgarMsgImpossibleAjouterPrj(I))
+                mlgarQuestionAjouterPrj(I) = LireChaineLocalisee(conNomUD, _
+                    conL10nAjoutPrj & "mlgarQuestionAjouterPrj(" & I & conPF, _
+                    mlgarQuestionAjouterPrj(I))
+            Next I
+        End If
+        blnLangOK = conVrai
+    End If
+
     Dim objVBPrj As VBProject
     Dim sc2iMsgBox As VbMsgBoxResult
 
     For Each objVBPrj In VBInstance.VBProjects
         If (objVBPrj.Filename = vbNullString) Then
-            MsgBox "Impossible d'ajouter ce projet :" & vbCrLf & objVBPrj.Name & vbCrLf & "Sauvegardez-le avant", vbInformation
+            MsgBox mlgarMsgImpossibleAjouterPrj(0) & vbCrLf & objVBPrj.Name & vbCrLf & _
+                    mlgarMsgImpossibleAjouterPrj(1), vbInformation
         Else
-            sc2iMsgBox = MsgBox("Voulez-vous ajouter ce projet :" & vbCrLf & objVBPrj.Name & vbCrLf & "à vos compteurs ?", vbQuestion + vbYesNo, conNomApp)
+            sc2iMsgBox = MsgBox(mlgarQuestionAjouterPrj(0) & vbCrLf & objVBPrj.Name & _
+                            vbCrLf & mlgarQuestionAjouterPrj(1), vbQuestion + vbYesNo)
             If (sc2iMsgBox = vbYes) Then
                 'Modification par René Rhéaume 2 août 2001
                 Call WritePrivateProfileString(conSecDurees, objVBPrj.Filename, conAZero, c2iINIFile)
@@ -256,9 +281,9 @@ Private Function AjouteProjet()
             End If
         End If
     Next
-End Function
+End Sub
 
-Private Function SupprimeCompteur()
+Private Sub SupprimeCompteur()
     On Error Resume Next
     If (Not lv.SelectedItem Is Nothing) Then
         'Modification par René Rhéaume 2 août 2001
@@ -266,7 +291,7 @@ Private Function SupprimeCompteur()
         '        DeleteSetting App.EXEName, conSecDurees, lv.SelectedItem.Key
         ActuCompteur
     End If
-End Function
+End Sub
 
 Private Sub Timer1_Timer()
     Static iNum As Long
@@ -289,9 +314,27 @@ Private Sub Timer1_Timer()
 Fin:
 End Sub
 
+'Procédure modifiée par René Rhéaume le 19 juin 2002
+' Support multilingue
 Private Sub UserDocument_Initialize()
+    Dim I As Long
     ActuCompteur
-    ChargeInfos
+    ChargerOptions
+    
+    tb.Buttons(conActu).ToolTipText = mlgLibelActu
+    tb.Buttons(conAddprj).ToolTipText = LireChaineLocalisee(conNomUD, _
+            "Obj.tb.Buttons(3-->'addprj').ToolTipText", "Ajouter les projets")
+    tb.Buttons(conProp).ToolTipText = LireChaineLocalisee(conNomUD, _
+            "Obj.tb.Buttons(4-->'prop').ToolTipText", "Modifier la durée")
+    tb.Buttons(conDelete).ToolTipText = mlgLibelDelete
+
+    If (blnMultilingueActive) Then
+        For I = 1 To 3
+            lv.ColumnHeaders(I).Text = LireChaineLocalisee(conNomUD, _
+                    "Obj.lv.ColumnHeaders(" & I & ").Text", lv.ColumnHeaders(I).Text)
+        Next I
+    End If
+    
     UserDocument_Resize
 '    ExtraireImageList imgTB, "UDCompteur.imgTB"
 End Sub
@@ -378,6 +421,7 @@ Fin:
 End Sub
 
 Private Function ConvertHeuresMinutesSecondes(ByVal lngTime As Long) As String
+    Const conEsp As String = " "
     Dim lngH As Long, lngMn As Long, lngS As Long
 
     lngH = lngTime \ conSecH
@@ -385,22 +429,23 @@ Private Function ConvertHeuresMinutesSecondes(ByVal lngTime As Long) As String
     lngMn = lngTime \ conSecMn
     lngS = lngTime - (lngMn * conSecMn)
 
-    ConvertHeuresMinutesSecondes = CStr(lngH) & " h " & CStr(lngMn) & " mn " + CStr(lngS) & " s"
+    ConvertHeuresMinutesSecondes = CStr(lngH) & conEsp & mlgarUniteTemps(0) & conEsp & _
+                                    CStr(lngMn) & conEsp & mlgarUniteTemps(1) & conEsp & _
+                                    CStr(lngS) & conEsp & mlgarUniteTemps(2)
 End Function
 
 Private Sub UserDocument_Show()
     ActuCompteur
 End Sub
 
-'Fonction modifiée par René Rhéaume 30 juillet 2001
-'Utilise un fichier INI et les fonctions API au lieu
-'d'un fichier texte et du FileSystemObject
-Private Sub ChargeInfos()
-    Const conSaveDurations As String = "SaveDurations"
-    Const conDurationSaveInterval As String = "DurationSaveInterval"
+'Procédure modifiée par René Rhéaume 30 juillet 2001
+' Utilise un fichier INI et les fonctions API au lieu
+' d'un fichier texte et du FileSystemObject
+'Procédure modifiée par René Rhéaume le 21 juin 2002
+Private Sub ChargerOptions()
     Dim lngSauvegarder As Long, lngIntervalle As Long
 
-    lngSauvegarder = GetPrivateProfileInt(conSecGen, conSaveDurations, 1, c2iINIFile)
+    lngSauvegarder = GetPrivateProfileInt(conSecGen, conValSauveDur, 1, c2iINIFile)
     Select Case lngSauvegarder
         Case 1
             bSauve = conVrai
@@ -408,16 +453,17 @@ Private Sub ChargeInfos()
             bSauve = conFaux
         Case Else
             bSauve = conVrai
-            WritePrivateProfileString conSecGen, conSaveDurations, "1", c2iINIFile
+            WritePrivateProfileString conSecGen, conValSauveDur, "1", c2iINIFile
     End Select
 
-    lngIntervalle = GetPrivateProfileInt(conSecGen, conDurationSaveInterval, 2, c2iINIFile)
-    If Err <> 0 Then
-        lngDureeSauve = 2
-        WritePrivateProfileString conSecGen, conDurationSaveInterval, "2", c2iINIFile
-    Else
-        lngDureeSauve = lngIntervalle
-    End If
+    lngIntervalle = GetPrivateProfileInt(conSecGen, conValDurSavNtrv, 2, c2iINIFile)
+    Select Case (conVrai)
+        Case Err <> 0, lngIntervalle < 0
+            lngDureeSauve = 2
+            WritePrivateProfileString conSecGen, conValDurSavNtrv, "2", c2iINIFile
+        Case Else
+            lngDureeSauve = lngIntervalle
+    End Select
 
     '    If Not bSauve Then
     '        Timer1.Enabled = conFaux
@@ -425,44 +471,61 @@ Private Sub ChargeInfos()
     Timer1.Enabled = bSauve
 End Sub
 
-' Ajouté par René Rhéaume 25 août 2001
+#If VersionVB = 6 Then
+'Ajouté par René Rhéaume 25 août 2001
 ' Importe les durées de la base de registres vers le fichier INI
 ' Utile pour les versions VB6 seulement
 ' Retourne 0 s'il n'y a pas d'erreur
-#If VersionVB = 6 Then
+'Fonction modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Public Function ImporterDurees() As Byte
-        Dim tbSettings As Variant, I As Long
-        Dim sFileName As String
-        Dim chnDuree As String                             ' Un peu bizarre, mais pas de conversions inutiles
-        Dim lngLigneCode As Long
-        Dim lngFinTab As String
-
-        On Error GoTo GestErr
-        lngLigneCode = 0
-        tbSettings = GetAllSettings(conNomApp, conSecDurees)
-        lngLigneCode = 1
-
-        If (IsEmpty(tbSettings) = conFaux) Then
-            lngLigneCode = 2
-            lngFinTab = UBound(tbSettings)
-            For I = 0 To lngFinTab
-                lngLigneCode = 3
-                sFileName = tbSettings(I, 0)
-                lngLigneCode = 4
-                chnDuree = tbSettings(I, 1)
-                lngLigneCode = 5
-                Call WritePrivateProfileString(conSecDurees, sFileName, chnDuree, c2iINIFile)
-                lngLigneCode = 6
-            Next I
+    Static mlgarErrImportation() As String
+    Static blnLangOK As Boolean
+    Dim J As Long
+    If (Not blnLangOK) Then
+        StrArray mlgarErrImportation, "Une erreur est survenue lors de l'importation des durées ", _
+            "de la base de registres vers le fichier INI.", "Lignes réussies : "
+        If (blnMultilingueActive) Then
+            For J = 0 To 2
+                mlgarErrImportation(J) = LireChaineLocalisee(conNomUD, _
+                    "Code.ImporterDurees.mlgarErrImportation(" & J & conPF, mlgarErrImportation(J))
+            Next J
         End If
-        ImporterDurees = 0
+        blnLangOK = conVrai
+    End If
+
+    Dim tbSettings As Variant, I As Long
+    Dim sFileName As String
+    Dim chnDuree As String                ' Un peu bizarre, mais pas de conversions inutiles
+    Dim lngLigneCode As Long
+    Dim lngFinTab As String
+
+    On Error GoTo GestErr
+    lngLigneCode = 0
+    tbSettings = GetAllSettings(conNomApp, conSecDurees)
+    lngLigneCode = 1
+
+    If (IsEmpty(tbSettings) = conFaux) Then
+        lngLigneCode = 2
+        lngFinTab = UBound(tbSettings)
+        For I = 0 To lngFinTab
+            lngLigneCode = 3
+            sFileName = tbSettings(I, 0)
+            lngLigneCode = 4
+            chnDuree = tbSettings(I, 1)
+            lngLigneCode = 5
+            Call WritePrivateProfileString(conSecDurees, sFileName, chnDuree, c2iINIFile)
+            lngLigneCode = 6
+        Next I
+    End If
+    ImporterDurees = 0
 
 Fin:
     Exit Function
 GestErr:
-    GererErrInattendue "Une erreur est survenue lors de l'importation des durées " & vbNewLine & _
-                        "de la base de registres vers le fichier INI." & vbNewLine & _
-                        "Lignes réussies : " & lngLigneCode, "UDCompteur.ImporterDurees"
+    GererErrInattendue mlgarErrImportation(0) & vbNewLine & _
+                        mlgarErrImportation(1) & vbNewLine & _
+                        mlgarErrImportation(2) & lngLigneCode, "UDCompteur.ImporterDurees"
     ImporterDurees = 1
 End Function
 #End If

@@ -32,19 +32,19 @@
 !ifndef VersionVB
 !define VersionVB 5
 !endif
-!define Revision 137
+!define Revision 142
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
 
 Name "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
 Caption "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
 CRCCheck On
-LicenseText "Lisez et approuvez la licence ci-dessous avant de continuer l'installation."
+LicenseText "Read this before continuing installation."
 LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
-ComponentText "Sélectionnez les composants de c2iExplorer que vous souhaitez installer."
-DirText "Indiquez dans quel dossier est installé Visual Basic ${VersionVB}.0 sur votre ordinateur."
-UninstallText "Ceci supprimera c2iExplorer de votre ordinateur. Cliquez sur «Désinstaller» pour désinstaller ou sur «Annuler» pour quitter."
-!packhdr "temp.dat" "E:\progra~1\console\bin\upx.exe -q --best --compress-icons=1 temp.dat"
+ComponentText "Sélect c2iExplorer components you want to install."
+DirText "Specify the folder where Visual Basic ${VersionVB}.0 is installed on your computer."
+UninstallText "This will delete c2iExplorer from tour computer. Click on 'Uninstall' to uninstall or on 'Cancel' to exit."
+;!packhdr "temp.dat" "E:\progra~1\console\bin\upx.exe -q --best --compress-icons=1 temp.dat"
 ;UninstallExeName uninst-c2iexplorer.exe
 OutFile "${CheminBase}\SourceForge\Fichiers\c2iexplorer-VB${VersionVB}-${Revision}.exe"
 Icon "${CheminBase}\Source\c2iExplorer.ico"
@@ -55,12 +55,13 @@ InstallDir "$PROGRAMFILES\Microsoft Visual Studio\VB98"
 !else
 InstallDir "$PROGRAMFILES\DevStudio\Vb"
 !endif
-InstType "Standard"
-InstType "Complète"
-InstType /NOCUSTOM
+InstallDirRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}" "UninstallString"
+InstType "Standard French"
+InstType "Standard English"
+InstType "Full"
 
-Section "c2iExplorer pour VB${VersionVB}"
-	SectionIn 12
+Section "c2iExplorer for VB${VersionVB}"
+	SectionIn 123
 	SetCompress Auto
 	; SetOverwrite ifnewer
 	; Placé en commentaire à cause d'un règlement de sourceforge.net
@@ -79,9 +80,13 @@ Section "c2iExplorer pour VB${VersionVB}"
 	SetOutPath "$INSTDIR\Wizards\Data"
 	File "${CheminBase}\Data\*.*"
 	SetOutPath "$INSTDIR\Wizards\Html"
-	File "${CheminBase}\Html\*.*"
+	File "${CheminBase}\Html\[]c2i*.*m*"
+	File "${CheminBase}\Html\[fr]c2i*.htm"
+	File "${CheminBase}\Html\prev.htm"
 	SetOutPath "$INSTDIR\Wizards\Html\Img"
 	File "${CheminBase}\Html\Img\*.*"
+	SetOutPath "$INSTDIR\Wizards\Lang"
+	File "${CheminBase}\Lang\*.lng"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElements"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cExplorer"
@@ -96,13 +101,35 @@ Section "c2iExplorer pour VB${VersionVB}"
 	RegDLL "$INSTDIR\Wizards\c2iexplorer.dll"
 SectionEnd
 
-Section "Code source VB 5/6"
-	SectionIn 2
-	SetCompress Auto
-	SetOverwrite On
+SectionDivider "English translation"
+
+Section "English user interface"
+	SectionIn 23
+	WriteINIStr "$INSTDIR\Wizards\DATA\c2iExplorer.ini" "General" "Language" "c2iExplorer-en.lng"
+SectionEnd
+
+Section "English report templates"
+	SectionIn 23
+	SetOutPath "$INSTDIR\Wizards\Html"
+	File "${CheminBase}\Html\[en]c2i*.htm"
+SectionEnd
+
+SectionDivider "Programmer stuff"
+
+Section "VB 5/6 source code"
+	SectionIn 3
 	SetOutPath "$INSTDIR\Wizards\c2iexplorer-source"
 	File "${CheminBase}\Source\*.*"
 	Exec "$WINDIR\explorer.exe /n,$INSTDIR\Wizards\c2iexplorer-source"
+SectionEnd
+
+Section "Localisation Dev Kit (LDK)"
+	SectionIn 3
+	SetOutPath "$INSTDIR\Wizards\LDK"
+	File "${CheminBase}\Lang\*.lng"
+	File "${CheminBase}\LDK\*.html"
+	File "${CheminBase}\LDK\*.css"
+	Exec "$WINDIR\explorer.exe /n,$INSTDIR\Wizards\LDK"
 SectionEnd
 
 Section -PostInstall
@@ -149,19 +176,19 @@ Section Uninstall
 	Delete "$INSTDIR\Wizards\DATA\C2I.MDB"
 	Delete "$INSTDIR\Wizards\DATA\c2ifr.mdb"
 	Delete "$INSTDIR\Wizards\DATA\codelib.dtd"
-	Delete "$INSTDIR\Wizards\HTML\c2i Description complète.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2i Liste des components avec descriptions.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2i Liste des components avec nbr lignes de code.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2i Liste des composants avec descriptions.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2i Liste des composants avec nbr lignes de code.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2i vierge.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i Description complète.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i Liste des components avec descriptions.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i Liste des components avec nbr lignes de code.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i Liste des composants avec descriptions.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i Liste des composants avec nbr lignes de code.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i vierge.htm"
 	Delete "$INSTDIR\Wizards\HTML\c2i xml.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2i xml.xml"
-	Delete "$INSTDIR\Wizards\HTML\c2iEssai.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2iMod1.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2iMod2.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2iMod3.htm"
-	Delete "$INSTDIR\Wizards\HTML\c2iMod4.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2i xml.xml"
+	Delete "$INSTDIR\Wizards\HTML\*c2iEssai.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2iMod1.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2iMod2.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2iMod3.htm"
+	Delete "$INSTDIR\Wizards\HTML\*c2iMod4.htm"
 	Delete "$INSTDIR\Wizards\HTML\prev.htm"
 	Delete "$INSTDIR\Wizards\HTML\IMG\ActiveXControl.gif"
 	Delete "$INSTDIR\Wizards\HTML\IMG\ActiveXDesigner.gif"
@@ -186,6 +213,14 @@ Section Uninstall
 	Delete "$INSTDIR\Wizards\HTML\IMG\VBForm.gif"
 	Delete "$INSTDIR\Wizards\HTML\IMG\VBMDIForm.gif"
 	Delete "$INSTDIR\Wizards\HTML\IMG\VBproject.gif"
+	Delete "$INSTDIR\Wizards\Lang\c2iExplorer-fr.lng"
+	Delete "$INSTDIR\Wizards\Lang\c2iExplorer-en.lng"
+	Delete "$INSTDIR\Wizards\LDK\c2iExplorer-fr.lng"
+	Delete "$INSTDIR\Wizards\LDK\c2iExplorer-en.lng"
+	Delete "$INSTDIR\Wizards\LDK\c2iexplorer_ldk.css"
+	Delete "$INSTDIR\Wizards\LDK\c2iexplorer_ldk_fr.html"
+	Delete "$INSTDIR\Wizards\LDK\c2iexplorer_ldk_en.html"
+	Delete "$INSTDIR\Wizards\LDK\gnu_fdl_en.html"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\boilerplate-c2iExplorer.txt"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\FredJust modifications.txt"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\Modifications René Rhéaume.txt"
@@ -241,6 +276,7 @@ Section Uninstall
 	RmDir "$INSTDIR\Wizards\Data"
 	RmDir "$INSTDIR\Wizards\Html\Img"
 	RmDir "$INSTDIR\Wizards\Html"
+	RmDir "$INSTDIR\Wizards\Lang"
 	RmDir "$INSTDIR\Wizards\c2iexplorer-source"
 	Delete "$INSTDIR\uninst-c2iexplorer.exe"
 	MessageBox "MB_OK|MB_ICONINFORMATION" "c2iExplorer est maintenant désinstallé. Cependant, le fichier de préférences «c2iExplorer.ini» a été copié sur le bureau à des fins d'archivage et de restauration de préférences."

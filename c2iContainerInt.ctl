@@ -176,7 +176,7 @@ Private iAlignement As AlignmentConstants
 Private bOuvert As Boolean
 Private sngHauteur As Single
 
-Private bCapturé As Boolean
+'Private bCapturé As Boolean
 
 '//************ NOUVEAU AVEC LA VERSION 1.1 **********************//
 Public Event BeforeOuvertureChange(ByRef Cancel As Boolean)
@@ -392,7 +392,7 @@ Private Sub UserControl_Initialize()
     sCaption = conLibelle
     bOuvert = conVrai
     sngHauteur = Height
-    bCapturé = conFaux
+'    bCapturé = conFaux
 End Sub
 
 Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -420,9 +420,9 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
             Case X < 0, Y < 0, X > Width, Y > Height       'si on sort du contrôle
                 bUserControlCaptured = conFaux
                 lngRep = ReleaseCapture                    'on relache le curseur
-                '            If bOuvert Then
-                '                Ouvert = Not bOuvert
-                '            End If
+                'If bOuvert Then
+                '   Ouvert = Not bOuvert
+                'End If
                 bOuvert = conFaux
         End Select
     End If
@@ -604,7 +604,7 @@ End Property
 #If VersionVB = 6 Then
 Public Property Get ParentHwnd() As Long
         ParentHwnd = ContainerHwnd
-    End Property
+End Property
 #End If
 
 Public Property Set PictureFond(ByVal picPictureFondA As Picture)

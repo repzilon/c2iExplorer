@@ -76,7 +76,7 @@ Begin VB.UserDocument UDClassViewer
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDClassViewer.dox":01CE
-            Key             =   "propgetlet"
+            Key             =   "proppublic"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDClassViewer.dox":02E0
@@ -88,7 +88,7 @@ Begin VB.UserDocument UDClassViewer
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDClassViewer.dox":051F
-            Key             =   "proppublic"
+            Key             =   "propgetlet"
          EndProperty
       EndProperty
    End
@@ -251,18 +251,10 @@ Private Sub MakeToolBar()
         Set objButton = .Add(, , , tbrSeparator)
         Set objButton = .Add(, conPrint, , , conPrint)
 
-        Select Case lngLanguage
-            Case c2i_Langue_Anglais
-                .Item(conActu).ToolTipText = "Refresh"
-                .Item(conDescro).ToolTipText = conLibelDescrpt
-                .Item(conPrint).ToolTipText = "Print"
-            Case Else
-                .Item(conActu).ToolTipText = "Actualisation"
-                .Item(conDescro).ToolTipText = conLibelDescrpt
-                .Item(conPrint).ToolTipText = "Imprimer"
-        End Select
+        .Item(conActu).ToolTipText = mlgLibelActu
+        .Item(conDescro).ToolTipText = mlgLibelDescrpt
+        .Item(conPrint).ToolTipText = mlgLibelPrint
     End With
-
     Set objButton = Nothing
 End Sub
 
@@ -303,29 +295,28 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
 
     lvProp.ListItems.Clear
     lblInt = vbNullString
-
     Set mobjCmp = objCmp
-
     lblClassName = mobjCmp.Name
+    
     For Each objMember In mobjCmp.CodeModule.Members
         sTexte = objMember.Name
         If (tbMain.Buttons(conDescro).Value = tbrPressed) Then
             On Error Resume Next
             strDescription = Trim$(objMember.Description)
-            On Error GoTo 0
+            On Error GoTo GestErr
             If (strDescription <> vbNullString) Then
-                sTexte = sTexte & " (" & strDescription & ")"
+                sTexte = sTexte & " (" & strDescription & conPF
             End If
         End If
 
         Select Case ExtraitIconeMembre(objMember, lngColor)
-            Case conMethode
+            Case conarClefTypeMembre(2)
                 If (lngColor <> Mem_Privee) Then
-                    Set lItem = lvProp.ListItems.Add(, , sTexte, conMethode, conMethode)
+                    Set lItem = lvProp.ListItems.Add(, , sTexte, conarClefTypeMembre(2), conarClefTypeMembre(2))
                     lItem.ForeColor = lngColor
                 End If
 
-            Case conPropriete
+            Case conarClefTypeMembre(4)
                 If (lngColor <> Mem_Privee) Then
                     blnAjoutProp = conFaux
                     iGet = 0
@@ -337,7 +328,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
                         iLet = .ProcBodyLine(objMember.Name, vbext_pk_Let)
                         iSet = .ProcBodyLine(objMember.Name, vbext_pk_Set)
                     End With
-
+                    On Error GoTo GestErr
                     Select Case conVrai
                         Case iLet <> 0, iSet <> 0
                             blnAjoutProp = conVrai
@@ -367,8 +358,17 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
         End Select
     Next
 
+SortieProc:
     Set objMember = Nothing
     Set lvProp.SelectedItem = Nothing
+    Exit Sub
+GestErr:
+    Select Case (Err.Number)
+        Case 35
+        Case Else
+            GererErrInattendue , "UDClassViewer.Init"
+    End Select
+    Resume SortieProc
 End Sub
 
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
@@ -387,7 +387,8 @@ Private Sub Imprime()
 
     On Error GoTo GestErr
     lngDC = GetDC(UserDocument.hwnd)
-    BitBlt PicSource.hdc, 0, 0, UserDocument.ScaleWidth, UserDocument.ScaleHeight - tbMain.Height, lngDC, 0, tbMain.Height, vbSrcCopy
+    BitBlt PicSource.hdc, 0, 0, UserDocument.ScaleWidth, _
+            UserDocument.ScaleHeight - tbMain.Height, lngDC, 0, tbMain.Height, vbSrcCopy
     ReleaseDC UserDocument.hwnd, lngDC
     PicSource.Refresh
     Printer.PaintPicture PicSource.Image, 0, 0

@@ -23,7 +23,6 @@ Begin VB.Form frmPrint
    PaletteMode     =   2  'Custom
    ScaleHeight     =   4830
    ScaleWidth      =   4365
-   ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Begin MSComctlLib.ProgressBar pbPrint 
       Align           =   2  'Align Bottom
@@ -86,6 +85,7 @@ Begin VB.Form frmPrint
          NumButtons      =   5
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "tous"
+            Object.ToolTipText     =   "Aperçu général"
             ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -93,6 +93,7 @@ Begin VB.Form frmPrint
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "voir"
+            Object.ToolTipText     =   "Aperçu élément selectionné"
             ImageIndex      =   2
          EndProperty
          BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -100,6 +101,7 @@ Begin VB.Form frmPrint
          EndProperty
          BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "quit"
+            Object.ToolTipText     =   "Quitter"
             ImageIndex      =   3
          EndProperty
       EndProperty
@@ -108,7 +110,7 @@ Begin VB.Form frmPrint
    Begin VB.FileListBox File1 
       Height          =   3015
       Left            =   0
-      Pattern         =   "c2i*.htm*;c2i*.xml"
+      Pattern         =   "[*]*.*htm*;[*]*.xml"
       TabIndex        =   0
       Top             =   1440
       Width           =   4335
@@ -171,39 +173,45 @@ Private Const conVoir As String = "voir"
 Private Const conTous As String = "tous"
 Private Const conQuit As String = "quit"
 Private Const conDate As String = "Date"
-Private Const conAttribImg As String = ".gif' border='0' align='middle' hspace='5'>"
-Private Const conBaliseImg As String = "<img src='img/"
+Private Const conAttribImg As String = ".gif"" border=""0"" align=""middle"" hspace=""5"" />"
+Private Const conBaliseImg As String = "<img src=""img/"
 Private Const conFormatDate As String = "dddddd"
 Private Const conComponents As String = "Components"
 Private Const conMembers As String = "Members"
+Private Const conNomForm As String = "frmPrint"
 Private objVBPrjPrint As VBIDE.VBProject
 Private objVBCmpPrint As VBIDE.VBComponent
 
 'Optimisation par René Rhéaume les 31 juillet 2001 et 5 janvier 2002
-Private Sub OK()
+'Procédure modifiée par René Rhéaume le 14 juin 2002
+' Ajout du cas «Exporter tout»
+'Procédure modifiée par René Rhéaume le 19 juin 2002
+' Correction de bogue si blnTous est à Faux
+Private Sub OK(Optional ByVal blnTous As Boolean = conFaux)
     Dim strCheminModele As String
     Dim strFichierModele As String
-    Dim blnCmpPresent As Boolean
+    Dim blnCmpPresent As Boolean, blnPrjPresent As Boolean
+    Dim blnExporterTout As Boolean
     strFichierModele = File1.Filename
     strCheminModele = File1.Path & conBS & strFichierModele
 
     If (strFichierModele <> vbNullString) Then
         If (FichierExiste(strCheminModele)) Then
+            blnPrjPresent = Not objVBPrjPrint Is Nothing
             blnCmpPresent = Not objVBCmpPrint Is Nothing
-            If (objVBPrjPrint Is Nothing) Then
-                If (blnCmpPresent = conFaux) Then
-                    ExportHTML strCheminModele
-                End If
+            blnExporterTout = blnTous Or (Not (blnPrjPresent Or blnCmpPresent))
+            If (blnExporterTout) Then
+                ExportHTML strCheminModele
             Else
                 If (blnCmpPresent) Then
                     ExportHTMLComponent strCheminModele, objVBCmpPrint
                 Else
                     ExportHTMLProject strCheminModele, objVBPrjPrint
                 End If
-                '            Unload Me
             End If
+            'Unload Me
         Else
-            MsgBox "Le fichier [" & strCheminModele & "] n'existe pas."
+            MsgBox mlgarFichExistePas(0) & strCheminModele & mlgarFichExistePas(1)
         End If
     End If
 End Sub
@@ -216,25 +224,22 @@ Private Sub File1_DblClick()
     If (File1.Filename <> vbNullString) Then OK
 End Sub
 
-' Modifié par René Rhéaume le 5 janvier 2002
+'Modifié par René Rhéaume le 5 janvier 2002
+'Modifié par René Rhéaume le 18 juin 2002
+' Support multilingue
 Private Sub Form_Load()
-    Select Case lngLanguage
-        Case c2i_Langue_Français
-            Me.Caption = "Impression"
-            Toolbar1.Buttons(conVoir).ToolTipText = "Aperçu élément selectionné"
-            Toolbar1.Buttons(conTous).ToolTipText = "Aperçu général"
-            Toolbar1.Buttons(conQuit).ToolTipText = "Quitter"
-            lblInfos = "Choisissez votre modèle :"
-            lblTitre = "Élément sélectionné :"
-        Case Else
-            Me.Caption = "Print"
-            Toolbar1.Buttons(conVoir).ToolTipText = "Preview"
-            Toolbar1.Buttons(conTous).ToolTipText = "General Preview"
-            Toolbar1.Buttons(conQuit).ToolTipText = "Quit"
-            lblInfos = "Choose your model :"
-            lblTitre = "Selected element :"
-    End Select
-
+    Dim I As Long
+    
+    Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, "Imprimer")
+    If (blnMultilingueActive) Then
+        For I = 1 To 5 Step 2
+            Toolbar1.Buttons(I).ToolTipText = LireChaineLocalisee(conNomForm, _
+                "Obj.Toolbar1.Buttons(" & I & ").ToolTipText", Toolbar1.Buttons(I).ToolTipText)
+        Next I
+    End If
+    lblInfos = LireChaineLocalisee(conNomForm, "Obj.lblInfos.Caption", "Choisissez votre modèle :")
+    lblTitre = LireChaineLocalisee(conNomForm, "Obj.lblTitre.Caption", "Élément sélectionné :")
+    
     '    PositionForm Me, conVrai
     File1.Path = strCheminApp & "\html"
 '    ExtraireImageList ImageList1, "frmPrint.ImageList1"
@@ -247,23 +252,16 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 'Modifié par René Rhéaume le 5 janvier 2002
+'Procédure modifiée par René Rhéaume le 14 juin 2002
+' OK gère maintenant le cas «Exporter tout»
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
-    Dim chnFichierModele As String
     Select Case Button.Key
         Case conVoir
             OK
         Case conQuit
             Quitter
         Case conTous
-            chnFichierModele = File1.Path & conBS & File1.Filename
-            If (chnFichierModele <> vbNullString) Then
-                If FichierExiste(chnFichierModele) Then
-                    ExportHTML chnFichierModele
-                    '                    Unload Me
-                Else
-                    MsgBox "Le fichier [" & chnFichierModele & "] n'existe pas."
-                End If
-            End If
+            OK conVrai
     End Select
 End Sub
 
@@ -355,38 +353,16 @@ AffichErr:
 End Sub
 
 Public Sub ExportHTML(ByVal sHTMLFileName As String)
-    '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
     Dim lngRep As Long, objVBPrj As VBIDE.VBProject
     Dim sTete As String, sFin As String, sMiddle As String
     Dim strDate As String
 
     Screen.MousePointer = vbHourglass
-
+    
     On Error GoTo GestErr
     If FichierExiste(c2iHTMLFile) Then
         Kill c2iHTMLFile
     End If
-
-    'Ancienne version
-    '    'add projects
-    '    Set fso = New FileSystemObject
-    '    Set txtOut = fso.CreateTextFile(c2iHTMLFile)
-    '    Set txtIn = fso.OpenTextFile(sHTMLFileName)
-    '    sMiddle = txtIn.ReadAll
-    '    txtIn.Close
-    '    Set txtIn = Nothing
-    '    If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
-    '        sTete = RemplaceString(sTete, conDate, Format$(VBA.Date$, conFormatDate))
-    '        txtOut.Write sTete
-    '        For Each objVBPrj In VBInstance.VBProjects
-    '            AddProject objVBPrj, txtOut, sMiddle
-    '        Next
-    '        sFin = RemplaceString(sFin, conDate, Format$(VBA.Date$, conFormatDate))
-    '        txtOut.Write sFin
-    '    End If
-    '
-    '    Set txtOut = Nothing
-    '    Set fso = Nothing
 
     'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
@@ -403,14 +379,11 @@ Public Sub ExportHTML(ByVal sHTMLFileName As String)
 
     Screen.MousePointer = vbDefault
 
-    lngRep = ShellExecute(0, "open", c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
+    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
     If (lngRep = 0) Then GoTo GestErr
     Exit Sub
     
 GestErr:
-    '    txtOut.Close
-    '    Set txtOut = Nothing
-    '    Set fso = Nothing
     GererErrInattendue , "frmPrint.ExportHTML"
 End Sub
 
@@ -478,7 +451,7 @@ Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VB
     Set objVBCmp = Nothing
     Screen.MousePointer = vbDefault
 
-    lngRep = ShellExecute(0, "open", c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
+    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
     If lngRep = 0 Then GoTo GestErr
 
     Exit Sub
@@ -560,7 +533,7 @@ Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As 
     Set objVBMember = Nothing
     Screen.MousePointer = vbDefault
 
-    lngRep = ShellExecute(0, "open", c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
+    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
     If lngRep = 0 Then GoTo GestErr
 
     Exit Sub
@@ -597,7 +570,7 @@ Private Sub AddProject(ByVal objVBPrj As VBIDE.VBProject, ByVal sMiddle As Strin
         AnalyseHTMLPrj objVBPrj, sFin
         Call EcrireFichier(sFin, c2iHTMLFile)
     End If
-
+    
     Set objVBCmp = Nothing
 End Sub
 
@@ -610,7 +583,6 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
     Dim sTete As String, sFin As String
 
     If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
-
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
         AnalyseHTMLCmp objVBCmp, sTete
         Call EcrireFichier(sTete, c2iHTMLFile)
@@ -623,13 +595,13 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
         AnalyseHTMLCmp objVBCmp, sFin
         Call EcrireFichier(sFin, c2iHTMLFile)
     End If
+
     Set objVBMember = Nothing
 End Sub
 
 'Modifié par René Rhéaume 1er août 2001
 'Retrait du paramètre TextStream et nouvel appel pour écriture de fichier
 Private Sub AddMember(ByVal objVBMember As VBIDE.Member, ByVal sMiddle As String)
-
     If (AfficheMembre(objVBMember)) Then
         With objVBMember.Collection.Parent
             AnalyseHTMLPrj .Parent.Collection.Parent, sMiddle
@@ -638,10 +610,17 @@ Private Sub AddMember(ByVal objVBMember As VBIDE.Member, ByVal sMiddle As String
         End With
         Call EcrireFichier(sMiddle, c2iHTMLFile)
     End If
-
 End Sub
 
+'Fonction modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String, ByVal sSearch As String) As Boolean
+    Static mlgMsgFmtNonValable As String
+    If (mlgMsgFmtNonValable = vbNullString) Then
+        mlgMsgFmtNonValable = LireChaineLocalisee(conNomForm, _
+            "Code.ExtraitHTML.mlgMsgFmtNonValable", "Format non valable")
+    End If
+    
     Const conHTMLCmmtEnd As String = " -->"
     Dim iDeb As Long, iFin As Long
     Dim sSearchDeb As String, sSearchFin As String
@@ -655,7 +634,7 @@ Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String,
     Select Case conVrai
         Case iDeb = 0, iFin = 0
             ExtraitHTML = conFaux
-            MsgBox "Format non valable", vbExclamation
+            MsgBox mlgMsgFmtNonValable, vbExclamation
             Exit Function
     End Select
 
@@ -687,14 +666,23 @@ Private Sub RemplaceString(ByRef sString As String, ByVal sSearch As String, ByV
     '    RemplaceString = sString
 End Sub
 
+'Modifié par René Rhéaume le 16 juin 2002
+' Optimisé la gestion d'erreur
 'Déplacé de GestFichier par René Rhéaume le 18 mai 2002
 ' Optimisation de taille mémoire indiquée dans les manuels en ligne
 ' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
 'Ajout par René Rhéaume le 1er août 2001
 ' Retourne 0 s'il n'y a pas eu d'erreur et -1 s'il y en a eu une.
 ' Retourne le contenu du fichier dans le 2e argument
+'Fonction modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFichier As String) As Integer
-    On Error Resume Next
+    Static mlgMsgImpossOuvrir As String
+    If (mlgMsgImpossOuvrir = vbNullString) Then
+        mlgMsgImpossOuvrir = LireChaineLocalisee(conNomForm, _
+            "Code.LireFichierTexte.mlgMsgImpossOuvrir", "Impossible d'ouvrir le fichier: ")
+    End If
+    On Error GoTo GestErr
     LireFichierTexte = 0
     Screen.MousePointer = 11
 
@@ -703,12 +691,12 @@ Private Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFi
     ContenuFichier = Input(LOF(1), 1)
     Close #1
     Screen.MousePointer = 0
+    Exit Function
 
-    If (Err) Then
-        MsgBox "Impossible d'ouvrir le fichier: " & chnNomFichier, vbExclamation
-        LireFichierTexte = -1
-        Exit Function
-    End If
+GestErr:
+    MsgBox mlgMsgImpossOuvrir & chnNomFichier, vbExclamation
+    LireFichierTexte = -1
+    Screen.MousePointer = 0
 End Function
 
 'Déplacé de GestFichier par René Rhéaume le 18 mai 2002
@@ -716,7 +704,15 @@ End Function
 ' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
 ' Ajout par René Rhéaume le 1er août 2001
 ' Retourne 0 s'il n'y a pas eu d'erreur et -1 s'il y en a eu une.
+'Fonction modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Function EcrireFichier(ByVal chnContenu As String, ByVal chnNomFichier As String) As Integer
+    Static mlgMsgVerrouille As String
+    If (mlgMsgVerrouille = vbNullString) Then
+        mlgMsgVerrouille = LireChaineLocalisee(conNomForm, _
+            "Code.EcrireFichier.mlgMsgVerrouille", _
+            "» est verrouillé par une autre application. Fermez ce fichier dans cette application et cliquez sur OK.")
+    End If
     ' Instructions d'entrée/sortie de VB
     On Error GoTo GestErr
     ' Ouvre le fichier.
@@ -733,7 +729,7 @@ SortieProc:
 GestErr:
     Select Case Err.Number
         Case 52
-            MsgBox "Le fichier " & chnNomFichier & " est verrouillé par une autre application. Fermez ce fichier dans cette application et cliquez sur OK.", vbExclamation
+            MsgBox mlgarFichExistePas(0) & chnNomFichier & mlgMsgVerrouille, vbExclamation
             Resume
         Case Else
             GererErrInattendue , "frmPrint.EcrireFichier"

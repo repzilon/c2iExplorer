@@ -1,7 +1,6 @@
 VERSION 5.00
 Begin VB.Form frmDuree 
    BorderStyle     =   4  'Fixed ToolWindow
-   Caption         =   "Modification de la durée"
    ClientHeight    =   1545
    ClientLeft      =   45
    ClientTop       =   285
@@ -17,6 +16,7 @@ Begin VB.Form frmDuree
    EndProperty
    Icon            =   "frmDuree.frx":0000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    PaletteMode     =   2  'Custom
@@ -24,7 +24,6 @@ Begin VB.Form frmDuree
    ScaleWidth      =   3765
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton cmdQuit 
-      Caption         =   "&Fermer"
       Height          =   375
       Left            =   2520
       TabIndex        =   8
@@ -32,7 +31,6 @@ Begin VB.Form frmDuree
       Width           =   1095
    End
    Begin VB.CommandButton cmdAppliquer 
-      Caption         =   "&Appliquer"
       Height          =   375
       Left            =   1320
       TabIndex        =   7
@@ -65,7 +63,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.Label lblProjectName 
       BackStyle       =   0  'Transparent
-      Caption         =   "NomProjet"
       Height          =   375
       Left            =   120
       TabIndex        =   6
@@ -74,7 +71,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.Label lblTemps 
       BackStyle       =   0  'Transparent
-      Caption         =   "s"
       Height          =   255
       Index           =   2
       Left            =   3240
@@ -84,7 +80,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.Label lblTemps 
       BackStyle       =   0  'Transparent
-      Caption         =   "mn"
       Height          =   255
       Index           =   1
       Left            =   2040
@@ -94,7 +89,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.Label lblTemps 
       BackStyle       =   0  'Transparent
-      Caption         =   "h"
       Height          =   255
       Index           =   0
       Left            =   960
@@ -171,6 +165,18 @@ End Sub
 
 Private Sub cmdQuit_Click()
     Unload Me
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 16 juin 2002
+' Support multilingue
+Private Sub Form_Load()
+    Const conNomForm As String = "frmDuree"
+    lblTemps(0).Caption = mlgarUniteTemps(0)
+    lblTemps(1).Caption = mlgarUniteTemps(1)
+    lblTemps(2).Caption = mlgarUniteTemps(2)
+    Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, "Modifier la durée")
+    cmdAppliquer.Caption = LireChaineLocalisee(conNomForm, "Obj.cmdAppliquer.Caption", "&Appliquer")
+    cmdQuit.Caption = LireChaineLocalisee(conNomForm, "Obj.cmdQuit.Caption", "&Fermer")
 End Sub
 
 Private Sub txtH_LostFocus()

@@ -214,8 +214,8 @@ Private Const conDelete As String = "delete"
 Private Const conVoir As String = "voir"
 Private Const conCopie As String = "copie"
 Private Const conExtBD As String = ".mdb"
-Private Const conFiltreBD As String = "Bases de données (*.mdb)|*.mdb"
 Private Const conRSElements As String = "Elements"
+Private Const conNomUD As String = "UDBiblio"
 Private Enum TypePosition
     posDeclarations = 1
     posPostDeclar = 2
@@ -227,15 +227,42 @@ Private Enum Direction
     enAvant = 1
     enArriere = -1
 End Enum
+Private strFiltreBD As String
 
 Public bFrmBiblio As Boolean
 Public TVEx As TreeView
 
-' Procédure modifiée par René Rhéaume le 24 avril 2002
+'Procédure modifiée par René Rhéaume le 24 avril 2002
 ' Regroupement des opérations du Select Case
-' Procédure modifiée par René Rhéaume le 2 mai 2002
+'Procédure modifiée par René Rhéaume le 2 mai 2002
 ' Vérification de l'existence de base.c2i
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub Enregistrement(ByVal sFile As String)
+    Const conClefL10nEnr As String = "Code.Enregistrement."
+    Static mlgarMsgBaseC2iAbsent() As String
+    Static mlgarMsgErrSauvegarde() As String
+    Static blnLangEnrOK As Boolean
+    Dim I As Long
+    If (Not blnLangEnrOK) Then
+        StrArray mlgarMsgBaseC2iAbsent, "Ce fichier est le modèle de structure de bibliothèque de code.", _
+            "Veuillez réinstaller l'application."
+        StrArray mlgarMsgErrSauvegarde, _
+            "Il y a eu une erreur lors de l'initialisation de la sauvegarde.", _
+            "a peut-être créé un fichier de sauvegarde sous le nom de"
+            If (blnMultilingueActive) Then
+                For I = 0 To 1
+                    mlgarMsgBaseC2iAbsent(I) = LireChaineLocalisee(conNomUD, _
+                            conClefL10nEnr & "mlgarMsgBaseC2iAbsent(" & I & conPF, _
+                            mlgarMsgBaseC2iAbsent(I))
+                    mlgarMsgErrSauvegarde(I) = LireChaineLocalisee(conNomUD, _
+                            conClefL10nEnr & "mlgarMsgErrSauvegarde(" & I & conPF, _
+                            mlgarMsgErrSauvegarde(I))
+                Next I
+            End If
+        blnLangEnrOK = conVrai
+    End If
+
     Const conExtBak As String = ".bak"
     Const conNomMeth As String = "UDBiblio.Enregistrement"
     Dim db As Database, rs As Recordset
@@ -272,11 +299,12 @@ Private Sub Enregistrement(ByVal sFile As String)
                     rs.Update
             End Select
         Next
-        If FichierExiste(sFile & conExtBak) Then Kill sFile & conExtBak
+        If FichierExiste(sFile & conExtBak) Then
+            Kill sFile & conExtBak
+        End If
     Else
-        MsgBox "Le fichier «" & c2iDataFileNameOrigine & "» n'existe pas." & vbNewLine & _
-                "Ce fichier est le modèle de structure de bibliothèque de code." & vbNewLine & _
-                "Veuillez réinstaller l'application.", vbCritical
+        MsgBox mlgarFichExistePas(0) & c2iDataFileNameOrigine & mlgarFichExistePas(1) & vbNewLine & _
+                mlgarMsgBaseC2iAbsent(0) & vbNewLine & mlgarMsgBaseC2iAbsent(1), vbCritical
     End If
 
 SortieFunc:
@@ -287,8 +315,8 @@ SortieFunc:
     Set db = Nothing
     Exit Sub
 RestaurerSauvegarde:
-    GererErrInattendue "Il y a eu une erreur lors de l'initialisation de la sauvegarde." & vbCrLf & _
-            "c2iExplorer a cependant peut-être créé un fichier de sauvegarde sous le nom de" & vbCrLf & _
+    GererErrInattendue mlgarMsgErrSauvegarde(0) & vbCrLf & _
+            conNomApp & mlgarMsgErrSauvegarde(1) & vbCrLf & _
             sFile & conExtBak & " .", conNomMeth
     Resume SortieFunc
 Fin:
@@ -358,21 +386,27 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     End Select
 End Sub
 
-' Procédure modifiée par René Rhéaume le 29 juillet 2001
+'Procédure modifiée par René Rhéaume le 29 juillet 2001
 ' Lecture du fichier INI
-' Procédure modifiée par René Rhéaume le 3 mai 2002
+'Procédure modifiée par René Rhéaume le 3 mai 2002
 ' Retrait du message d'erreur si le fichier de base de
 ' données spécifié dans le fichier INI n'existe pas
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub UserDocument_Initialize()
+    Dim strDebutFiltreBD As String
+
     c2iCurrentDataFileName = LireChaineFichierINI(conSecGen, conValData, vbNullString, c2iINIFile)
-
-    MakeToolBar
     bFrmBiblio = conFaux
-
     If (FichierExiste(c2iCurrentDataFileName)) Then
         ChargeBase c2iCurrentDataFileName
     End If
-
+    
+    MakeToolBar
+    strDebutFiltreBD = LireChaineLocalisee(conNomUD, _
+            "Code.UserDocument_Initialize.strDebutFiltreBD", "Bases de données")
+    strFiltreBD = strDebutFiltreBD & " (*.mdb)|*.mdb"
+    
     UserDocument_Resize
     Set TVEx = tv
 '    ExtraireImageList imgTB, "UDBiblio.imgTB"
@@ -442,7 +476,7 @@ Private Sub InsertCode(ByVal strDeclaration As String, ByVal strEnTete As String
     Dim lngStartColumn As Long, lngEndLine As Long, lngEndColumn As Long
     
     If (VBInstance.ActiveCodePane.CodeModule Is Nothing) Then
-        MsgBox conMsgAucuneFenetreCodeActive, vbExclamation
+        MsgBox mlgMsgAucuneFenetreCodeActive, vbExclamation
     Else
         Set objCodeModule = VBInstance.ActiveCodePane.CodeModule
         lngNbLignesDeclar = objCodeModule.CountOfDeclarationLines
@@ -578,7 +612,10 @@ Private Function ChercherCode(ByVal lngDebut As Long, ByVal lngSens As Direction
     Set objCodeModule = Nothing
 End Function
 
+'Procédure modifiée par René Rhéaume le 19 juin 2002
+' Support multilingue
 Private Sub MakeToolBar()
+    Const conL10nTbMain As String = "Obj.tbMain.Buttons("
     Dim objButton As Button
 
     With tbMain
@@ -612,48 +649,34 @@ Private Sub MakeToolBar()
         'Set objButton = .Buttons.Add(, "import", , , "import")
         'Set objButton = .Buttons.Add(, , , tbrSeparator)
 
-        Select Case lngLanguage
-            Case c2i_Langue_Anglais
-                .Buttons(conNewdata).ToolTipText = "New database"
-                .Buttons(conBiblio).ToolTipText = "Load a database"
-                .Buttons(conSave).ToolTipText = "Save database"
-
-                .Buttons(conNewbiblio).ToolTipText = "Create a new library"
-                .Buttons(conNewcategorie).ToolTipText = "Create a new folder"
-
-                .Buttons(conDelete).ToolTipText = conDelete
-
-                .Buttons(conVoir).ToolTipText = "View/Add element"
-                .Buttons(conCopie).ToolTipText = "Insert code"
-
-                .Buttons(conDeclareProc).ToolTipText = "Insert declaration code"
-                .Buttons(conHeadProc).ToolTipText = "Insert head code"
-                .Buttons(conInLineProc).ToolTipText = "Insert inline code"
-                .Buttons(conEndProc).ToolTipText = "Insert end code"
-
-                '.Buttons("export").ToolTipText = "Export"
-                '.Buttons("import").ToolTipText = "Import"
-            Case Else
-                .Buttons(conNewdata).ToolTipText = "Nouvelle base de données"
-                .Buttons(conBiblio).ToolTipText = "Charger une base de données"
-                .Buttons(conSave).ToolTipText = "Sauvegarder la base de données"
-
-                .Buttons(conNewbiblio).ToolTipText = "Créer une bibliothèque"
-                .Buttons(conNewcategorie).ToolTipText = "Créer une catégorie"
-
-                .Buttons(conDelete).ToolTipText = "Supprimer"
-
-                .Buttons(conVoir).ToolTipText = "Voir/ajouter un élément"
-                .Buttons(conCopie).ToolTipText = "Insérer le code"
-
-                .Buttons(conDeclareProc).ToolTipText = "Insérer le code des déclarations"
-                .Buttons(conHeadProc).ToolTipText = "Insérer le code de début de procédure"
-                .Buttons(conInLineProc).ToolTipText = "Insérer le code interne"
-                .Buttons(conEndProc).ToolTipText = "Insérer le code de fin deprocédure"
-
-                '.Buttons("export").ToolTipText = "Exporter"
-                '.Buttons("import").ToolTipText = "Importer"
-        End Select
+        .Buttons(conNewdata).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "1-->'newdata').ToolTipText", "Nouvelle base de données")
+        .Buttons(conBiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "2-->'biblio').ToolTipText", "Charger une base de données")
+        .Buttons(conSave).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "3-->'save').ToolTipText", "Sauvegarder la base de données")
+        .Buttons(conNewbiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "5-->'newbiblio').ToolTipText", "Créer une bibliothèque")
+        .Buttons(conNewcategorie).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "6-->'newcategorie').ToolTipText", "Créer une catégorie")
+        .Buttons(conDelete).ToolTipText = mlgLibelDelete
+        .Buttons(conVoir).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "10-->'voir').ToolTipText", "Voir/ajouter un élément")
+        .Buttons(conCopie).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "11-->'copie').ToolTipText", "Insérer le code")
+        .Buttons(conDeclareProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "13-->'DeclareProc').ToolTipText", _
+                "Insérer le code des déclarations")
+        .Buttons(conHeadProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "14-->'HeadProc').ToolTipText", _
+                "Insérer le code de début de procédure")
+        .Buttons(conInLineProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "15-->'InLineProc').ToolTipText", "Insérer le code interne")
+        .Buttons(conEndProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conL10nTbMain & "16-->'EndProc').ToolTipText", _
+                "Insérer le code de fin de procédure")
+        '.Buttons("export").ToolTipText = "Exporter"
+        '.Buttons("import").ToolTipText = "Importer"
     End With
 
     Set objButton = Nothing
@@ -699,7 +722,7 @@ Private Function SaveLibrary() As Byte
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = conExtBD
-        .Filter = conFiltreBD
+        .Filter = strFiltreBD
         .FilterIndex = 1
         .Filename = c2iCurrentDataFileName
         .Flags = OFN_HIDEREADONLY + OFN_NOREADONLYRETURN
@@ -736,7 +759,7 @@ Private Function OpenBiblio() As Byte
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = conExtBD
-        .Filter = conFiltreBD
+        .Filter = strFiltreBD
         .FilterIndex = 1
         .Filename = c2iCurrentDataFileName
         .Flags = conFanionsOuvrir
@@ -759,7 +782,15 @@ Fin:
     Exit Function
 End Function
 
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub ChargeBase(ByVal sFileName As String)
+    Static mlgMsgErrChargeBase As String
+    If (mlgMsgErrChargeBase = vbNullString) Then
+        mlgMsgErrChargeBase = LireChaineLocalisee(conNomUD, _
+            "Code.ChargeBase.mlgMsgErrChargeBase", "Erreur lors du chargement de la base")
+    End If
+
     tv.Nodes.Clear
 
     On Error GoTo GestErr
@@ -791,12 +822,7 @@ GestErr:
         db.Close
     End If
     Set db = Nothing
-    If (lngLanguage = c2i_Langue_Anglais) Then
-        MsgBox "Error in loading database", vbExclamation, "c2iExplorer : Library"
-    Else
-        MsgBox "Erreur dans le chargement de la base", vbExclamation, "c2iExplorer : Bibliothèque"
-    End If
-    GererErrInattendue , "UDBiblio.ChargeBase"
+    GererErrInattendue mlgMsgErrChargeBase, "UDBiblio.ChargeBase"
     'destruction de la hiérarchie
     Set Explorer = Nothing
     Set Explorer = New cExplorer
@@ -810,81 +836,93 @@ Private Function AnnuleNull(rs As Recordset, sField As String) As String
     End If
 End Function
 
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub AddBiblio()
-    Dim sTitle As String, sMessage As String, sM2 As String
+    Const conClefL10nBibl As String = "Code.AddBiblio."
+    Static mlgarMsgBibl() As String
+    Static blnLangOK As Boolean
+    Dim I As Long
+    If (Not blnLangOK) Then
+        StrArray mlgarMsgBibl, "Saisissez le nom de la nouvelle bibliothèque :", _
+            "Ce nom de bibliothèque est déjà utilisé.", _
+            "Le nom de la bibliothèque n'est pas correct."
+        If (blnMultilingueActive) Then
+            For I = 0 To 2
+                mlgarMsgBibl(I) = LireChaineLocalisee(conNomUD, _
+                        conClefL10nBibl & "mlgarMsgBibl(" & I & conPF, mlgarMsgBibl(I))
+            Next I
+        End If
+        blnLangOK = conVrai
+    End If
+    
     Dim sResult As String
-
-    sTitle = conNomApp
-    Select Case lngLanguage
-        Case c2i_Langue_Anglais
-            sMessage = "Input the name of the new library"
-            sM2 = "Impossible, this library is still used"
-        Case Else
-            sMessage = "Saisissez le nom de la nouvelle bibliothèque"
-            sM2 = "Impossible, cette bibliothèque existe déjà"
-    End Select
-
-    sResult = InputBox(sMessage, sTitle)
-
     Dim mNode As Node
+    sResult = Trim$(InputBox(mlgarMsgBibl(0)))
+    
     On Error Resume Next
     Set mNode = tv.Nodes(sResult)
     If (mNode Is Nothing) Then
-        If (Trim$(sResult) <> vbNullString) Then
-            On Error GoTo Fin
+        If (sResult <> vbNullString) Then
+            On Error GoTo GestErr
             tv.Nodes.Add , , sResult, sResult, conBiblio
         End If
     Else
-        MsgBox sM2, , sTitle
+        MsgBox mlgarMsgBibl(1), vbInformation
     End If
-    Set mNode = Nothing
 
-    Exit Sub
-Fin:
+SortieProc:
     Set mNode = Nothing
-    Select Case lngLanguage
-        Case c2i_Langue_Anglais
-            MsgBox "The library name is invalid", vbInformation
-        Case Else
-            MsgBox "Le nom de la bibliothèque n'est pas correct", vbInformation
-    End Select
+    Exit Sub
+GestErr:
+    MsgBox mlgarMsgBibl(2), vbInformation
+    Resume SortieProc
 End Sub
 
+'Procédure modifiée par René Rhéaume le 18 juin 2002
+' Optimisation de la lisibilité et de la vitesse (un peu)
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub AddCategorie()
-    Dim sMessage As String, sM2 As String
-    Dim sResult As String
-
-    If (tv.SelectedItem Is Nothing) Then Exit Sub
-
-    If (tv.SelectedItem.Image <> conElement) Then
-        Select Case lngLanguage
-            Case c2i_Langue_Anglais
-                sMessage = "Input the name of the new folder"
-                sM2 = "Impossible, this folder is still used"
-            Case Else
-                sMessage = "Saisissez le nom de la nouvelle catégorie"
-                sM2 = "Impossible, cette catégorie existe déjà"
-        End Select
-
-        sResult = InputBox(sMessage, conNomApp)
-        If (sResult = vbNullString) Then Exit Sub
-
-        Dim mNode As Node
-        On Error Resume Next
-        Set mNode = tv.Nodes(tv.SelectedItem.Key + tv.PathSeparator + sResult)
-        If (mNode Is Nothing) Then
-            tv.Nodes.Add tv.SelectedItem, tvwChild, tv.SelectedItem.Key + tv.PathSeparator + sResult, sResult, "categorie"
-        Else
-            MsgBox sM2, , conNomApp
+    Const conClefL10nCat As String = "Code.AddCategorie."
+    Static mlgarMsgCat() As String
+    Static blnLangOK As Boolean
+    Dim I As Long
+    If (Not blnLangOK) Then
+        StrArray mlgarMsgCat, "Saisissez le nom de la nouvelle catégorie :", _
+            "Ce nom de catégorie est déjà utilisé.", _
+            "Le nom de la catégorie n'est pas correct."
+        If (blnMultilingueActive) Then
+            For I = 0 To 2
+                mlgarMsgCat(I) = LireChaineLocalisee(conNomUD, _
+                        conClefL10nCat & "mlgarMsgCat(" & I & conPF, mlgarMsgCat(I))
+            Next I
         End If
-    Else
-        If lngLanguage = c2i_Langue_Anglais Then
-            MsgBox "Select a library or a folder to add a folder", vbInformation, conNomApp
-        Else
-            MsgBox "Sélectionnez une bibliothèque ou une catégorie pour ajouter une catégorie", vbInformation, conNomApp
-        End If
+        blnLangOK = conVrai
     End If
 
+    Dim sResult As String
+    Dim mNode As Node
+    Dim strClef As String
+
+    If (Not tv.SelectedItem Is Nothing) Then
+        If (tv.SelectedItem.Image <> conElement) Then
+            sResult = Trim$(InputBox(mlgarMsgCat(0)))
+            If (sResult <> vbNullString) Then
+                On Error Resume Next
+                strClef = tv.SelectedItem.Key & tv.PathSeparator & sResult
+                Set mNode = tv.Nodes(strClef)
+                If (mNode Is Nothing) Then
+                    tv.Nodes.Add tv.SelectedItem, tvwChild, strClef, sResult, "categorie"
+                Else
+                    MsgBox mlgarMsgCat(1), vbInformation
+                End If
+            End If
+        Else
+            MsgBox mlgarMsgCat(2), vbInformation
+        End If
+    End If
+    Set mNode = Nothing
 End Sub
 
 Private Sub UserDocument_Paint()
@@ -905,7 +943,7 @@ Private Sub UserDocument_Terminate()
     Set TVEx = Nothing
 End Sub
 
-' Procédure ajoutée par René Rhéaume le 24 avril 2002
+'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
 Public Sub GererBoutonNouvBD()
     If (tv.Nodes.Count > 0) Then
@@ -919,7 +957,7 @@ Public Sub GererBoutonNouvBD()
     c2iCurrentDataFileName = vbNullString
 End Sub
 
-' Procédure ajoutée par René Rhéaume le 24 avril 2002
+'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
 Public Sub GererBoutonCopie()
     Dim objE As cElement
@@ -931,18 +969,20 @@ Public Sub GererBoutonCopie()
             ValideInsertion objE
             Set objE = Nothing
         Case conWeb, conMail
-            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, (tv.SelectedItem.Image = conMail)
+            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, _
+                (strImage = conMail)
     End Select
 End Sub
 
-' Procédure ajoutée par René Rhéaume le 24 avril 2002
+'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
 Public Sub GererBoutonVoir()
     Dim strImage As String
     strImage = tv.SelectedItem.Image
     Select Case (strImage)
         Case conWeb, conMail
-            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, (tv.SelectedItem.Image = conMail)
+            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, _
+                (strImage = conMail)
         Case Else
             Load frmBiblio
             If (strImage = conElement) Then

@@ -63,7 +63,7 @@ Private Sub IDTExtensibility_OnAddInsUpdate(custom() As Variant)
     ' commentaire pour que la procédure soit compilée
 End Sub
 
-' Procédure modifiée par René Rhéaume le 29 avril 2002
+'Procédure modifiée par René Rhéaume le 29 avril 2002
 ' Meilleure conditions et vérification de l'existence
 ' de c2iExplorer.ini
 Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectMode As vbext_ConnectMode, ByVal AddInInst As VBIDE.AddIn, custom() As Variant)
@@ -72,6 +72,8 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
     'on crée l'objet window et usrcomm
     '=================================================
     Const conErrFichIntrouvable As Long = 53
+    Const conNomMeth As String = "Connectc2iExplorer.IDTExtensibility_OnConnection"
+    Dim strFichierLangue As String
     On Error GoTo GestErr
     ' Enregistre l'instance vb
     Set VBInstance = VBInst
@@ -91,7 +93,13 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
                 ' Initialisation des variables globales
                 c2iHTMLFile = strCheminApp & "\html\prev.htm"
                 c2iDataFileNameOrigine = strCheminApp & "\data\base.c2i"
-                
+                strFichierLangue = strCheminApp & "\Lang\" & _
+                        LireChaineFichierINI(conSecGen, conValLang, vbNullString, c2iINIFile)
+                If (ValiderFichierLangue(strFichierLangue)) Then
+                    strFichLangueActuel = strFichierLangue
+                    blnMultilingueActive = conVrai
+                End If
+                ChargerChainesGlobales
                 'pour stocker les durées
                 ReDim DuréePrj(0)
             
@@ -107,12 +115,11 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
                     Set objWindowCompteur = .CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", conNomApp, sGuidCompteur, objUDCompteur)
                 End With
                 Set Connection = Me
-            
                 AddToAddInCommandBar
             Case Else ' Abandon
-                Err.Raise conErrFichIntrouvable, "c2iExplorer.Connectc2iExplorer.IDTExtensibility_OnConnection", "c2iExplorer.ini est introuvable malgré l'intervention de l'utilsateur."
-                'IDTExtensibility.OnDisconnection vbext_dm_UserClosed, Null
                 Set Connection = Nothing
+                Err.Raise conErrFichIntrouvable, conNomApp & "." & conNomMeth, _
+                            "c2iExplorer.ini est introuvable malgré l'intervention de l'utilsateur."
         End Select
     End If
     
@@ -120,7 +127,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
 
 GestErr:
     If (Err.Number <> conErrFichIntrouvable) Then
-        GererErrInattendue , "Connectc2iExplorer.IDTExtensibility_OnConnection"
+        GererErrInattendue , conNomMeth
     End If
 End Sub
 
@@ -218,7 +225,7 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
     Exit Function
 
 GestErr:
-    MsgBox "AddToAddInCommandBar : " & Err.Description, vbInformation
+    GererErrInattendue , "Connectc2iExplorer.AddToAddInCommandBar"
 End Function
 
 Private Sub Show()
@@ -231,7 +238,7 @@ Private Sub Show()
     Exit Sub
 
 GestErr:
-    MsgBox "BoutonBar_Click : " & Err.Description, vbInformation
+    GererErrInattendue , "Connectc2iExplorer.Show"
 End Sub
 
 Private Sub BoutonBar_Click(ByVal CommandBarControl As Object, handled As Boolean, CancelDefault As Boolean)

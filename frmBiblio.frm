@@ -68,7 +68,6 @@ Begin VB.Form frmBiblio
          NumButtons      =   3
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "add"
-            Object.ToolTipText     =   "Ajouter l'élément à la catégorie"
             ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -76,7 +75,6 @@ Begin VB.Form frmBiblio
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "quit"
-            Object.ToolTipText     =   "Quitter"
             ImageIndex      =   2
          EndProperty
       EndProperty
@@ -234,30 +232,27 @@ Private Const conQuit As String = "quit"
 Private Const conAdd As String = "add"
 Private mObjE As cElement
 
-' Modifié par René Rhéaume le 5 janvier 2002
+'Modifié par René Rhéaume le 5 janvier 2002
+'Modifié par René Rhéaume le 18 juin 2002
+' Support multilingue
 Private Sub Form_Load()
     '    PositionForm Me
-    Select Case lngLanguage
-        Case c2i_Langue_Anglais
-            lblNom = "Name"
-            lblDescription = conLibelDescrpt
-            lblDeclare = "Declaration"
-            lblHeadProc = "Procedure header"
-            lblInlineProc = "Code"
-            lblEndProc = "Procedure footer"
-            tbMain.Buttons(conAdd).ToolTipText = "Add to the selected folder"
-            tbMain.Buttons(conQuit).ToolTipText = "Quit"
-        Case Else
-            lblNom = "Nom"
-            lblDescription = conLibelDescrpt
-            lblDeclare = "Déclaration"
-            lblHeadProc = "En-tête de la procédure"
-            lblInlineProc = "Code"
-            lblEndProc = "Fin de la procédure"
-            tbMain.Buttons(conAdd).ToolTipText = "Ajouter à la catégorie sélectionnée"
-            tbMain.Buttons(conQuit).ToolTipText = "Quitter"
-    End Select
-'    ExtraireImageList imgTB, "frmBiblio.imgTB"
+    Const conNomForm As String = "frmBiblio"
+    If (blnMultilingueActive) Then
+        Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, Me.Caption)
+    End If
+    lblNom.Caption = LireChaineLocalisee(conNomForm, "Obj.lblNom.Caption", "Nom")
+    lblDescription.Caption = mlgLibelDescrpt
+    lblDeclare.Caption = LireChaineLocalisee(conNomForm, "Obj.lblDeclar.Caption", "Déclaration")
+    lblHeadProc.Caption = LireChaineLocalisee(conNomForm, _
+            "Obj.lblHeadProc.Caption", "En-tête de la procédure")
+    lblInlineProc.Caption = LireChaineLocalisee(conNomForm, "Obj.lblInlineProc.Caption", "Code")
+    lblEndProc.Caption = LireChaineLocalisee(conNomForm, _
+            "Obj.lblEndProc.Caption", "Fin de la procédure")
+    tbMain.Buttons(conAdd).ToolTipText = LireChaineLocalisee(conNomForm, _
+            "Obj.tbMain.Buttons(1-->'add').ToolTipText", "Ajouter à la catégorie sélectionnée")
+    tbMain.Buttons(conQuit).ToolTipText = LireChaineLocalisee(conNomForm, _
+            "Obj.tbMain.Buttons(3-->'quit').ToolTipText", "Quitter")
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)

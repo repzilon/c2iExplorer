@@ -78,6 +78,15 @@ Begin VB.UserDocument UDAddCode
       Top             =   480
       Width           =   4935
       Begin VB.TextBox txtCodeDeclarationView 
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   1455
          Left            =   120
          MultiLine       =   -1  'True
@@ -87,6 +96,15 @@ Begin VB.UserDocument UDAddCode
          Width           =   4695
       End
       Begin VB.TextBox txtCodeView 
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   2055
          Left            =   120
          MultiLine       =   -1  'True
@@ -95,9 +113,8 @@ Begin VB.UserDocument UDAddCode
          Top             =   2400
          Width           =   4695
       End
-      Begin VB.Label Label1 
+      Begin VB.Label lblCode 
          AutoSize        =   -1  'True
-         Caption         =   "Declarations"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -112,11 +129,10 @@ Begin VB.UserDocument UDAddCode
          Left            =   120
          TabIndex        =   9
          Top             =   360
-         Width           =   885
+         Width           =   45
       End
-      Begin VB.Label Label1 
+      Begin VB.Label lblCode 
          AutoSize        =   -1  'True
-         Caption         =   "Code"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -131,7 +147,7 @@ Begin VB.UserDocument UDAddCode
          Left            =   120
          TabIndex        =   11
          Top             =   2160
-         Width           =   375
+         Width           =   45
       End
    End
    Begin VB.Frame frameLstProp 
@@ -287,7 +303,6 @@ Begin VB.UserDocument UDAddCode
          Width           =   2295
       End
       Begin VB.Label lblType 
-         Caption         =   "Type :"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -431,95 +446,34 @@ Private Const conAddprop As String = "addprop"
 Private Const conDelprop As String = "delprop"
 Private Const conDelete As String = "delete"
 Private Const conCopie As String = "copie"
+Private Const conNomUD As String = "UDAddCode"
 Private strarCatDonnes() As String
 Private strarPrefixes() As String
 
 'Modifié par René Rhéaume le 28 juillet 2001
 'Optimisé par René Rhéaume le 6 janvier 2002
 'Utilise un fichier INI et des fonctions API
+'Modifié par René Rhéaume le 18 juin 2002
+' Déplacé du code vers ChargerCombos et support multilingue
 Private Sub UserDocument_Initialize()
-    Const conNomMeth As String = "UDAddCode.UserDocument_Initialize"
-    '    'Ancienne version
-    '    Dim fso As FileSystemObject, txtFile As TextStream
-    '    Dim c2iTypeFile As String
-    'Commun aux deux versions
-    Dim lngDeb As Long
-    Dim sObj As String, sName As String, sType As String
-    'Nouvelle version
-    Dim chnContenuSectionTypes As String, tblSectionTypes() As String
-    Dim I As Long, iPos As Long, iPos2 As Long
-    Dim lngFinTab As Long
-    On Error GoTo Fin
-
-    'Nouvelle version
-    lngDeb = GetPrivateProfileInt(conSecGen, "DefaultType", 6, c2iINIFile)
-    chnContenuSectionTypes = LireSectionFichierINI("Types", c2iINIFile)
-    SplitB chnContenuSectionTypes, tblSectionTypes(), vbNullChar
-
-    lngFinTab = UBound(tblSectionTypes()) - 1
-    ReDim strarCatDonnes(0 To lngFinTab)
-    ReDim strarPrefixes(0 To lngFinTab)
-    For I = 0 To lngFinTab
-        iPos = InStr(1, tblSectionTypes(I), "=")
-        sName = Trim$(Left$(tblSectionTypes(I), iPos - 1))
-        cmbLstType.AddItem sName
-        iPos2 = InStr(iPos + 1, tblSectionTypes(I), ";")
-        sObj = Trim$(Mid$(tblSectionTypes(I), iPos + 1, iPos2 - iPos - 1))
-        strarCatDonnes(I) = sObj
-        sType = Trim$(Right$(tblSectionTypes(I), Len(tblSectionTypes(I)) - iPos2))
-        strarPrefixes(I) = sType
-    Next I
-    cmbLstType.ListIndex = lngDeb
-
-    '    'Ancienne version
-    '    c2iTypeFile = strCheminApp + "\data\types.txt"
-    '
-    '    Set fso = New FileSystemObject
-    '    Set txtFile = fso.OpenTextFile(c2iTypeFile)
-    '    lngDeb = CLng(txtFile.ReadLine)
-    '
-    '    With cmbLstType
-    '        Do Until txtFile.AtEndOfStream
-    '            LectureLigne sObj, sName, sType, txtFile.ReadLine
-    '            .AddItem sName
-    '            cmbLstDeb.AddItem sType
-    '            cmbObjV.AddItem sObj
-    '        Loop
-    '        txtFile.Close
-    '
-    '        .ListIndex = lngDeb
-    '    End With
-    '    Set txtFile = Nothing
-    '    Set fso = Nothing
-
+    ChargerCombos
     MakeToolBar
-    If (lngLanguage = c2i_Langue_Anglais) Then
-        FrameProp.Caption = "Property :"
-        lblNom = "Name :"
-        frameLstProp.Caption = "Properties list"
-        Framecode.Caption = "Generated code"
-    Else
-        FrameProp.Caption = "Propriété :"
-        lblNom = "Nom :"
-        frameLstProp.Caption = "Liste des propriétés"
-        Framecode.Caption = "Code généré"
-    End If
+    
+    FrameProp.Caption = LireChaineLocalisee(conNomUD, _
+            "Obj.FrameProp.Caption", "Propriété :")
+    frameLstProp.Caption = LireChaineLocalisee(conNomUD, _
+            "Obj.frameLstProp.Caption", "Liste des propriétés")
+    Framecode.Caption = LireChaineLocalisee(conNomUD, "Obj.FrameCode.Caption", "Code généré")
+    lblCode(0).Caption = LireChaineLocalisee(conNomUD, "Obj.lblCode(0).Caption", "Déclarations")
+    lblCode(1).Caption = LireChaineLocalisee(conNomUD, "Obj.lblCode(1).Caption", "Code")
+    lblNom.Caption = LireChaineLocalisee(conNomUD, "Obj.lblNom.Caption", "Nom :")
+    lblType.Caption = LireChaineLocalisee(conNomUD, "Obj.lblType.Caption", "Type :")
+    
     UserDocument_Resize
     
 '    ExtraireImageList ImgLst, "UDAddCode.ImgLst"
 '    ExtraireImageList imgPortée, "UDAddCode.imgPortée"
 '    ExtraireImageList imgTB, "UDAddCode.imgTB"
-    
-    Exit Sub
-Fin:
-    If (lngLanguage = c2i_Langue_Anglais) Then
-        GererErrInattendue "Error when loading file " & c2iINIFile, conNomMeth
-    Else
-        GererErrInattendue "Erreur au chargement de " & c2iINIFile, conNomMeth
-    End If
-    '    'Ancienne version
-    '    Set txtFile = Nothing
-    '    Set fso = Nothing
 End Sub
 
 Private Function ExtractName(ByVal sText As String) As String
@@ -534,8 +488,15 @@ Private Function ExtractType(ByVal sText As String) As String
     ExtractType = Mid$(sText, lDeb + 1, Len(sText) - lDeb - 1)
 End Function
 
-' Optimisé par René Rhéaume le 6 janvier 2002
+'Optimisé par René Rhéaume le 6 janvier 2002
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub AjouteProp()
+    Static mlgMsgPropExisteDeja As String
+    If (mlgMsgPropExisteDeja = vbNullString) Then
+        mlgMsgPropExisteDeja = LireChaineLocalisee(conNomUD, _
+            "Code.AjouteProp.mlgMsgPropExisteDeja", "Cette propriété existe déjà.")
+    End If
     ' -------------------- DÉCLARATION VARIABLES ---------------------
     Dim mN As Node, mNFils As Node
     Dim sType As String
@@ -552,7 +513,7 @@ Private Sub AjouteProp()
     If (strNom <> vbNullString) Then
         If (lngIdxSel > -1) Then
             On Error GoTo GestErr
-            sType = strNom & " (" & cmbLstType.List(lngIdxSel) & ")"
+            sType = strNom & " (" & cmbLstType.List(lngIdxSel) & conPF
             blnObjet = (strarCatDonnes(lngIdxSel) = "o")
 
             'ajoute la nouvelle propriété au treeview, si elle existe ->GestErr
@@ -608,7 +569,7 @@ GestErr:
     Set mNFils = Nothing
     Set mN = Nothing
     If (Err.Number = ccNonUniqueKey) Then
-        MsgBox "Cette propriété existe déjà", vbInformation
+        MsgBox mlgMsgPropExisteDeja, vbInformation
     Else
         GererErrInattendue , "UDAddCode.AjouteProp"
     End If
@@ -646,13 +607,21 @@ Private Sub DelProp()
 End Sub
 
 'Modifié par René Rhéaume le 2 mars 2002
-'Le générateur n'ajoutait plus la portée pour le
-'2e élément d'une propriété en lecture/écriture
+' Le générateur n'ajoutait plus la portée pour le
+' 2e élément d'une propriété en lecture/écriture
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
 Private Sub VoirCode()
+    Static mlgGenerePar As String
+    If (mlgGenerePar = vbNullString) Then
+        mlgGenerePar = LireChaineLocalisee(conNomUD, "Code.VoirCode.mlgGenerePar", "Généré par")
+    End If
+
     Const conEspace As String = " "
     Const conAs As String = " As "
     Const conEgal As String = " = "
     Const conSetEsp As String = conSet & conEspace
+    
     Dim sDeclaration As String, sCode As String
     Dim mN As Node, mNFils As Node
     Dim strTagmN As String
@@ -697,7 +666,7 @@ Private Sub VoirCode()
                     End If
                     sCode = sCode & strNom & conEgal & strTagmN & strNom & vbCrLf
                 Case conSet, conLet
-                    sCode = sCode & "(ByVal " & strTagmN & strNom & "A As " & strType & ")" & vbCrLf
+                    sCode = sCode & "(ByVal " & strTagmN & strNom & "A As " & strType & conPF & vbCrLf
                     If (strTexteFils = conSet) Then
                         sCode = sCode & conSetEsp
                     End If
@@ -710,7 +679,8 @@ Private Sub VoirCode()
         Set mN = mN.Next
     Loop
 
-    sDeclaration = "'//************Généré par c2iExplorer*******************" & vbCrLf & sDeclaration
+    sDeclaration = "'//*********** " & mlgGenerePar & " c2iExplorer ****************" & _
+        vbCrLf & sDeclaration
 
     txtCodeDeclarationView = sDeclaration
     txtCodeView = sCode
@@ -720,7 +690,6 @@ Private Sub VoirCode()
     On Error Resume Next
     txtName = vbNullString
     txtName.SetFocus
-
 End Sub
 
 'Mise en commentaire par René Rhéaume le 28 juillet 2001
@@ -736,6 +705,7 @@ End Sub
 'End Function
 
 Private Sub MakeToolBar()
+    Const conDebL10n As String = "Obj.tbMain.Buttons("
     Dim objButton As Button
 
     With tbMain
@@ -748,19 +718,15 @@ Private Sub MakeToolBar()
         Set objButton = .Buttons.Add(, , , tbrSeparator)
         Set objButton = .Buttons.Add(, conCopie, , , conCopie)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-
-        Select Case lngLanguage
-            Case c2i_Langue_Anglais
-                .Buttons(conAddprop).ToolTipText = "Add a property"
-                .Buttons(conDelprop).ToolTipText = "Delete property"
-                .Buttons(conDelete).ToolTipText = "Delete all"
-                .Buttons(conCopie).ToolTipText = "Copy generated code"
-            Case Else
-                .Buttons(conAddprop).ToolTipText = "Ajouter une propriété"
-                .Buttons(conDelprop).ToolTipText = "Supprimer la propriété"
-                .Buttons(conDelete).ToolTipText = "Remise à zéro"
-                .Buttons(conCopie).ToolTipText = "Copier le code généré"
-        End Select
+        
+        .Buttons(conAddprop).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conDebL10n & "1-->'addprop').ToolTipText", "Ajouter une propriété")
+        .Buttons(conDelprop).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conDebL10n & "2-->'delprop').ToolTipText", "Supprimer la propriété")
+        .Buttons(conDelete).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conDebL10n & "4-->'delete').ToolTipText", "Remettre à zéro")
+        .Buttons(conCopie).ToolTipText = LireChaineLocalisee(conNomUD, _
+                conDebL10n & "6-->'copie').ToolTipText", "Copier le code généré")
     End With
 
     Set objButton = Nothing
@@ -818,4 +784,48 @@ Private Sub UserDocument_Resize()
     txtCodeDeclarationView.Width = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
     txtCodeView.Width = sngLargeurZoneCode
     txtCodeView.Height = sngHauteurFraCode - txtCodeView.Top - conEspaceLibre
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 18 juin 2002
+' Pour alléger UserDocument_Initialize
+'Procédure modifiée par René Rhéaume le 20 juin 2002
+' Support multilingue
+Private Sub ChargerCombos()
+    Static mlgMsgErrChargement As String
+    If (mlgMsgErrChargement = vbNullString) Then
+        mlgMsgErrChargement = LireChaineLocalisee(conNomUD, _
+            "Code.ChargerCombos.mlgMsgErrChargement", "Erreur au chargement de ")
+    End If
+    
+    Const conNomMeth As String = "UDAddCode.ChargerCombos"
+    Dim lngDeb As Long
+    Dim sObj As String, sName As String, sType As String
+    Dim chnContenuSectionTypes As String, tblSectionTypes() As String
+    Dim I As Long, iPos As Long, iPos2 As Long
+    Dim lngFinTab As Long
+    On Error GoTo Fin
+
+    'Nouvelle version
+    lngDeb = GetPrivateProfileInt(conSecGen, "DefaultType", 6, c2iINIFile)
+    chnContenuSectionTypes = LireSectionFichierINI("Types", c2iINIFile)
+    SplitB chnContenuSectionTypes, tblSectionTypes(), vbNullChar
+
+    lngFinTab = UBound(tblSectionTypes()) - 1
+    ReDim strarCatDonnes(0 To lngFinTab)
+    ReDim strarPrefixes(0 To lngFinTab)
+    For I = 0 To lngFinTab
+        iPos = InStr(1, tblSectionTypes(I), "=")
+        sName = Trim$(Left$(tblSectionTypes(I), iPos - 1))
+        cmbLstType.AddItem sName
+        iPos2 = InStr(iPos + 1, tblSectionTypes(I), ";")
+        sObj = Trim$(Mid$(tblSectionTypes(I), iPos + 1, iPos2 - iPos - 1))
+        strarCatDonnes(I) = sObj
+        sType = Trim$(Right$(tblSectionTypes(I), Len(tblSectionTypes(I)) - iPos2))
+        strarPrefixes(I) = sType
+    Next I
+    cmbLstType.ListIndex = lngDeb
+    
+    Exit Sub
+Fin:
+    GererErrInattendue mlgMsgErrChargement & c2iINIFile, conNomMeth
 End Sub
