@@ -25,22 +25,23 @@
 ; ***** END LICENSE BLOCK *****
 
 ; <!DOCTYPE Nullsoft-SuperPiMPScript 1.91>
-; Script NSIS pour c2iExplorer 1.60.120 VB5/6 Beta
+; Script NSIS pour c2iExplorer 1.60.${Revision} VB5/6 Beta
 
 !ifndef VersionVB
 !define VersionVB 5
 !endif
 ;!define VB6
+!define Revision 126
 
-Name "c2iExplorer 1.60.120 Beta pour VB${VersionVB}"
-Caption "c2iExplorer 1.60.120 Beta pour VB${VersionVB}"
+Name "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
+Caption "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
 CRCCheck On
 LicenseText "Lisez et approuvez la licence ci-dessous avant de continuer l'installation."
 LicenseData "C:\Mes documents\c2iexplorer\Source\Modifications René Rhéaume.txt"
 ComponentText "Sélectionnez les composants de c2iExplorer que vous souhaitez installer."
 DirText "Indiquez dans quel dossier est installé Visual Basic ${VersionVB}.0 sur votre ordinateur."
 UninstallText "Ceci supprimera c2iExplorer de votre ordinateur. Cliquez sur «Désinstaller» pour désinstaller ou sur «Annuler» pour quitter."
-!packhdr "temp.dat" "c:\progra~1\upx120w\upx.exe -q --best --compress-icons=1 temp.dat"
+!packhdr "temp.dat" "c:\progra~1\console\upx120w\upx.exe -q --best --compress-icons=1 temp.dat"
 ;UninstallExeName uninst-c2iexplorer.exe
 OutFile "C:\Mes documents\c2iexplorer\c2iexplorer-VB${VersionVB}.exe"
 Icon "C:\Mes documents\c2iexplorer\Source\c2iExplorer.ico"
@@ -59,7 +60,7 @@ Section "c2iExplorer pour VB${VersionVB}"
 	SectionIn 12
 	SetCompress Auto
 	; SetOverwrite ifnewer
-	; Placé en commentaire à cause d'uin règlement de sourceforge.net
+	; Placé en commentaire à cause d'un règlement de sourceforge.net
 	; SetOutPath $SYSDIR
 	; UnRegDLL $SYSDIR\mscomctl.ocx
 	; File "C:\Windows\Bureau\mdinote-setup\mscomctl.ocx"

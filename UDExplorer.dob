@@ -577,7 +577,35 @@ Option Explicit
 ' Nom du projet + ..reference ou ..composant
 'TAG : reference ou OCX
 '***********************************************
-
+Private Const conAbrTagCom As String = "Com"
+Private Const conAbrTagMet As String = "Met"
+Private Const conAbrTagPro As String = "Pro"
+Private Const conClefRessource As String = "Ressource"
+Private Const conImgComposant As String = "composant"
+Private Const conTagComponent As String = "Component"
+Private Const conTagMethode As String = "Methode"
+Private Const conTagProjet As String = "Projet"
+Private Const conTagOcx As String = "ocx"
+Private Const conTexteModule As String = "Module(s)"
+Private Const conActu As String = "actu"
+Private Const conVoir As String = "voir"
+Private Const conProp As String = "prop"
+Private Const conCompile As String = "compile"
+Private Const conDelete As String = "delete"
+Private Const conPublic As String = "public"
+Private Const conPrive As String = "prive"
+Private Const conFriend As String = "friend"
+Private Const conOK As String = "ok"
+Private Const conBtnSelMsgBox As String = "msgboxgene"
+Private Const conBtnSelProp As String = "propgene"
+Private Const conBtnSelBiblio As String = "biblio"
+Private Const conBtnSelInfo As String = "info"
+Private Const conBtnSelInternet As String = "internet"
+Private Const conBtnSelCapture As String = "capture"
+Private Const conClefDossReference As String = "..reference"
+Private Const conClefDossComposant As String = "..composant"
+Private blnAffDesc As Boolean
+Private blnAffFiltres As Boolean
 Public SelectedNode As Node
 Public sSelectedTBButton As String
 
@@ -587,18 +615,20 @@ Public sSelectedTBButton As String
 Private Sub ActuMembreComponent()
     Dim objVBMember As VBIDE.Member
     Dim objVBPrj As VBIDE.VBProject, objVBCmp As VBIDE.VBComponent
-
+    Dim nodSelection As Node
+    
     Work
-
-    Analyse_Component tv.SelectedItem, objVBPrj, objVBCmp
-    Do Until tv.SelectedItem.Children = 0
-        tv.Nodes.Remove tv.SelectedItem.Child.Key
+    
+    Set nodSelection = tv.SelectedItem
+    Analyse_Component nodSelection, objVBPrj, objVBCmp
+    Do Until nodSelection.Children = 0
+        tv.Nodes.Remove nodSelection.Child.Key
     Loop
 
     On Error Resume Next
-    If objVBCmp.Type <> vbext_ct_ResFile Then              'on n'analyse pas les ressources files
+    If (objVBCmp.Type <> vbext_ct_ResFile) Then             'on n'analyse pas les ressources files
         For Each objVBMember In objVBCmp.CodeModule.Members
-            AjouteMembre tv.SelectedItem, objVBMember
+            AjouteMembre nodSelection, objVBMember
         Next
     End If
 
@@ -607,6 +637,7 @@ Private Sub ActuMembreComponent()
     Set objVBPrj = Nothing
     Set objVBCmp = Nothing
     Set objVBMember = Nothing
+    Set nodSelection = Nothing
 End Sub
 
 Private Sub AnalyseNode(ByVal Node As Node)
@@ -616,23 +647,25 @@ Private Sub AnalyseNode(ByVal Node As Node)
     'GENERE LORS D'UN SIMPLE CLICK
     On Error GoTo GestErr
 
-    txtDescription = ""
+    txtDescription = vbNullString
 
     'on regarde sur quel type d'image on a cliqué
     Select Case Left$(Node.Tag, 3)
             'on clique sur un component
-        Case "Com"
+        Case conAbrTagCom
             Analyse_Component Node, objVBPrj, objCmp
             'VERIF QUE TOUT EXISTE
             'le projet a été supprimé, on ne sait pas pourquoi
-            If objVBPrj Is Nothing Then
+            If (objVBPrj Is Nothing) Then
+                ' Note par René Rhéaume, le 8 janvier 2002
+                ' Ce ne serait pas plutôt Node au lieu de tv.SelectedItem
                 tv.Nodes.Remove tv.SelectedItem.Parent.Parent.Key
                 GoTo GestErr
             End If
             'le component a été supprimé
-            If objCmp Is Nothing Then
+            If (objCmp Is Nothing) Then
                 'vérif que ce n'est pas une ressource
-                If Right$(Node.Key, 9) <> "Ressource" Then
+                If (Right$(Node.Key, 9) <> conClefRessource) Then
                     tv.Nodes.Remove tv.SelectedItem.Key
                 End If
                 GoTo GestErr
@@ -643,23 +676,23 @@ Private Sub AnalyseNode(ByVal Node As Node)
             txtDescription = objCmp.Description            'mise à jour de la description
 
             'on clique sur une méthode
-        Case "Met"
+        Case conAbrTagMet
 
             Analyse_Methode Node, objVBPrj, objCmp, objMember    'par référence
 
             'VERIF QUE TOUT EXISTE
             'le projet a été supprimé, on ne sait pas pourquoi
-            If objVBPrj Is Nothing Then
+            If (objVBPrj Is Nothing) Then
                 tv.Nodes.Remove tv.SelectedItem.Parent.Parent.Parent.Key
                 GoTo GestErr
             End If
             'le component a été supprimé
-            If objCmp Is Nothing Then
+            If (objCmp Is Nothing) Then
                 tv.Nodes.Remove tv.SelectedItem.Parent.Key
                 GoTo GestErr
             End If
             'le member a été supprimé
-            If objMember Is Nothing Then
+            If (objMember Is Nothing) Then
                 tv.Nodes.Remove tv.SelectedItem.Key
                 GoTo GestErr
             End If
@@ -670,7 +703,7 @@ Private Sub AnalyseNode(ByVal Node As Node)
 GestErr:
     Set objMember = Nothing
     Set objCmp = Nothing
-    If Not objVBPrj Is Nothing Then
+    If (Not objVBPrj Is Nothing) Then
         Set VBPrjSelected = objVBPrj
     End If
     Set objVBPrj = Nothing
@@ -678,27 +711,26 @@ GestErr:
 End Sub
 
 Private Sub Suppression(ByVal mNode As Node)
+    Const conMsgConfirm As String = "Etes-vous sur de vouloir supprimer "
     Dim sc2iMsgBox As VbMsgBoxResult
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
 
     On Error GoTo GestErr
     Select Case Left$(mNode.Tag, 3)
-        Case "Pro"
-            sc2iMsgBox = MsgBox("Etes-vous sur de vouloir supprimer " + mNode.Text + " ?", vbYesNo + vbDefaultButton2, "c2iExplorer")
-            If sc2iMsgBox = vbYes Then
+        Case conAbrTagPro
+            sc2iMsgBox = MsgBox(conMsgConfirm & mNode.Text & " ?", vbYesNo + vbDefaultButton2, conNomApp)
+            If (sc2iMsgBox = vbYes) Then
                 VBInstance.VBProjects.Remove VBInstance.VBProjects(mNode.Key)
             End If
-            Exit Sub
-        Case "Com"
-            sc2iMsgBox = MsgBox("Etes-vous sur de vouloir supprimer " + mNode.Text + " ?", vbYesNo + vbDefaultButton2, "c2iExplorer")
-            If sc2iMsgBox = vbYes Then
+        Case conAbrTagCom
+            sc2iMsgBox = MsgBox(conMsgConfirm & mNode.Text & " ?", vbYesNo + vbDefaultButton2, conNomApp)
+            If (sc2iMsgBox = vbYes) Then
                 Analyse_Component mNode, objVBPrj, objCmp
                 objVBPrj.VBComponents.Remove objCmp
                 tv.Nodes.Remove mNode
             End If
-            Exit Sub
-        Case "Met"
+        Case conAbrTagMet
             Analyse_Methode mNode, objVBPrj, objCmp, objMember    'par référence
             'suppression d'un membre
             Dim objCodeModule As VBIDE.CodeModule
@@ -706,40 +738,44 @@ Private Sub Suppression(ByVal mNode As Node)
 
             On Error Resume Next
             Select Case mNode.Image
-                Case "Get"
+                Case conGet
                     lngType = vbext_pk_Get
-                Case "Set"
+                Case conSet
                     lngType = vbext_pk_Set
-                Case "Let"
+                Case conLet
                     lngType = vbext_pk_Let
-                Case "methode"
+                Case conMethode
                     lngType = vbext_pk_Proc
             End Select
             Set objCodeModule = objMember.Collection.Parent
             lngStartLine = objCodeModule.ProcStartLine(objMember.Name, lngType)
             lngNumCount = objCodeModule.ProcCountLines(objMember.Name, lngType)
-            If lngNumCount = 0 Then
-                MsgBox "Suppression impossible", vbExclamation, "c2iExplorer"
+            If (lngNumCount = 0) Then
+                MsgBox "Suppression impossible", vbExclamation, conNomApp
             Else
                 Clipboard.Clear
                 Clipboard.SetText objCodeModule.Lines(lngStartLine, lngNumCount)
                 objCodeModule.DeleteLines lngStartLine, lngNumCount
             End If
             Set objCodeModule = Nothing
-            If mNode.Image = "Get" Or mNode.Image = "Set" Or mNode.Image = "Let" Then
-                tv_NodeClick mNode.Parent.Parent
-            Else
-                tv_NodeClick mNode
-            End If
+            Select Case mNode.Image
+                Case conGet, conSet, conLet
+                    tv_NodeClick mNode.Parent.Parent
+                Case Else
+                    tv_NodeClick mNode
+            End Select
     End Select
-    Exit Sub
-GestErr:
-End Sub
 
+GestErr:
+    Set objVBPrj = Nothing
+    Set objCmp = Nothing
+    Set objMember = Nothing
+End Sub
 
 Private Sub ViewNode(ByVal Node As Node)
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
+    Dim lngPos As Long
 
     On Error GoTo GestErr
 
@@ -747,55 +783,56 @@ Private Sub ViewNode(ByVal Node As Node)
     'on regarde sur quel type d'image on a cliqué
     Select Case Left$(Node.Tag, 3)
             'on clique sur un component
-        Case "Com"
-            If Node.Tag <> "Component" Then
+        Case conAbrTagCom
+            If (Node.Tag <> conTagComponent) Then
                 Analyse_Component Node, objVBPrj, objCmp
 
-                If Not objVBPrj Is VBInstance.ActiveVBProject Then
+                If (Not objVBPrj Is VBInstance.ActiveVBProject) Then
                     Set VBInstance.ActiveVBProject = objVBPrj    'on le met actif
                 End If
                 'connection pour l'ajout de références
                 Set Connection.refEvent = VBInstance.Events.ReferencesEvents(objVBPrj)
-                If Not objCmp.CodeModule.CodePane Is VBInstance.ActiveCodePane Then
+                If (Not objCmp.CodeModule.CodePane Is VBInstance.ActiveCodePane) Then
                     Set VBInstance.ActiveCodePane = objCmp.CodeModule.CodePane    'on met le component actif
                 End If
             End If
 
             'on clique sur une méthode
-        Case "Met"
+        Case conAbrTagMet
 
             Analyse_Methode Node, objVBPrj, objCmp, objMember    'par référence
             'VERIF QUE TOUT EXISTE
 
-            If Not objVBPrj Is VBInstance.ActiveVBProject Then
+            If (Not objVBPrj Is VBInstance.ActiveVBProject) Then
                 Set VBInstance.ActiveVBProject = objVBPrj  'on le met actif
             End If
             Set Connection.refEvent = VBInstance.Events.ReferencesEvents(objVBPrj)
-            If Not objCmp.CodeModule.CodePane Is VBInstance.ActiveCodePane Then
+            If (Not objCmp.CodeModule.CodePane Is VBInstance.ActiveCodePane) Then
                 Set VBInstance.ActiveCodePane = objCmp.CodeModule.CodePane    'on met le codepane actif
             End If
             'objCmp.CodeModule.CodePane.TopLine = objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc)
             On Error Resume Next
-            Dim iRecherche As Long
 
             Select Case Node.Image
-                Case "propriete"
-                    If Node.Children <> 0 Then
-                        objCmp.CodeModule.CodePane.TopLine = CLng(Right$(Node.Child.Tag, Len(Node.Child.Tag) - 3))
-                        objCmp.CodeModule.CodePane.SetSelection CLng(Right$(Node.Child.Tag, Len(Node.Child.Tag) - 3)), 1, CLng(Right$(Node.Child.Tag, Len(Node.Child.Tag) - 3)) + 1, 1
+                Case conPropriete
+                    If (Node.Children <> 0) Then
+                        lngPos = CLng(Right$(Node.Child.Tag, Len(Node.Child.Tag) - 3))
+                        objCmp.CodeModule.CodePane.TopLine = lngPos
+                        objCmp.CodeModule.CodePane.SetSelection lngPos, 1, lngPos + 1, 1
                     End If
                     'on ne fait rien
-                Case "Get", "Let", "Set"
-                    objCmp.CodeModule.CodePane.TopLine = CLng(Right$(Node.Tag, Len(Node.Tag) - 3))
-                    objCmp.CodeModule.CodePane.SetSelection CLng(Right$(Node.Tag, Len(Node.Tag) - 3)), 1, CLng(Right$(Node.Tag, Len(Node.Tag) - 3)) + 1, 1
+                Case conGet, conLet, conSet
+                    lngPos = CLng(Right$(Node.Tag, Len(Node.Tag) - 3))
+                    objCmp.CodeModule.CodePane.TopLine = lngPos
+                    objCmp.CodeModule.CodePane.SetSelection lngPos, 1, lngPos + 1, 1
                 Case Else
-                    iRecherche = vbext_pk_Proc
-                    objCmp.CodeModule.CodePane.TopLine = objMember.Collection.Parent.ProcBodyLine(objMember.Name, iRecherche)
-                    If Err.Number <> 0 Then
+                    lngPos = objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc)
+                    objCmp.CodeModule.CodePane.TopLine = lngPos
+                    If (Err.Number <> 0) Then
                         objCmp.CodeModule.CodePane.SetSelection 1, 1, 2, 1
                         Err.Clear
                     Else
-                        objCmp.CodeModule.CodePane.SetSelection objMember.Collection.Parent.ProcBodyLine(objMember.Name, iRecherche), 1, objMember.Collection.Parent.ProcBodyLine(objMember.Name, iRecherche) + 1, 1
+                        objCmp.CodeModule.CodePane.SetSelection lngPos, 1, lngPos + 1, 1
                     End If
             End Select
 
@@ -810,49 +847,58 @@ End Sub
 
 'Ajout par René Rhéaume 2 août 2001
 Private Sub mnuAffichage_Click()
-    mnuAffichageBarreDescription.Checked = tbDescription.Visible
-    mnuAffichageBarreFiltres.Checked = tbFiltre.Visible
+    mnuAffichageBarreDescription.Checked = blnAffDesc
+    mnuAffichageBarreFiltres.Checked = blnAffFiltres
 End Sub
 
 'Ajout par René Rhéaume 2 août 2001
 Private Sub mnuAffichageBarreDescription_Click()
-    mnuAffichageBarreDescription.Checked = Not mnuAffichageBarreDescription.Checked
-    tbDescription.Visible = mnuAffichageBarreDescription.Checked
+    blnAffDesc = Not mnuAffichageBarreDescription.Checked
+'    mnuAffichageBarreDescription.Checked = blnAffDesc
+    tbDescription.Visible = blnAffDesc
     UserDocument_Resize
 End Sub
 
 'Ajout par René Rhéaume 2 août 2001
 Private Sub mnuAffichageBarreFiltres_Click()
-    mnuAffichageBarreFiltres.Checked = Not mnuAffichageBarreFiltres.Checked
-    tbFiltre.Visible = mnuAffichageBarreFiltres.Checked
+    blnAffFiltres = Not mnuAffichageBarreFiltres.Checked
+'    mnuAffichageBarreFiltres.Checked = blnAffFiltres
+    tbFiltre.Visible = blnAffFiltres
     UserDocument_Resize
 End Sub
 
 Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
+    Dim nodSelection As Node
 
     On Error GoTo Fin
-    If Button.Key = "ok" Then
-        If tv.SelectedItem Is Nothing Then Exit Sub
-        Select Case Left$(tv.SelectedItem.Tag, 3)
-            'on clique sur un component
-            Case "Com"
-                Analyse_Component tv.SelectedItem, objVBPrj, objCmp
-                If Not objCmp Is Nothing Then
-                    objCmp.Description = txtDescription
-                End If
-            Case "Met"
-                Analyse_Methode tv.SelectedItem, objVBPrj, objCmp, objMember    'par référence
-                If Not objMember Is Nothing Then
-                    objMember.Description = txtDescription
-                End If
-        End Select
+    If (Button.Key = conOK) Then
+        Set nodSelection = tv.SelectedItem
+        If (Not nodSelection Is Nothing) Then
+            Select Case Left$(nodSelection.Tag, 3)
+                'on clique sur un component
+                Case conAbrTagCom
+                    Analyse_Component nodSelection, objVBPrj, objCmp
+                    If (Not objCmp Is Nothing) Then
+                        objCmp.Description = txtDescription
+                    End If
+                Case conAbrTagMet
+                    Analyse_Methode nodSelection, objVBPrj, objCmp, objMember    'par référence
+                    If (Not objMember Is Nothing) Then
+                        objMember.Description = txtDescription
+                    End If
+            End Select
+        End If
     End If
+    
+SortieProc:
+    Set nodSelection = Nothing
     Exit Sub
 Fin:
-    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
-    Debug.Assert conFaux
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+'    Debug.Assert conFaux
+    Resume SortieProc
 End Sub
 
 ' Ajout par René Rhéaume le 2 août 2001
@@ -863,30 +909,31 @@ Private Sub tbDescription_MouseUp(Button As Integer, Shift As Integer, X As Sing
 End Sub
 
 Private Sub tbFiltre_ButtonClick(ByVal Button As MSComctlLib.Button)
+    Const conDebClefMasquer As String = "n-"
     'mise à jour des images
-    If Left$(Button.Image, 2) = "n-" Then
+    If Left$(Button.Image, 2) = conDebClefMasquer Then
         Button.Image = Right$(Button.Image, Len(Button.Image) - 2)
     Else
-        Button.Image = "n-" + Button.Image
+        Button.Image = conDebClefMasquer & Button.Image
     End If
     Select Case Button.Key
-        Case "variable"
+        Case conVariable
             bAfficheVariable = Not bAfficheVariable
-        Case "constante"
+        Case conConstante
             bAfficheConstante = Not bAfficheConstante
-        Case "methode"
+        Case conMethode
             bAfficheMethode = Not bAfficheMethode
-        Case "evenement"
+        Case conEvenement
             bAfficheEvenement = Not bAfficheEvenement
-        Case "propriete"
+        Case conPropriete
             bAffichePropriete = Not bAffichePropriete
-        Case "api"
+        Case conAPI
             bAfficheAPI = Not bAfficheAPI
-        Case "public"
+        Case conPublic
             bAffichePublic = Not bAffichePublic
-        Case "prive"
+        Case conPrive
             bAffichePrive = Not bAffichePrive
-        Case "friend"
+        Case conFriend
             bAfficheFriend = Not bAfficheFriend
     End Select
 End Sub
@@ -902,74 +949,74 @@ Private Sub tbGene_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim objPrj As VBIDE.VBProject
     Dim objCmp As VBIDE.VBComponent
     Dim objMember As Member
-    Dim I As Long
+    Dim nodSelection As Node
 
     Select Case Button.Key
             'actualisation
-        Case "actu"
+        Case conActu
             Init conVrai
 
             'voir le designer
-        Case "voir"
-            If tv.SelectedItem Is Nothing Then Exit Sub
+        Case conVoir
+            Set nodSelection = tv.SelectedItem
             'Modification par René Rhéaume le 27 juillet 2001
             'Permet d'afficher le code d'un module standard au lieu du
             '«visualiseur de classes». Si c'est une autre sorte de
             'module, par exemple, un module de classe, il affichera
             'le visualiseur de classes. Si c'est une méthode, fait
             'la même chose qu'un double-clic.
-            Select Case tv.SelectedItem.Tag
-                Case "Component"
-                    Analyse_Component tv.SelectedItem, objPrj, objCmp
-                    On Error Resume Next
-                    If Not objCmp.DesignerWindow Is Nothing Then
-                        objCmp.DesignerWindow.Visible = conVrai
-                    Else
-                        Select Case tv.SelectedItem.Parent.Text
-                            Case "Module(s)"
-                                If Not objCmp.CodeModule Is Nothing Then
-                                    objCmp.CodeModule.CodePane.Show
-                                End If
-                            Case Else
-                                objWindowClassViewer.Visible = conVrai
-                                objUDClassViewer.Init objCmp
-                        End Select
-                    End If
-                Case "Methode"
-                    Analyse_Methode tv.SelectedItem, objPrj, objCmp, objMember
-                    ViewNode tv.SelectedItem
-                Case Else
-                    ViewNode tv.SelectedItem
-            End Select
+            If (Not nodSelection Is Nothing) Then
+                Select Case nodSelection.Tag
+                    Case conTagComponent
+                        Analyse_Component nodSelection, objPrj, objCmp
+                        On Error Resume Next
+                        If (Not objCmp.DesignerWindow Is Nothing) Then
+                            objCmp.DesignerWindow.Visible = conVrai
+                        Else
+                            Select Case nodSelection.Parent.Text
+                                Case conTexteModule
+                                    If (Not objCmp.CodeModule Is Nothing) Then
+                                        objCmp.CodeModule.CodePane.Show
+                                    End If
+                                Case Else
+                                    objWindowClassViewer.Visible = conVrai
+                                    objUDClassViewer.Init objCmp
+                            End Select
+                        End If
+                    Case conTagMethode
+                        Analyse_Methode nodSelection, objPrj, objCmp, objMember
+                        ViewNode nodSelection
+                    Case Else
+                        ViewNode nodSelection
+                End Select
+            End If
             'Fin de modification
             Set objMember = Nothing
             Set objCmp = Nothing
             Set objPrj = Nothing
-
+            Set nodSelection = Nothing
 
             'ajout de propriétés
-        Case "prop"
+        Case conProp
             Select Case sSelectedTBButton
-                Case "msgboxgene"
+                Case conBtnSelMsgBox
                     objWindowMsgBox.Visible = conVrai
-                Case "propgene"
+                Case conBtnSelProp
                     objWindowAddCode.Visible = conVrai
-                Case "biblio"
+                Case conBtnSelBiblio
                     objWindowBiblio.Visible = conVrai
-                Case "info"
+                Case conBtnSelInfo
                     objWindowCompteur.Visible = conVrai
-                Case "internet"
+                Case conBtnSelInternet
                     ConnectionInternet "http://www.c2i.fr"
-                Case "capture"
+                Case conBtnSelCapture
                     Impression
             End Select
             'compilation
-        Case "compile"
+        Case conCompile
             'On s'assure qu'il y a un projet ouvert
-            For Each objPrj In VBInstance.VBProjects
-                I = I + 1
-            Next
-            If I > 0 Then
+            If (VBInstance.VBProjects.Count > 0) Then
+                On Error Resume Next
                 #If VersionVB = 5 Then
                 VBInstance.CommandBars(1).Controls(1).Controls(11).Execute
                 #ElseIf VersionVB = 6 Then
@@ -978,52 +1025,53 @@ Private Sub tbGene_ButtonClick(ByVal Button As MSComctlLib.Button)
             End If
 
             'suppression
-        Case "delete"
+        Case conDelete
             Suppression SelectedNode
     End Select
-
-    Set objPrj = Nothing
-    Set objCmp = Nothing
-    Set objMember = Nothing
-
 End Sub
 
 Public Function Impression()
     Dim objPrj As VBProject, objCmp As VBComponent, objMember As Member
-    If tv.SelectedItem Is Nothing Then Exit Function
-    Load frmPrint
-    Select Case Left$(tv.SelectedItem.Tag, 3)
-        Case "Com"
-            Analyse_Component tv.SelectedItem, objPrj, objCmp
-            If Not objCmp Is Nothing Then
-                frmPrint.ObjetSelectionnés Nothing, objCmp
-                frmPrint.Show vbModal
-            End If
-        Case "Met"
-            Analyse_Methode tv.SelectedItem, objPrj, objCmp, objMember    'par référence
-            If Not objCmp Is Nothing Then
-                frmPrint.ObjetSelectionnés Nothing, objCmp
-                frmPrint.Show vbModal
-            End If
-        Case "Pro"
-            Set objPrj = VBInstance.VBProjects(tv.SelectedItem.Key)
-            If Not objPrj Is Nothing Then
-                frmPrint.ObjetSelectionnés objPrj, Nothing
-                frmPrint.Show vbModal
-            End If
-    End Select
+    Dim nodSelection As Node, strDebTag As String
+    Set nodSelection = tv.SelectedItem
+    If (Not nodSelection Is Nothing) Then
+        Load frmPrint
+        strDebTag = Left$(nodSelection.Tag, 3)
+        Select Case strDebTag
+            Case conAbrTagCom, conAbrTagMet
+                If (strDebTag = conAbrTagCom) Then
+                    Analyse_Component nodSelection, objPrj, objCmp
+                Else
+                    Analyse_Methode nodSelection, objPrj, objCmp, objMember    'par référence
+                End If
+                If (Not objCmp Is Nothing) Then
+                    frmPrint.ObjetSelectionnés Nothing, objCmp
+                    frmPrint.Show vbModal
+                End If
+            Case conAbrTagPro
+                Set objPrj = VBInstance.VBProjects(nodSelection.Key)
+                If (Not objPrj Is Nothing) Then
+                    frmPrint.ObjetSelectionnés objPrj, Nothing
+                    frmPrint.Show vbModal
+                End If
+        End Select
+    End If
+    Set objMember = Nothing
+    Set objCmp = Nothing
+    Set objPrj = Nothing
+    Set nodSelection = Nothing
 End Function
 
 Private Sub tbGene_ButtonMenuClick(ByVal ButtonMenu As MSComctlLib.ButtonMenu)
-    tbGene.Buttons("prop").Image = ButtonMenu.Key
+    tbGene.Buttons(conProp).Image = ButtonMenu.Key
     sSelectedTBButton = ButtonMenu.Key
-    tbGene.Buttons("prop").ToolTipText = ButtonMenu.Text
-    tbGene_ButtonClick tbGene.Buttons("prop")
+    tbGene.Buttons(conProp).ToolTipText = ButtonMenu.Text
+    tbGene_ButtonClick tbGene.Buttons(conProp)
 End Sub
 
 ' Ajout par René Rhéaume le 2 août 2001
 Private Sub tbGene_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    If Button = vbRightButton Then
+    If (Button = vbRightButton) Then
         PopupMenu mnuAffichage, , X, Y
     End If
 End Sub
@@ -1037,18 +1085,16 @@ End Sub
 '(supposé être Ctrl+Clic) d'un formulaire, module, etc.
 Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim objPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
-    
-    If Button = vbLeftButton Then
-        If Shift = vbCtrlMask Then
-            Select Case tv.SelectedItem.Tag
-                Case "Component"
-                    Analyse_Component tv.SelectedItem, objPrj, objCmp
-                    On Error Resume Next
-                    objWindowClassViewer.Visible = conVrai
-                    objUDClassViewer.Init objCmp
-            End Select
-        End If
-    End If
+    Select Case conFaux
+         Case Button = vbLeftButton, Shift = vbCtrlMask, tv.SelectedItem.Tag = conTagComponent
+         Case Else
+            Analyse_Component tv.SelectedItem, objPrj, objCmp
+            On Error Resume Next
+            objWindowClassViewer.Visible = conVrai
+            objUDClassViewer.Init objCmp
+    End Select
+    Set objCmp = Nothing
+    Set objPrj = Nothing
 End Sub
 
 Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
@@ -1068,11 +1114,9 @@ Private Sub UserDocument_Initialize()
     bAfficheFriend = conVrai
     bAffichePrive = conVrai
     bAffichePublic = conVrai
-
-    c2iHTMLFile = App.Path & "\html\prev.htm"
-    c2iDataFileNameOrigine = App.Path & "\data\base.c2i"
-    'Ajout par René Rhéaume, 28 juillet 2001
-    c2iINIFile = App.Path & "\data\c2iExplorer.ini"
+    
+    blnAffDesc = tbDescription.Visible
+    blnAffFiltres = tbFiltre.Visible
 
     Set Explorer = New cExplorer
     InitToolbar
@@ -1080,38 +1124,27 @@ End Sub
 
 Private Sub UserDocument_Resize()
     Dim lngHauteurTV As Long
+    Dim lngLargeurBtnDesc As Long
     On Error Resume Next
-    With tv
-        .Left = 0
-        .Width = tbFiltre.Width
-        lngHauteurTV = ScaleHeight - tbGene.Height
-        If tbDescription.Visible = conVrai Then
-            lngHauteurTV = lngHauteurTV - tbDescription.Height
-        End If
-        If tbFiltre.Visible = conVrai Then
-            lngHauteurTV = lngHauteurTV - tbFiltre.Height
-        End If
-        .Height = lngHauteurTV
-        .Top = tbGene.Top + tbGene.Height
-    End With
+    lngHauteurTV = ScaleHeight - tbGene.Height
+    If (tbDescription.Visible) Then
+        lngHauteurTV = lngHauteurTV - tbDescription.Height
+    End If
+    If (tbFiltre.Visible) Then
+        lngHauteurTV = lngHauteurTV - tbFiltre.Height
+    End If
+    tv.Move 0, tbGene.Top + tbGene.Height, tbFiltre.Width, lngHauteurTV
 
-    If tbDescription.Visible = conVrai Then
-        With txtDescription
-'            .Width = ScaleX(ScaleWidth, vbPixels, vbTwips) - ScaleX(tbDescription.Buttons(1).Width, vbPixels, vbTwips)
-'            .Height = ScaleY(tbDescription.Height, vbPixels, vbTwips)
-'            .Left = ScaleX(tbDescription.Buttons(1).Width, vbPixels, vbTwips)
-            .Width = ScaleWidth - tbDescription.Buttons(1).Width
-            .Height = tbDescription.Height
-            .Left = tbDescription.Buttons(1).Width
-            .Top = 0
-        End With
+    If (tbDescription.Visible) Then
+        lngLargeurBtnDesc = tbDescription.Buttons(1).Width
+        txtDescription.Move lngLargeurBtnDesc, 0, ScaleWidth - lngLargeurBtnDesc, lngLargeurBtnDesc
     End If
 End Sub
 
 Public Sub Init(Optional ByVal bClear As Boolean = conFaux)
     Dim objVBPrj As VBIDE.VBProject
 
-    If bClear Then
+    If (bClear) Then
         With tv
             .Visible = conFaux
             .Nodes.Clear
@@ -1145,9 +1178,9 @@ Public Sub AjouteProjet(ByVal objVBPrj As VBIDE.VBProject)
     sKey = objVBPrj.Name
     sImageKey = ExtraitIconeProjet(objVBPrj)
     Set mNodePrj = tv.Nodes.Add(, , sKey, objVBPrj.Name, sImageKey)
-    mNodePrj.Tag = "Projet"
+    mNodePrj.Tag = conTagProjet
     mNodePrj.Sorted = conVrai
-    If objVBPrj Is objVBPrj.Collection.StartProject Then
+    If (objVBPrj Is objVBPrj.Collection.StartProject) Then
         mNodePrj.Bold = conVrai
     End If
 
@@ -1183,7 +1216,7 @@ Public Sub AjouteProjet(ByVal objVBPrj As VBIDE.VBProject)
 
     Set tv.SelectedItem = mNodePrj
     Set mNodePrj = Nothing
-
+    Set objVBCmp = Nothing
 End Sub
 
 Public Sub RetireProjet(ByVal objVBPrj As VBIDE.VBProject)
@@ -1206,19 +1239,17 @@ Public Sub AjouteComponent(ByVal objVBCmp As VBIDE.VBComponent)
     'Component
     '***********************************************
     Set mNodePrj = tv.Nodes(objVBCmp.Collection.Parent.Name)
-    
-    If objVBCmp.Type = vbext_ct_ResFile Then
-        sKey = objVBCmp.Collection.Parent.Name + "\" + "Ressource"
-        sImageKey = ExtraitIconeComponent(objVBCmp)
+    sImageKey = ExtraitIconeComponent(objVBCmp)
+    If (objVBCmp.Type = vbext_ct_ResFile) Then
+        sKey = objVBCmp.Collection.Parent.Name & conBS & conClefRessource
         Set mNodeCmp = tv.Nodes.Add(NodeTypeFeuille(objVBCmp.Collection.Parent.Name, sImageKey), tvwChild, sKey, objVBCmp.FileNames(1), sImageKey)
     Else
-        sKey = objVBCmp.Collection.Parent.Name + "\" + objVBCmp.Name
-        sImageKey = ExtraitIconeComponent(objVBCmp)
+        sKey = objVBCmp.Collection.Parent.Name & conBS & objVBCmp.Name
         Set mNodeCmp = tv.Nodes.Add(NodeTypeFeuille(objVBCmp.Collection.Parent.Name, sImageKey), tvwChild, sKey, objVBCmp.Name, sImageKey)
+        mNodeCmp.EnsureVisible
     End If
-    mNodeCmp.Tag = "Component"
+    mNodeCmp.Tag = conTagComponent
     mNodeCmp.Sorted = conVrai
-    mNodeCmp.EnsureVisible
     
 GestErr:
     Set mNodePrj = Nothing
@@ -1226,18 +1257,21 @@ GestErr:
 End Sub
 
 Public Sub RetireComposant(ByVal objVBCmp As VBIDE.VBComponent, Optional ByVal sOldName As String)
-    Dim sKeyParent As String, sName As String
+    Dim sKeyParent As String, sName As String, strClef As String
 
-    If sOldName = "" Then
+    If (sOldName = vbNullString) Then
         sName = objVBCmp.Name
     Else
         sName = sOldName
     End If
     On Error GoTo GestErr
-    sKeyParent = tv.Nodes(objVBCmp.Collection.Parent.Name + "\" + sName).Parent.Key
-    tv.Nodes.Remove objVBCmp.Collection.Parent.Name + "\" + sName
+    strClef = objVBCmp.Collection.Parent.Name & conBS & sName
+    sKeyParent = tv.Nodes(strClef).Parent.Key
+    tv.Nodes.Remove strClef
 
-    If tv.Nodes(sKeyParent).Children = 0 Then tv.Nodes.Remove sKeyParent
+    If (tv.Nodes(sKeyParent).Children = 0) Then
+        tv.Nodes.Remove sKeyParent
+    End If
     Exit Sub
 
 GestErr:
@@ -1245,8 +1279,12 @@ GestErr:
 End Sub
 
 Public Function AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Member)
+#If OldC2iStyle <> 1 Then
+    Const conCmd As String = "cmd"
+#End If
     Dim sImageKey As String, lngCouleurPortee As Long, sKey As String
     Dim mNodeMember As Node, mNodeProp As Node, Neu As Node
+
 
     '***********************************************
     'CLE D'UN MEMBRE
@@ -1260,49 +1298,58 @@ Public Function AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.
     On Error Resume Next
     If AfficheMembre(objVBMember) Then                     'on l'affiche ?
         sImageKey = ExtraitIconeMembre(objVBMember, lngCouleurPortee) 'détermination de l'icone
-        Dim sAff As String
-        sAff = ""   'si vous souhaitez l'ancienne présentation, mettez sAff à c2i comme valeur
-        If sAff = "c2i" Then
-            sKey = objVBMember.Collection.Parent.Parent.Collection.Parent.Name + "\" + objVBMember.Collection.Parent.Parent.Name + "\" + objVBMember.Name
+        ' Modifié par René Rhéaume le 9 janvier 2002
+        ' Optimisation de la modification de FredJust
+        
+#If OldC2iStyle = 1 Then
+        With objVBMember.Collection.Parent.Parent
+            sKey = .Collection.Parent.Name & conBS & .Name & conBS & objVBMember.Name
             Set mNodeMember = tv.Nodes.Add(mNodeCmp, tvwChild, sKey, objVBMember.Name, sImageKey)
-        Else
+        End With
+#Else
 '//-------------------------------------------------------------//
-            'Modifications de FredJust le 10/10/2000 16:44:42
-            'Ajout d'un Node pour le dossier
-            Set Neu = tv.Nodes(objVBMember.Collection.Parent.Parent.Collection.Parent.Name + "\" + objVBMember.Collection.Parent.Parent.Name + "\" + sImageKey)
-            Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, objVBMember.Collection.Parent.Parent.Collection.Parent.Name + "\" + objVBMember.Collection.Parent.Parent.Name + "\" + sImageKey, sImageKey, "d" & sImageKey)
-            If objVBMember.Type = 1 And InStr(1, objVBMember.Name, "_") <> 0 Then
-                Set Neu = tv.Nodes(objVBMember.Collection.Parent.Parent.Collection.Parent.Name + "\" + objVBMember.Collection.Parent.Parent.Name + "\cmd")
-                Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, objVBMember.Collection.Parent.Parent.Collection.Parent.Name + "\" + objVBMember.Collection.Parent.Parent.Name + "\cmd", "Objets", "dcmd")
-            End If
-            sKey = objVBMember.Collection.Parent.Parent.Collection.Parent.Name + "\" + objVBMember.Collection.Parent.Parent.Name + "\" + objVBMember.Name
+        'Modifications de FredJust le 10/10/2000 16:44:42
+        'Ajout d'un Node pour le dossier
+        With objVBMember.Collection.Parent.Parent
+            sKey = .Collection.Parent.Name & conBS & .Name & conBS
+            Set Neu = tv.Nodes(sKey & sImageKey)
+            Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & sImageKey, sImageKey, "d" & sImageKey)
+            Select Case conFaux
+                Case objVBMember.Type = vbext_mt_Method, InStr(1, objVBMember.Name, "_") <> 0
+                Case Else
+                    Set Neu = tv.Nodes(sKey & conCmd)
+                    Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & conCmd, "Objets", "dcmd")
+            End Select
+            sKey = sKey & objVBMember.Name
             Set mNodeMember = tv.Nodes.Add(Neu, tvwChild, sKey, objVBMember.Name, sImageKey)
-            'Fin de modification
+        End With
+        'Fin de modification
 '//-------------------------------------------------------------//
-        End If
-        mNodeMember.Tag = "Methode"
+#End If
+        ' Fin de la modification de René Rhéaume
+        mNodeMember.Tag = conTagMethode
         mNodeMember.ForeColor = lngCouleurPortee
 
         'ajout des Set, Get, Let
-        If objVBMember.Type = vbext_mt_Property Then
+        If (objVBMember.Type = vbext_mt_Property) Then
             'recherche du Get
             Dim iGet As Long, iLet As Long, iSet As Long
             iGet = objVBMember.Collection.Parent.ProcBodyLine(objVBMember.Name, vbext_pk_Get)
-            If iGet <> 0 Then
-                Set mNodeProp = tv.Nodes.Add(mNodeMember, tvwChild, mNodeMember.Key + "Get", "Get", "Get")
-                mNodeProp.Tag = "Met" + CStr(iGet)
+            If (iGet <> 0) Then
+                Set mNodeProp = tv.Nodes.Add(mNodeMember, tvwChild, mNodeMember.Key + conGet, conGet, conGet)
+                mNodeProp.Tag = conAbrTagMet & CStr(iGet)
             End If
             'recherche du Let
             iLet = objVBMember.Collection.Parent.ProcBodyLine(objVBMember.Name, vbext_pk_Let)
-            If iLet <> 0 Then
-                Set mNodeProp = tv.Nodes.Add(mNodeMember, tvwChild, mNodeMember.Key + "Let", "Let", "Let")
-                mNodeProp.Tag = "Met" + CStr(iLet)
+            If (iLet <> 0) Then
+                Set mNodeProp = tv.Nodes.Add(mNodeMember, tvwChild, mNodeMember.Key + conLet, conLet, conLet)
+                mNodeProp.Tag = conAbrTagMet & CStr(iLet)
             Else
                 'recherche du Set
                 iSet = objVBMember.Collection.Parent.ProcBodyLine(objVBMember.Name, vbext_pk_Set)
-                If iSet <> 0 Then
-                    Set mNodeProp = tv.Nodes.Add(mNodeMember, tvwChild, mNodeMember.Key + "Set", "Set", "Set")
-                    mNodeProp.Tag = "Met" + CStr(iSet)
+                If (iSet <> 0) Then
+                    Set mNodeProp = tv.Nodes.Add(mNodeMember, tvwChild, mNodeMember.Key + conSet, conSet, conSet)
+                    mNodeProp.Tag = conAbrTagMet & CStr(iSet)
                 End If
             End If
             Set mNodeProp = Nothing
@@ -1324,11 +1371,11 @@ Public Sub InitReferences(objVBPrj As VBIDE.VBProject)
     On Error GoTo GestErr
     
     Set mNodePrj = tv.Nodes(objVBPrj.Name)
-    Set mNodeRef = tv.Nodes.Add(mNodePrj, tvwChild, mNodePrj.Key + "..reference", "Références", "dreference")
+    Set mNodeRef = tv.Nodes.Add(mNodePrj, tvwChild, mNodePrj.Key & conClefDossReference, "Références", "dreference")
     mNodeRef.Tag = "Reference"
     'mNodeRef.ForeColor = RGB(0, 0, 255)
     mNodeRef.Bold = conVrai
-    Set mNodeComposant = tv.Nodes.Add(mNodePrj, tvwChild, mNodePrj.Key + "..composant", "Composants", "dcomposant")
+    Set mNodeComposant = tv.Nodes.Add(mNodePrj, tvwChild, mNodePrj.Key & conClefDossComposant, "Composants", "dcomposant")
     mNodeComposant.Tag = "OCX"
     'mNodeComposant.ForeColor = RGB(0, 0, 255)
     mNodeComposant.Bold = conVrai
@@ -1337,26 +1384,24 @@ Public Sub InitReferences(objVBPrj As VBIDE.VBProject)
         AjouteReference objVBPrj, objRef
     Next
     
+SortieProc:
     Set mNodePrj = Nothing
     Set mNodeRef = Nothing
     Set mNodeComposant = Nothing
+    Set objRef = Nothing
     Exit Sub
 
 GestErr:
     MsgBox "Erreur dans la lecture des Références no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbInformation
-    Set mNodePrj = Nothing
-    Set mNodeRef = Nothing
-    Set mNodeComposant = Nothing
-
+    Resume SortieProc
 End Sub
 
 Public Sub AjouteReference(ByRef objVBPrj As VBIDE.VBProject, ByRef objRef As VBIDE.Reference)
-
     On Error GoTo Fin
-    If Right$(objRef.FullPath, 3) = "oca" Then
-        AjouteOCX objRef, tv.Nodes(objVBPrj.Name + "..composant")
+    If (Right$(objRef.FullPath, 3) = "oca") Then
+        AjouteOCX objRef, tv.Nodes(objVBPrj.Name & conClefDossComposant)
     Else
-        AjouteBibliotheque objRef, tv.Nodes(objVBPrj.Name + "..reference")
+        AjouteBibliotheque objRef, tv.Nodes(objVBPrj.Name & conClefDossReference)
     End If
 
     Exit Sub
@@ -1364,15 +1409,16 @@ Fin:
     'lien interne, groupe de projet
     Dim mCmp As Node
     On Error Resume Next
-    Set mCmp = tv.Nodes.Add(tv.Nodes(objVBPrj.Name + "..composant"), tvwChild, tv.Nodes(objVBPrj.Name + "..composant").Key + objRef.Name, objRef.Name + " (" + CStr(objRef.Major) + "." + CStr(objRef.Minor) + ")", "composant")
-    mCmp.Tag = "ocx"
-    If objRef.BuiltIn Then
-        mCmp.ForeColor = vbBlue                            'ne peut être supprimé
+    Set mCmp = tv.Nodes.Add(tv.Nodes(objVBPrj.Name & conClefDossComposant), tvwChild, tv.Nodes(objVBPrj.Name + conClefDossComposant).Key + objRef.Name, objRef.Name + " (" + CStr(objRef.Major) + "." + CStr(objRef.Minor) + ")", conImgComposant)
+    mCmp.Tag = conTagOcx
+    If (objRef.IsBroken) Then
+        mCmp.ForeColor = vbRed          'lien cassé
+    Else
+        If (objRef.BuiltIn) Then
+            mCmp.ForeColor = vbBlue     'ne peut être supprimé
+        End If
     End If
-    If objRef.IsBroken Then
-        mCmp.ForeColor = vbRed                             'lien cassé
-    End If
-
+    
     Set mCmp = Nothing
 End Sub
 
@@ -1386,17 +1432,19 @@ Private Sub AjouteOCX(ByRef objRef As VBIDE.Reference, ByRef mNodeComposant As N
     'ocx
     '***********************************************
     On Error Resume Next
-    Set mCmp = tv.Nodes.Add(mNodeComposant, tvwChild, mNodeComposant.Key + objRef.Name, objRef.Description + " (" + CStr(objRef.Major) + "." + CStr(objRef.Minor) + ")", "composant")
-    mCmp.Tag = "ocx"
-    If objRef.BuiltIn Then
-        mCmp.ForeColor = vbBlue                            'ne peut être supprimé
-    End If
-    If objRef.IsBroken Then
-        mCmp.ForeColor = vbRed                             'lien cassé
+    Set mCmp = tv.Nodes.Add(mNodeComposant, tvwChild, mNodeComposant.Key & objRef.Name, objRef.Description & " (" + CStr(objRef.Major) + "." & CStr(objRef.Minor) + ")", conImgComposant)
+    mCmp.Tag = conTagOcx
+    If (objRef.IsBroken) Then
+        mCmp.ForeColor = vbRed          'lien cassé
+    Else
+        If (objRef.BuiltIn) Then
+            mCmp.ForeColor = vbBlue     'ne peut être supprimé
+        End If
     End If
 
     Set mCmp = Nothing
 End Sub
+
 Private Sub AjouteBibliotheque(ByRef objRef As VBIDE.Reference, ByRef mNodeRef As Node)
     Dim mRef As Node
 
@@ -1409,11 +1457,12 @@ Private Sub AjouteBibliotheque(ByRef objRef As VBIDE.Reference, ByRef mNodeRef A
     On Error Resume Next
     Set mRef = tv.Nodes.Add(mNodeRef, tvwChild, mNodeRef.Key + objRef.Name, objRef.Description + " (" + CStr(objRef.Major) + "." + CStr(objRef.Minor) + ")", "reference")
     mRef.Tag = "ref"
-    If objRef.BuiltIn Then
-        mRef.ForeColor = vbBlue                            'ne peut être supprimé
-    End If
-    If objRef.IsBroken Then
-        mRef.ForeColor = vbRed                             'lien cassé
+    If (objRef.IsBroken) Then
+        mRef.ForeColor = vbRed          'lien cassé
+    Else
+        If (objRef.BuiltIn) Then
+            mRef.ForeColor = vbBlue     'ne peut être supprimé
+        End If
     End If
 
     Set mRef = Nothing
@@ -1429,7 +1478,7 @@ Private Function NodeTypeFeuille(ByVal sNomProjet As String, sImageKey As String
     'TAG
     'Dossier
     '***********************************************
-    Set NodeTypeFeuille = tv.Nodes(sNomProjet + ".." + sImageKey)
+    Set NodeTypeFeuille = tv.Nodes(sNomProjet & ".." & sImageKey)
     Exit Function
 
 GestErr:
@@ -1438,71 +1487,71 @@ GestErr:
 
     If lngLanguage = c2i_Langue_Français Then
         Select Case sImageKey
-            Case "ActiveXDesigner"
+            Case conActiveXDesigner
                 sNomType = "Concepteur(s) ActiveX"
-            Case "ClassModule"
+            Case conClassModule
                 sNomType = "Module(s) de classe"
-            Case "DocObject"
+            Case conDocObject
                 sNomType = "Document(s) utilisateur"
-            Case "MSForm"
+            Case conMSForm
                 sNomType = "Formulaire(s) MSForms"
-            Case "PropPage"
+            Case conPropPage
                 sNomType = "Page(s) de propriétés"
-            Case "RelatedDocument"
+            Case conRelatedDocument
                 sNomType = "Document(s) associé(s)"
-            Case "ResFile"
+            Case conResFile
                 sNomType = "Ressources externes"
-            Case "StdModule"
+            Case conStdModule
                 'Note par René Rhéaume 27 julllet 2001 8h53 HAE
                 'Si vous changez ce nom, il faudra aussi le changer dans
                 'cette chaîne Sub tbGene_ButtonClick de ce document
                 'utilisateur. Si les noms en français et en anglais ne
                 'sont plus les mêmes, il faudra changer le
                 '«Case "<Nom>"» par «Case "<Nom français>", "<English Name>"»
-                sNomType = "Module(s)"
-            Case "UserControl"
+                sNomType = conTexteModule
+            Case conUserControl
                 sNomType = "Contrôle(s) utilisateur"
-            Case "VBChildForm"
+            Case conVBChildForm
                 sNomType = "Fenêtre(s) enfant MDI"
-            Case "VBForm"
+            Case conVBForm
                 sNomType = "Formulaire(s)"
                 sImageKey = "VBForm"
-            Case "VBMDIForm"
+            Case conVBMDIForm
                 sNomType = "Fenêtre MDI mère"
             Case Else
-                sNomType = "Inconnu"
+                sNomType = conInconnu
         End Select
     Else
         Select Case sImageKey
-            Case "ActiveXDesigner"
+            Case conActiveXDesigner
                 sNomType = "ActiveX Designer(s)"
-            Case "ClassModule"
+            Case conClassModule
                 sNomType = "Class module(s)"
-            Case "DocObject"
+            Case conDocObject
                 sNomType = "User document(s)"
-            Case "MSForm"
+            Case conMSForm
                 sNomType = "MS Form"
-            Case "PropPage"
+            Case conPropPage
                 sNomType = "Property page(s)"
-            Case "RelatedDocument"
+            Case conRelatedDocument
                 sNomType = "Associated document(s)"
-            Case "ResFile"
+            Case conResFile
                 sNomType = "Ressource file"
-            Case "StdModule"
+            Case conStdModule
                 'Note par René Rhéaume 27 julllet 2001 8h53 HAE
                 'Si vous changez ce nom, il faudra aussi le changer dans
                 'cette chaîne Sub tbGene_ButtonClick de ce document
                 'utilisateur. Si les noms en français et en anglais ne
                 'sont plus les même, il faudra changer le
                 '«Case "<Nom>"» par «Case "<Nom français>", "<English Name>"»
-                sNomType = "Module(s)"
-            Case "UserControl"
+                sNomType = conTexteModule
+            Case conUserControl
                 sNomType = "User Control(s)"
-            Case "VBChildForm"
+            Case conVBChildForm
                 sNomType = "Child Form(s)"
-            Case "VBForm"
+            Case conVBForm
                 sNomType = "Form(s)"
-            Case "VBMDIForm"
+            Case conVBMDIForm
                 sNomType = "MDI Form"
             Case Else
                 sNomType = "Unknown"
@@ -1518,7 +1567,7 @@ End Function
 Private Sub Analyse_Component(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProject, ByRef objCmp As VBIDE.VBComponent)
     Dim sKey As String
 
-    On Error Resume Next                                   'à cause des Resfile qui ont une clé ="" et n'ont pas de Designer
+    On Error Resume Next 'à cause des Resfile qui ont une clé =vbNullString et n'ont pas de Designer
     Set objPrj = VBInstance.VBProjects(mNode.Parent.Parent.Key)    'on recherche le projet
     sKey = Right$(mNode.Key, Len(mNode.Key) - Len(mNode.Parent.Parent.Key) - 1)    'clé du component
     Set objCmp = objPrj.VBComponents(sKey)
@@ -1526,17 +1575,25 @@ End Sub
 
 Private Sub Analyse_Methode(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProject, ByRef objCmp As VBIDE.VBComponent, ByRef objMember As Member)
     Dim sKey As String, mNodeRecherche As Node
+    Dim strClefPrj As String, strClefPar As String
+    Dim lngLenCPar As String
 
-    If mNode = "Get" Or mNode = "Let" Or mNode = "Set" Then
-        Set mNodeRecherche = mNode.Parent
-    Else
-        Set mNodeRecherche = mNode
-    End If
+    Select Case mNode
+        Case conGet, conLet, conSet
+            Set mNodeRecherche = mNode.Parent
+        Case Else
+            Set mNodeRecherche = mNode
+    End Select
     'Set objPrj = VBInstance.VBProjects(mNodeRecherche.Parent.Parent.Parent.Key)    'on recherche le projet
-    Set objPrj = VBInstance.VBProjects(mNodeRecherche.Parent.Parent.Parent.Parent.Key)    'on recherche le projet
-    sKey = Right$(mNodeRecherche.Parent.Parent.Key, Len(mNodeRecherche.Parent.Parent.Key) - Len(mNodeRecherche.Parent.Parent.Parent.Parent.Key) - 1)    'clé du component
+    With mNodeRecherche.Parent.Parent
+        strClefPrj = .Parent.Parent.Key
+        strClefPar = .Key
+    End With
+    lngLenCPar = Len(strClefPar)
+    Set objPrj = VBInstance.VBProjects(strClefPrj)    'on recherche le projet
+    sKey = Right$(strClefPar, lngLenCPar - Len(strClefPrj) - 1)    'clé du component
     Set objCmp = objPrj.VBComponents(sKey)
-    sKey = Right$(mNodeRecherche.Key, Len(mNodeRecherche.Key) - Len(mNodeRecherche.Parent.Parent.Key) - 1)    'clé du membre
+    sKey = Right$(mNodeRecherche.Key, Len(mNodeRecherche.Key) - lngLenCPar - 1)    'clé du membre
     On Error Resume Next
     Set objMember = objCmp.CodeModule.Members(sKey)
 End Sub
@@ -1545,127 +1602,94 @@ Private Sub UserDocument_Show()
     UserDocument_Resize
 End Sub
 
-Private Function AfficheMembre(ByVal objMember As VBIDE.Member) As Boolean
-    '=========================================
-    'Détermine si l'on affiche le membre sélectionné
-    'en fonction du filtre général
-    '=========================================
-    '
-    AfficheMembre = conFaux                                  'on n'affiche pas par default
-    Select Case objMember.Type
-        Case vbext_mt_Const
-            AfficheMembre = bAfficheConstante
-        Case vbext_mt_Event
-            AfficheMembre = bAfficheEvenement
-        Case vbext_mt_Method
-            'extraction de la ligne de code
-            If objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1 Then
-                AfficheMembre = bAfficheMethode
-            Else
-                AfficheMembre = bAfficheAPI
-            End If
-        Case vbext_mt_Property
-            AfficheMembre = bAffichePropriete
-        Case vbext_mt_Variable
-            AfficheMembre = bAfficheVariable
-        Case Else
-            AfficheMembre = conVrai
-    End Select
 
-    Select Case objMember.Scope
-        Case vbext_Friend
-            If Not bAfficheFriend Then AfficheMembre = conFaux
-        Case vbext_Private
-            If Not bAffichePrive Then AfficheMembre = conFaux
-        Case vbext_Public
-            If Not bAffichePublic Then AfficheMembre = conFaux
-    End Select
-
-End Function
 
 Private Sub InitToolbar()
+    Const conLanguage As String = "Language"
+    Const conIdxResFlt As Integer = 1100
+    Const conIdxResGen As Integer = 1000
     Dim objButton As Button, objButtonMenu As ButtonMenu
     Dim lngLanguageTemp As Long
     
     'Sélection de la langue
-    lngLanguageTemp = GetPrivateProfileInt("General", "Language", 1, c2iINIFile)
+    lngLanguageTemp = GetPrivateProfileInt(conSecGen, conLanguage, 1, c2iINIFile)
     Select Case lngLanguageTemp
         Case 1, 2
             lngLanguage = lngLanguageTemp
         Case Else
             lngLanguage = c2i_Langue_Français
-            WritePrivateProfileString "General", "Language", "1", c2iINIFile
+            WritePrivateProfileString conSecGen, conLanguage, "1", c2iINIFile
     End Select
 
 
     With tbFiltre
         .ImageList = ImgLstFilter
 
-        Set objButton = .Buttons.Add(, "variable", , , "variable")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage)
+        Set objButton = .Buttons.Add(, conVariable, , , conVariable)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage)
 
-        Set objButton = .Buttons.Add(, "constante", , , "constante")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 1)
+        Set objButton = .Buttons.Add(, conConstante, , , conConstante)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 1)
 
-        Set objButton = .Buttons.Add(, "methode", , , "methode")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 2)
+        Set objButton = .Buttons.Add(, conMethode, , , conMethode)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 2)
 
-        Set objButton = .Buttons.Add(, "evenement", , , "evenement")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 3)
+        Set objButton = .Buttons.Add(, conEvenement, , , conEvenement)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 3)
 
-        Set objButton = .Buttons.Add(, "propriete", , , "propriete")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 4)
+        Set objButton = .Buttons.Add(, conPropriete, , , conPropriete)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 4)
 
-        Set objButton = .Buttons.Add(, "api", , , "api")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 5)
+        Set objButton = .Buttons.Add(, conAPI, , , conAPI)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 5)
 
-        Set objButton = .Buttons.Add(, "public", , , "public")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 6)
+        Set objButton = .Buttons.Add(, conPublic, , , conPublic)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 6)
 
-        Set objButton = .Buttons.Add(, "prive", , , "prive")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 7)
+        Set objButton = .Buttons.Add(, conPrive, , , conPrive)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 7)
 
-        Set objButton = .Buttons.Add(, "friend", , , "friend")
-        objButton.ToolTipText = LoadResString(1100 * lngLanguage + 8)
+        Set objButton = .Buttons.Add(, conFriend, , , conFriend)
+        objButton.ToolTipText = LoadResString(conIdxResFlt * lngLanguage + 8)
     End With
 
     With tbGene
         Set .ImageList = ImgTBGene
         Set .HotImageList = ImgTBGene
 
-        Set objButton = .Buttons.Add(, "actu", , , "actu")
-        objButton.ToolTipText = LoadResString(1000 * lngLanguage)
+        Set objButton = .Buttons.Add(, conActu, , , conActu)
+        objButton.ToolTipText = LoadResString(conIdxResGen * lngLanguage)
 
-        Set objButton = .Buttons.Add(, "voir", , , "voir")
-        objButton.ToolTipText = LoadResString(1000 * lngLanguage + 1)
+        Set objButton = .Buttons.Add(, conVoir, , , conVoir)
+        objButton.ToolTipText = LoadResString(conIdxResGen * lngLanguage + 1)
 
-        Set objButton = .Buttons.Add(, "delete", , , "delete")
+        Set objButton = .Buttons.Add(, conDelete, , , conDelete)
         objButton.ToolTipText = "Supprimer"
 
-        Set objButton = .Buttons.Add(, "prop", , tbrDropdown, "info")
+        Set objButton = .Buttons.Add(, conProp, , tbrDropdown, conBtnSelInfo)
         objButton.ToolTipText = "Durée du développement"
-        objButton.ButtonMenus.Add , "info", "Durée du développement"
-        objButton.ButtonMenus.Add , "propgene", "Générateur de propriétés"
-        objButton.ButtonMenus.Add , "msgboxgene", "Générateur de MsgBox"
-        objButton.ButtonMenus.Add , "biblio", "Bibliothèque de code"
-        objButton.ButtonMenus.Add , "internet", "c2iExplorer sur le Web"
-        objButton.ButtonMenus.Add , "capture", "Imprimer"
-        sSelectedTBButton = "info"
+        objButton.ButtonMenus.Add , conBtnSelInfo, "Durée du développement"
+        objButton.ButtonMenus.Add , conBtnSelProp, "Générateur de propriétés"
+        objButton.ButtonMenus.Add , conBtnSelMsgBox, "Générateur de MsgBox"
+        objButton.ButtonMenus.Add , conBtnSelBiblio, "Bibliothèque de code"
+        objButton.ButtonMenus.Add , conBtnSelInternet, "c2iExplorer sur le Web"
+        objButton.ButtonMenus.Add , conBtnSelCapture, "Imprimer"
+        sSelectedTBButton = conBtnSelInfo
 
         Set objButton = .Buttons.Add(, "nul1", , tbrSeparator)
 
-        Set objButton = .Buttons.Add(, "compile", , , "compile")
-        objButton.ToolTipText = LoadResString(1000 * lngLanguage + 6)
+        Set objButton = .Buttons.Add(, conCompile, , , conCompile)
+        objButton.ToolTipText = LoadResString(conIdxResGen * lngLanguage + 6)
     End With
 
     With tbDescription
         Set .ImageList = ImgTbDescription
         Set .HotImageList = ImgTbDescription
-        Set objButton = .Buttons.Add(, "ok", , , "ok")
-        If lngLanguage = c2i_Langue_Français Then
-            objButton.ToolTipText = "Appliquer la description"
-        Else
+        Set objButton = .Buttons.Add(, conOK, , , conOK)
+        If lngLanguage = c2i_Langue_Anglais Then
             objButton.ToolTipText = "Apply description"
+        Else
+            objButton.ToolTipText = "Appliquer la description"
         End If
     End With
 
@@ -1674,17 +1698,17 @@ Private Sub InitToolbar()
 End Sub
 
 Public Function Work(Optional ByVal bWork As Boolean = conVrai)
-    If bWork Then
-        tbGene.Buttons("actu").Image = "actuwork"
+    If (bWork) Then
+        tbGene.Buttons(conActu).Image = "actuwork"
     Else
-        tbGene.Buttons("actu").Image = "actu"
+        tbGene.Buttons(conActu).Image = conActu
     End If
     DoEvents
 End Function
 
 Private Sub UserDocument_Terminate()
     'Modifié par René Rhéaume, 3 août 2001
-    sSelectedTBButton = ""
+    sSelectedTBButton = vbNullString
     Set SelectedNode = Nothing
     Set Explorer = Nothing
 
@@ -1693,5 +1717,5 @@ Private Sub UserDocument_Terminate()
 '        Debug.Assert NombreInstancesClasses = 0
 '    End If
     'Modifié par René Rhéaume 29 juillet 2001
-    WritePrivateProfileString "General", "Data", c2iCurrentDataFileName, c2iINIFile
+    WritePrivateProfileString conSecGen, conValData, c2iCurrentDataFileName, c2iINIFile
 End Sub

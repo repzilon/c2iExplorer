@@ -195,7 +195,6 @@ Begin VB.Form frmBiblio
       End
       Begin VB.Label lblDescription 
          AutoSize        =   -1  'True
-         Caption         =   "Description"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -209,11 +208,10 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   12
          Top             =   600
-         Width           =   795
+         Width           =   45
       End
       Begin VB.Label lblNom 
          AutoSize        =   -1  'True
-         Caption         =   "Nom"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -227,11 +225,10 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   11
          Top             =   240
-         Width           =   315
+         Width           =   45
       End
       Begin VB.Label lblEndProc 
          AutoSize        =   -1  'True
-         Caption         =   "Fin de procédure"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -241,7 +238,7 @@ Begin VB.Form frmBiblio
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   390
+         Height          =   195
          Left            =   120
          TabIndex        =   10
          Top             =   4440
@@ -250,7 +247,6 @@ Begin VB.Form frmBiblio
       End
       Begin VB.Label lblInlineProc 
          AutoSize        =   -1  'True
-         Caption         =   "Code"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -264,11 +260,10 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   9
          Top             =   3480
-         Width           =   375
+         Width           =   45
       End
       Begin VB.Label lblHeadProc 
          AutoSize        =   -1  'True
-         Caption         =   "En-tête de procédure"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -278,7 +273,7 @@ Begin VB.Form frmBiblio
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   390
+         Height          =   195
          Left            =   120
          TabIndex        =   8
          Top             =   2520
@@ -287,7 +282,6 @@ Begin VB.Form frmBiblio
       End
       Begin VB.Label lblDeclare 
          AutoSize        =   -1  'True
-         Caption         =   "Déclaration"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -301,7 +295,7 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   7
          Top             =   1560
-         Width           =   810
+         Width           =   45
       End
    End
 End
@@ -331,33 +325,37 @@ Attribute VB_Exposed = False
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
 '
 ' ***** END LICENSE BLOCK *****
 
 Option Explicit
+Private Const conQuit As String = "quit"
+Private Const conAdd As String = "add"
 Private mObjE As cElement
 
+' Modifié par René Rhéaume le 5 janvier 2002
 Private Sub Form_Load()
 '    PositionForm Me
     Select Case lngLanguage
-        Case c2i_Langue_Français
+        Case c2i_Langue_Anglais
+            lblNom = "Name"
+            lblDescription = conLibelDescrpt
+            lblDeclare = "Declaration"
+            lblHeadProc = "Procedure header"
+            lblInlineProc = "Code"
+            lblEndProc = "Procedure footer"
+            tbMain.Buttons(conAdd).ToolTipText = "Add to the selected folder"
+            tbMain.Buttons(conQuit).ToolTipText = "Quit"
+        Case Else
             lblNom = "Nom"
-            lblDescription = "Description"
+            lblDescription = conLibelDescrpt
             lblDeclare = "Déclaration"
             lblHeadProc = "En-tête de la procédure"
             lblInlineProc = "Code"
             lblEndProc = "Fin de la procédure"
-            tbMain.Buttons(1).ToolTipText = "Ajouter à la catégorie sélectionnée"
-            tbMain.Buttons(3).ToolTipText = "Quitter"
-        Case Else
-            lblNom = "Name"
-            lblDescription = "Description"
-            lblDeclare = "Declaration"
-            lblHeadProc = "Head of the procedure"
-            lblInlineProc = "Code"
-            lblEndProc = "End of the procedure"
-            tbMain.Buttons(1).ToolTipText = "Add to the selected folder"
-            tbMain.Buttons(3).ToolTipText = "Quit"
+            tbMain.Buttons(conAdd).ToolTipText = "Ajouter à la catégorie sélectionnée"
+            tbMain.Buttons(conQuit).ToolTipText = "Quitter"
     End Select
 End Sub
 
@@ -368,47 +366,51 @@ Private Sub Form_Unload(Cancel As Integer)
 End Sub
 
 Public Property Set Element(ByVal objE As cElement)
-    If objE Is mObjE Then Exit Property
-    Set mObjE = objE
-    With mObjE
-        txtName = .Titre
-        txtDescription = .Description
-        txtDeclaration = .DeclareProc
-        txtHead = .HeadProc
-        txtInline = .InLineProc
-        txtEnd = .EndProc
-    End With
+    If (Not objE Is mObjE) Then
+        Set mObjE = objE
+        With mObjE
+            txtName = .Titre
+            txtDescription = .Description
+            txtDeclaration = .DeclareProc
+            txtHead = .HeadProc
+            txtInline = .InLineProc
+            txtEnd = .EndProc
+        End With
+    End If
 End Property
 
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
-        Case "quit"
+        Case conQuit
             Unload Me
-        Case "add"
+        Case conAdd
             AddCode
     End Select
 End Sub
 
+' Optimisé par René Rhéaume le 18 janvier 2002
 Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
 
     On Error Resume Next
-    If objUDBiblio.TVEx.SelectedItem Is Nothing Then Exit Sub
-
-    If Trim$(txtName) = "" Then Exit Sub
-
-    If objUDBiblio.TVEx.SelectedItem.Image = "element" Then
-        Set mNodeParent = objUDBiblio.TVEx.SelectedItem.Parent
-    Else
-        Set mNodeParent = objUDBiblio.TVEx.SelectedItem
+    Set mNodeParent = objUDBiblio.TVEx.SelectedItem
+    Select Case conVrai
+        Case mNodeParent Is Nothing, Trim$(txtName) = vbNullString
+            Exit Sub
+    End Select
+    
+    If (mNodeParent.Image = conElement) Then
+        Set mNodeParent = mNodeParent.Parent
     End If
 
-    sKey = mNodeParent.FullPath + "/" + Trim$(txtName)
+    sKey = mNodeParent.FullPath & "/" & Trim$(txtName)
     Set objE = Explorer.Elements(sKey)
-    If objE Is Nothing Then
+    If (objE Is Nothing) Then
         'on ajoute un nouvel élément
-        Set objE = Explorer.Elements.Add(Trim$(txtDeclaration), Trim$(txtHead), Trim$(txtInline), Trim$(txtEnd), Trim$(txtDescription), mNodeParent.FullPath + "/" + Trim$(txtName), mNodeParent.FullPath + "/" + Trim$(txtName))
+        Set objE = Explorer.Elements.Add(Trim$(txtDeclaration), _
+                    Trim$(txtHead), Trim$(txtInline), Trim$(txtEnd), _
+                    Trim$(txtDescription), sKey, sKey)
         objUDBiblio.AddElement objE
     Else
         objE.DeclareProc = Trim$(txtDeclaration)
@@ -418,4 +420,5 @@ Private Sub AddCode()
         objE.Description = Trim$(txtDescription)
     End If
     Set mNodeParent = Nothing
+    Set objE = Nothing
 End Sub

@@ -37,6 +37,8 @@ Option Explicit
 
 Implements IDTExtensibility
 
+Private Const conClefVisible As String = "DisplayOnConnect"
+
 'Public objWindowProp As Window 'c'est le container de notre document
 'l'objet menu
 Public objBouton As Office.CommandBarButton
@@ -66,41 +68,49 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
     'connection du complément
     'on crée l'objet window et usrcomm
     '=================================================
-
     On Error GoTo GestErr
+    
     ' Enregistre l'instance vb
     Set VBInstance = VBInst
-
-    If Not objWindow Is Nothing Then
+    
+    If (Not objWindow Is Nothing) Then
         ' En cours d'exécution, affiche seulement
         Show
-        If ConnectMode = vbext_cm_AfterStartup Then
+        If (ConnectMode = vbext_cm_AfterStartup) Then
             ' Démarre à partir du Gestionaire de Compléments
             AddToAddInCommandBar
         End If
         Exit Sub
     End If
-
+    
+    ' Initialisation des variables globales
+    strCheminApp = App.Path
+    c2iHTMLFile = strCheminApp & "\html\prev.htm"
+    c2iDataFileNameOrigine = strCheminApp & "\data\base.c2i"
+    'Ajout par René Rhéaume, 28 juillet 2001
+    c2iINIFile = strCheminApp & conCheminRelatifINI
+    'pour stocker les durées
+    ReDim DuréePrj(0)
+    
     'création de la fenêtre
     'objWindow est l'objet Window de vbe
     'objUD est le 'contenu' de la fenêtre
-    Set objWindow = VBInstance.Windows.CreateToolWindow(AddInInst, "c2iExplorer.UDExplorer", "c2iExplorer", sGuid, objUD)
-    Set objWindowBiblio = VBInstance.Windows.CreateToolWindow(AddInInst, "c2iExplorer.UDBiblio", "c2iExplorer", sGuidBiblio, objUDBiblio)
-    Set objWindowAddCode = VBInstance.Windows.CreateToolWindow(AddInInst, "c2iExplorer.UDAddCode", "c2iExplorer", sGuidAddCode, objUDAddCode)
-    Set objWindowClassViewer = VBInstance.Windows.CreateToolWindow(AddInInst, "c2iExplorer.UDClassViewer", "c2iExplorer", sGuidClassViewer, objUDClassViewer)
-    Set objWindowMsgBox = VBInstance.Windows.CreateToolWindow(AddInInst, "c2iExplorer.UDMsgBox", "c2iExplorer", sGuidMsgBox, objUDMsgBox)
-    Set objWindowCompteur = VBInstance.Windows.CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", "c2iExplorer", sGuidCompteur, objUDCompteur)
+    With VBInstance.Windows
+        Set objWindow = .CreateToolWindow(AddInInst, "c2iExplorer.UDExplorer", conNomApp, sGuid, objUD)
+        Set objWindowBiblio = .CreateToolWindow(AddInInst, "c2iExplorer.UDBiblio", conNomApp, sGuidBiblio, objUDBiblio)
+        Set objWindowAddCode = .CreateToolWindow(AddInInst, "c2iExplorer.UDAddCode", conNomApp, sGuidAddCode, objUDAddCode)
+        Set objWindowClassViewer = .CreateToolWindow(AddInInst, "c2iExplorer.UDClassViewer", conNomApp, sGuidClassViewer, objUDClassViewer)
+        Set objWindowMsgBox = .CreateToolWindow(AddInInst, "c2iExplorer.UDMsgBox", conNomApp, sGuidMsgBox, objUDMsgBox)
+        Set objWindowCompteur = .CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", conNomApp, sGuidCompteur, objUDCompteur)
+    End With
     Set Connection = Me
-
+    
     AddToAddInCommandBar
 
-    'pour stocker les durées
-    ReDim DuréePrj(0)
     Exit Sub
 
 GestErr:
-    MsgBox "IDTExtensibility_OnConnection : " + Err.Description + " : " + CStr(Err.Number)
-
+    MsgBox "IDTExtensibility_OnConnection : " & Err.Description & " : " & CStr(Err.Number) ' & vbCrLf & CStr(lngLigneOK)
 End Sub
 
 '------------------------------------------------------
@@ -112,10 +122,10 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
     '=================================================
     On Error GoTo GestErr
 
-    If objWindow.Visible Then  'sauvegarde de la visibilité
-        WritePrivateProfileString "General", "DisplayOnConnect", "1", c2iINIFile
+    If (objWindow.Visible) Then  'sauvegarde de la visibilité
+        WritePrivateProfileString conSecGen, conClefVisible, "1", c2iINIFile
     Else
-        WritePrivateProfileString "General", "DisplayOnConnect", "0", c2iINIFile
+        WritePrivateProfileString conSecGen, conClefVisible, "0", c2iINIFile
     End If
 
     objBouton.Delete
@@ -171,24 +181,26 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
 
     'capture du click
     On Error GoTo GestErr
-    Set Me.BoutonBar = VBInstance.Events.CommandBarEvents(objBouton)
-    'Set Me.BoutonBarProp = VBInstance.Events.CommandBarEvents(objBoutonPropriété)
-    Set Me.CmpEvent = VBInstance.Events.VBComponentsEvents(Nothing)
-    Set Me.prjEvent = VBInstance.Events.VBProjectsEvents
+    With VBInstance.Events
+        Set Me.BoutonBar = .CommandBarEvents(objBouton)
+        'Set Me.BoutonBarProp = .CommandBarEvents(objBoutonPropriété)
+        Set Me.CmpEvent = .VBComponentsEvents(Nothing)
+        Set Me.prjEvent = .VBProjectsEvents
+    End With
 
-    lngAfficherExplorer = GetPrivateProfileInt("General", "DisplayOnConnect", 0, App.Path & "\data\c2iExplorer.ini")
+    lngAfficherExplorer = GetPrivateProfileInt(conSecGen, conClefVisible, 0, strCheminApp & conCheminRelatifINI)
     Select Case lngAfficherExplorer
         Case 1
             Show
             objUD.Init
         Case Else
-            WritePrivateProfileString "General", "DisplayOnConnect", "0", App.Path & "\data\c2iExplorer.ini"
+            WritePrivateProfileString conSecGen, conClefVisible, "0", strCheminApp & conCheminRelatifINI
     End Select
 
     Exit Function
 
 GestErr:
-    MsgBox "AddToAddInCommandBar : " + Err.Description, vbInformation
+    MsgBox "AddToAddInCommandBar : " & Err.Description, vbInformation
 End Function
 
 Private Sub Show()
@@ -201,7 +213,7 @@ Private Sub Show()
     Exit Sub
 
 GestErr:
-    MsgBox "BoutonBar_Click : " + "Err.Description, vbInformation"
+    MsgBox "BoutonBar_Click : " & Err.Description, vbInformation
 End Sub
 
 Private Sub BoutonBar_Click(ByVal CommandBarControl As Object, handled As Boolean, CancelDefault As Boolean)
@@ -235,30 +247,37 @@ Private Sub prjEvent_ItemActivated(ByVal VBProject As VBIDE.VBProject)
 End Sub
 
 Private Sub prjEvent_ItemAdded(ByVal VBProject As VBIDE.VBProject)
+    Dim lngFinTabDurees As Long
     objUD.Init conVrai
-    If VBInstance.VBProjects.Count = 1 Then
+    If (VBInstance.VBProjects.Count = 1) Then
         Set VBPrjSelected = VBProject
     End If
-    If UBound(DuréePrj) = 0 Then
+    lngFinTabDurees = UBound(DuréePrj)
+    If (lngFinTabDurees = 0) Then
         DuréePrj(0).Durée = 0
-        DuréePrj(0).Name = ""
-        DuréePrj(0).Filename = ""
+        DuréePrj(0).Name = vbNullString
+        DuréePrj(0).Filename = vbNullString
     End If
-    ReDim Preserve DuréePrj(UBound(DuréePrj) + 1)
-    DuréePrj(UBound(DuréePrj)).Filename = VBProject.Filename
-    DuréePrj(UBound(DuréePrj)).Name = VBProject.Name
-    DuréePrj(UBound(DuréePrj)).Durée = timeGetTime / 1000
+    lngFinTabDurees = lngFinTabDurees + 1
+    ReDim Preserve DuréePrj(lngFinTabDurees)
+    DuréePrj(lngFinTabDurees).Filename = VBProject.Filename
+    DuréePrj(lngFinTabDurees).Name = VBProject.Name
+    DuréePrj(lngFinTabDurees).Durée = timeGetTime / 1000
 End Sub
 
 Private Sub prjEvent_ItemRemoved(ByVal VBProject As VBIDE.VBProject)
+    Dim lngFinTabDurees As Long
+    Dim I As Long
+    lngFinTabDurees = UBound(DuréePrj)
+    
     objUD.RetireProjet VBProject
     SauveDuree VBProject
+    
     'suppression dans le tableau des projects pour la session
-    Dim I As Long
-    For I = 0 To UBound(DuréePrj)
-        If VBProject.Name = DuréePrj(I).Name Then
-            DuréePrj(I).Filename = ""
-            DuréePrj(I).Name = ""
+    For I = 0 To lngFinTabDurees
+        If (VBProject.Name = DuréePrj(I).Name) Then
+            DuréePrj(I).Filename = vbNullString
+            DuréePrj(I).Name = vbNullString
             DuréePrj(I).Durée = 0
             Exit For
         End If

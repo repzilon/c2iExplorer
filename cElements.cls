@@ -54,7 +54,7 @@ Public Function Add(DeclareProc As String, HeadProc As String, _
     objNewMember.Description = Description
     objNewMember.Nom = Nom
     objNewMember.DeclareProc = DeclareProc
-    If Len(sKey) = 0 Then
+    If (LenB(sKey) = 0) Then
         mCol.Add objNewMember
     Else
         mCol.Add objNewMember, sKey

@@ -79,7 +79,7 @@ Begin VB.UserControl c2iContainerInt
       Height          =   240
       Index           =   1
       Left            =   2160
-      Picture         =   "c2iContainerInt.ctx":0222
+      Picture         =   "c2iContainerInt.ctx":01FD
       Top             =   840
       Visible         =   0   'False
       Width           =   240
@@ -88,7 +88,7 @@ Begin VB.UserControl c2iContainerInt
       Height          =   240
       Index           =   1
       Left            =   1560
-      Picture         =   "c2iContainerInt.ctx":0324
+      Picture         =   "c2iContainerInt.ctx":02DA
       Top             =   840
       Visible         =   0   'False
       Width           =   240
@@ -97,7 +97,7 @@ Begin VB.UserControl c2iContainerInt
       Height          =   240
       Index           =   0
       Left            =   1560
-      Picture         =   "c2iContainerInt.ctx":0426
+      Picture         =   "c2iContainerInt.ctx":03AD
       Top             =   480
       Visible         =   0   'False
       Width           =   240
@@ -106,7 +106,7 @@ Begin VB.UserControl c2iContainerInt
       Height          =   240
       Index           =   0
       Left            =   2160
-      Picture         =   "c2iContainerInt.ctx":0528
+      Picture         =   "c2iContainerInt.ctx":0480
       Top             =   480
       Visible         =   0   'False
       Width           =   240
@@ -139,15 +139,37 @@ Attribute VB_Ext_KEY = "PropPageWizardRun" ,"Yes"
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
 '
 ' ***** END LICENSE BLOCK *****
 
 Option Explicit
+
 '//****************************************//
 '//  Copyright c2i - Richard CLARK
 '//  http://www.c2i.fr
 '//  rc@c2i.fr
 '//**************************************//
+
+' -------------------- DÉCLARATION CONSTANTES --------------------
+' Par René Rhéaume, le 6 janvier 2002
+Private Const conAlignement As String = "Alignement"
+Private Const conAutomatique As String = "Automatique"
+Private Const conBorder As String = "Border"
+Private Const conCaption As String = "Caption"
+Private Const conCouleurFond As String = "CouleurFond"
+Private Const conCouleurFondTitre As String = "CouleurFondTitre"
+Private Const conCouleurTexteTitre As String = "CouleurTexteTitre"
+Private Const conFont As String = "Font"
+Private Const conHauteur As String = "Hauteur"
+Private Const conImgFermée0 As String = "ImgFermée0"
+Private Const conImgFermée1 As String = "ImgFermée1"
+Private Const conPicFond As String = "PicFond"
+Private Const conImgOuvert1 As String = "ImgOuvert1"
+Private Const conImgOuvert0 As String = "ImgOuvert0"
+Private Const conPictureTitleFond As String = "PictureTitleFond"
+Private Const conOuvert As String = "Ouvert"
+Private Const conLibelle As String = "c2iContainer"
 
 Private sCaption As String
 Private iAlignement As AlignmentConstants
@@ -181,50 +203,46 @@ Private bUserControlCaptured As Boolean
 Private Declare Function ReleaseCapture Lib "user32" () As Long
 Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
 
-
 Private Sub Dessine()
     PicTitre.Height = ImgFermée(0).Height
 
-    If bOuvert Then                                        'il est fermé, on l'ouvre
+    If (bOuvert) Then                                        'il est fermé, on l'ouvre
         Height = sngHauteur
         PicTitre.Picture = ImgOuvert(0).Picture
     Else                                                   'il est ouvert, on le ferme
         Height = ImgFermée(0).Height
         PicTitre.Picture = ImgFermée(0).Picture
     End If
-    PropertyChanged "Ouvert"
-    PropertyChanged "Hauteur"
+    PropertyChanged conOuvert
+    PropertyChanged conHauteur
 
     With shpGris
         .Left = 0
         .Top = 0
         .Width = ScaleWidth
         .Height = ScaleHeight
+        .Visible = bBorder
     End With
 
-    If bBorder Then
-        shpGris.Visible = conVrai
-        PicTitre.BorderStyle = 1
-    Else
-        shpGris.Visible = conFaux
-        PicTitre.BorderStyle = 0
-    End If
+    PicTitre.BorderStyle = Abs(CLng(bBorder))
     DessineTitre
 End Sub
 
-Private Sub DessineFond()
+Private Sub DessineFond(Optional ByVal blnTitreSeul As Boolean = conFaux)
     Dim iX As Long, iY As Long, iIncreX As Long, iIncreY As Long
     'dessin du container
-    If picFond.Picture <> 0 Then
-        iX = CInt(ScaleWidth / picFond.Width)
-        iY = CInt(ScaleHeight / picFond.Height)
-        For iIncreX = 0 To iX
-            For iIncreY = 0 To iY
-                PaintPicture picFond.Picture, picFond.Width * iIncreX, picFond.Height * iIncreY
+    If (blnTitreSeul = conFaux) Then
+        If (picFond.Picture <> 0) Then
+            iX = CInt(ScaleWidth / picFond.Width)
+            iY = CInt(ScaleHeight / picFond.Height)
+            For iIncreX = 0 To iX
+                For iIncreY = 0 To iY
+                    PaintPicture picFond.Picture, picFond.Width * iIncreX, picFond.Height * iIncreY
+                Next
             Next
-        Next
+        End If
     End If
-    If picTitleFond.Picture <> 0 Then
+    If (picTitleFond.Picture <> 0) Then
         iX = CInt((ScaleWidth - ImgFermée(0).Width) / picTitleFond.Width)
         iY = CInt(ScaleHeight / picTitleFond.Height)
         For iIncreX = 0 To iX
@@ -234,7 +252,6 @@ Private Sub DessineFond()
         Next
     End If
 End Sub
-
 
 Public Property Get hwnd() As Long
     hwnd = UserControl.hwnd
@@ -246,10 +263,10 @@ End Property
 
 Property Let Ouvert(bOuvertA As Boolean)
     Dim bCancel As Boolean
-    If bOuvertA <> bOuvert Then
+    If (bOuvertA <> bOuvert) Then
         bCancel = conFaux
         RaiseEvent BeforeOuvertureChange(bCancel)
-        If Not bCancel Then
+        If (Not bCancel) Then
             bOuvert = bOuvertA
             Dessine
             RaiseEvent OuvertureChange
@@ -264,7 +281,7 @@ End Property
 
 Property Let Caption(sCaptionA As String)
     sCaption = sCaptionA
-    PropertyChanged "Caption"
+    PropertyChanged conCaption
     DessineTitre
 End Property
 
@@ -274,35 +291,41 @@ End Property
 
 Property Let Alignement(iAlignA As AlignmentConstants)
     iAlignement = iAlignA
-    PropertyChanged "Alignement"
+    PropertyChanged conAlignement
     DessineTitre
 End Property
 
+' Optimisé par René Rhéaume le 6 janvier 2002
 Private Sub DessineTitre()
+    Dim sngLargImgFerm As Single
+    Dim sngPosX As Single
     'dessin du titre
-    PicTitre.Cls
-    DessineFond
-
-    Select Case iAlignement
-        Case vbCenter
-            If (PicTitre.ScaleWidth - PicTitre.ScaleX(ImgFermée(0).Width, vbTwips, vbPixels)) / 2 - PicTitre.TextWidth(sCaption) / 2 + PicTitre.ScaleX(ImgFermée(0).Width, vbTwips, vbPixels) >= ImgFermée(0).Width Then
-                PicTitre.CurrentX = (PicTitre.ScaleWidth - PicTitre.ScaleX(ImgFermée(0).Width, vbTwips, vbPixels)) / 2 - PicTitre.TextWidth(sCaption) / 2 + PicTitre.ScaleX(ImgFermée(0).Width, vbTwips, vbPixels)
-            Else
-                PicTitre.CurrentX = ImgFermée(0).Width
-            End If
-        Case vbLeftJustify
-            PicTitre.CurrentX = ImgFermée(0).Width
-        Case vbRightJustify                                'vérif largueur texte
-            If PicTitre.ScaleWidth - PicTitre.TextWidth(sCaption) > ImgFermée(0).Width Then
-                PicTitre.CurrentX = PicTitre.ScaleWidth - PicTitre.TextWidth(sCaption)
-            Else
-                PicTitre.CurrentX = ImgFermée(0).Width
-            End If
-    End Select
-    PicTitre.CurrentY = PicTitre.ScaleHeight / 2 - PicTitre.TextHeight(sCaption) / 2
-
-    PicTitre.Print sCaption
-
+    With PicTitre
+        .Cls
+        DessineFond (conVrai)
+    
+        sngLargImgFerm = ImgFermée(0).Width
+        Select Case iAlignement
+            Case vbCenter
+                sngPosX = (.ScaleWidth + .ScaleX(sngLargImgFerm, vbTwips, vbPixels) - .TextWidth(sCaption)) / 2
+                If (sngPosX >= sngLargImgFerm) Then
+                    .CurrentX = sngPosX
+                Else
+                    .CurrentX = sngLargImgFerm
+                End If
+            Case vbLeftJustify
+                .CurrentX = sngLargImgFerm
+            Case vbRightJustify                                'vérif largueur texte
+                sngPosX = .ScaleWidth - .TextWidth(sCaption)
+                If (sngPosX > sngLargImgFerm) Then
+                    .CurrentX = sngPosX
+                Else
+                    .CurrentX = sngLargImgFerm
+                End If
+        End Select
+        .CurrentY = (.ScaleHeight - .TextHeight(sCaption)) / 2
+        PicTitre.Print sCaption
+    End With
 End Sub
 
 Private Sub PicTitre_Click()
@@ -315,9 +338,9 @@ End Sub
 
 Private Sub PicTitre_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     RaiseEvent MouseTitleDown(Button, Shift, X, Y)
-    If X < ImgOuvert(0).Width Then
+    If (X < ImgOuvert(0).Width) Then
         RaiseEvent MouseTitleDown(Button, Shift, X, Y)
-        If bOuvert Then
+        If (bOuvert) Then
             PicTitre.Picture = ImgOuvert(1).Picture
         Else
             PicTitre.Picture = ImgFermée(1).Picture
@@ -328,24 +351,30 @@ End Sub
 
 Private Sub PicTitre_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Select Case conFaux
-        Case bFermetureAutomatique = conVrai, bOuvert = conFaux
+        Case bFermetureAutomatique, bOuvert = conFaux
         Case Else
             Ouvert = conVrai
     End Select
     
     UserControl_MouseMove Button, Shift, X, Y
-    If X > ImgFermée(0).Width Then
+    If (X > ImgFermée(0).Width) Then
         RaiseEvent MouseTitleMove(Button, Shift, X, Y)
     End If
 End Sub
 
 Private Sub PicTitre_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    If X > ImgFermée(0).Width Then
-        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
-        Exit Sub
-    Else
-        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
-        If Not bFermetureAutomatique Then
+'    If X > ImgFermée(0).Width Then
+'        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
+'        Exit Sub
+'    Else
+'        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
+'        If Not bFermetureAutomatique Then
+'            Ouvert = Not bOuvert
+'        End If
+'    End If
+    RaiseEvent MouseTitleUp(Button, Shift, X, Y)
+    If (X <= ImgFermée(0).Width) Then
+        If (Not bFermetureAutomatique) Then
             Ouvert = Not bOuvert
         End If
     End If
@@ -360,7 +389,7 @@ Private Sub UserControl_DblClick()
 End Sub
 
 Private Sub UserControl_Initialize()
-    sCaption = "c2iContainer"
+    sCaption = conLibelle
     bOuvert = conVrai
     sngHauteur = Height
     bCapturé = conFaux
@@ -376,13 +405,12 @@ Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Sing
     RaiseEvent MouseContainerDown(Button, Shift, X, Y)
 End Sub
 
-
 Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim lngRep As Long
 
     RaiseEvent MouseContainerMove(Button, Shift, X, Y)
 
-    If bFermetureAutomatique Then
+    If (bFermetureAutomatique) Then
         If Not bUserControlCaptured Then
             bUserControlCaptured = conVrai
             lngRep = SetCapture(hwnd)                      'on capture le curseur
@@ -391,10 +419,11 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
         Select Case conVrai
             Case X < 0, Y < 0, X > Width, Y > Height 'si on sort du contrôle
             bUserControlCaptured = conFaux
-            lngRep = ReleaseCapture                        'on relache le curseur
-            If bOuvert Then
-                Ouvert = Not bOuvert
-            End If
+            lngRep = ReleaseCapture 'on relache le curseur
+'            If bOuvert Then
+'                Ouvert = Not bOuvert
+'            End If
+            bOuvert = conFaux
         End Select
     End If
 End Sub
@@ -406,25 +435,25 @@ End Sub
 Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
     'lecture des propriétés dans le "sac"
     On Error Resume Next
-    iAlignement = PropBag.ReadProperty("Alignement", vbLeftJustify)
-    Caption = PropBag.ReadProperty("Caption", "c2iContainer")
-    Ouvert = PropBag.ReadProperty("Ouvert", conVrai)
-    sngHauteur = PropBag.ReadProperty("Hauteur")
+    iAlignement = PropBag.ReadProperty(conAlignement, vbLeftJustify)
+    Caption = PropBag.ReadProperty(conCaption, conLibelle)
+    Ouvert = PropBag.ReadProperty(conOuvert, conVrai)
+    sngHauteur = PropBag.ReadProperty(conHauteur)
 
-    Set ImgOuvert(0).Picture = PropBag.ReadProperty("ImgOuvert0")
-    Set ImgOuvert(1).Picture = PropBag.ReadProperty("ImgOuvert1")
-    Set ImgFermée(0).Picture = PropBag.ReadProperty("ImgFermée0")
-    Set ImgFermée(1).Picture = PropBag.ReadProperty("ImgFermée1")
+    Set ImgOuvert(0).Picture = PropBag.ReadProperty(conImgOuvert0)
+    Set ImgOuvert(1).Picture = PropBag.ReadProperty(conImgOuvert1)
+    Set ImgFermée(0).Picture = PropBag.ReadProperty(conImgFermée0)
+    Set ImgFermée(1).Picture = PropBag.ReadProperty(conImgFermée1)
 
-    BackColor = PropBag.ReadProperty("CouleurFond")
-    PicTitre.ForeColor = PropBag.ReadProperty("CouleurTexteTitre")
-    PicTitre.BackColor = PropBag.ReadProperty("CouleurFondTitre")
+    BackColor = PropBag.ReadProperty(conCouleurFond)
+    PicTitre.ForeColor = PropBag.ReadProperty(conCouleurTexteTitre)
+    PicTitre.BackColor = PropBag.ReadProperty(conCouleurFondTitre)
 
-    bFermetureAutomatique = PropBag.ReadProperty("Automatique")
-    bBorder = PropBag.ReadProperty("Border")
-    Set picFond.Picture = PropBag.ReadProperty("PicFond")
-    Set picTitleFond.Picture = PropBag.ReadProperty("PicTitleFond")
-    Set PicTitre.Font = PropBag.ReadProperty("Font")
+    bFermetureAutomatique = PropBag.ReadProperty(conAutomatique)
+    bBorder = PropBag.ReadProperty(conBorder)
+    Set picFond.Picture = PropBag.ReadProperty(conPicFond)
+    Set picTitleFond.Picture = PropBag.ReadProperty(conPictureTitleFond)
+    Set PicTitre.Font = PropBag.ReadProperty(conFont)
     Dessine
 End Sub
 
@@ -445,30 +474,30 @@ Private Sub UserControl_Resize()
 End Sub
 
 Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
-    PropBag.WriteProperty "Alignement", iAlignement, vbLeftJustify
-    PropBag.WriteProperty "Caption", sCaption
-    PropBag.WriteProperty "Ouvert", bOuvert, conVrai
-    PropBag.WriteProperty "Hauteur", sngHauteur
+    PropBag.WriteProperty conAlignement, iAlignement, vbLeftJustify
+    PropBag.WriteProperty conCaption, sCaption
+    PropBag.WriteProperty conOuvert, bOuvert, conVrai
+    PropBag.WriteProperty conHauteur, sngHauteur
 
-    PropBag.WriteProperty "ImgOuvert0", ImgOuvert(0).Picture
-    PropBag.WriteProperty "ImgOuvert1", ImgOuvert(1).Picture
-    PropBag.WriteProperty "ImgFermée0", ImgFermée(0).Picture
-    PropBag.WriteProperty "ImgFermée1", ImgFermée(1).Picture
-    PropBag.WriteProperty "CouleurFond", BackColor
-    PropBag.WriteProperty "CouleurTexteTitre", PicTitre.ForeColor
-    PropBag.WriteProperty "CouleurFondTitre", PicTitre.BackColor
-    PropBag.WriteProperty "Automatique", bFermetureAutomatique
-    PropBag.WriteProperty "Border", bBorder
+    PropBag.WriteProperty conImgOuvert0, ImgOuvert(0).Picture
+    PropBag.WriteProperty conImgOuvert1, ImgOuvert(1).Picture
+    PropBag.WriteProperty conImgFermée0, ImgFermée(0).Picture
+    PropBag.WriteProperty conImgFermée1, ImgFermée(1).Picture
+    PropBag.WriteProperty conCouleurFond, BackColor
+    PropBag.WriteProperty conCouleurTexteTitre, PicTitre.ForeColor
+    PropBag.WriteProperty conCouleurFondTitre, PicTitre.BackColor
+    PropBag.WriteProperty conAutomatique, bFermetureAutomatique
+    PropBag.WriteProperty conBorder, bBorder
     On Error Resume Next
-    PropBag.WriteProperty "PicFond", picFond.Picture
-    PropBag.WriteProperty "PicTitleFond", picTitleFond.Picture
-    PropBag.WriteProperty "Font", PicTitre.Font
+    PropBag.WriteProperty conPicFond, picFond.Picture
+    PropBag.WriteProperty conPictureTitleFond, picTitleFond.Picture
+    PropBag.WriteProperty conFont, PicTitre.Font
 End Sub
 
 Public Property Set PictureFerméeUp(ByVal picPictureFerméeUpA As Picture)
 Attribute PictureFerméeUp.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set ImgFermée(1).Picture = picPictureFerméeUpA
-    PropertyChanged "ImgFermée1"
+    PropertyChanged conImgFermée1
     Dessine
 End Property
 
@@ -479,7 +508,7 @@ End Property
 Public Property Set PictureFerméeDown(ByVal picPictureFerméeDownA As Picture)
 Attribute PictureFerméeDown.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set ImgFermée(0).Picture = picPictureFerméeDownA
-    PropertyChanged "ImgFermée0"
+    PropertyChanged conImgFermée0
     Dessine
 End Property
 
@@ -490,7 +519,7 @@ End Property
 Public Property Set PictureOuvertUp(ByVal picPictureOuvertUpA As Picture)
 Attribute PictureOuvertUp.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set ImgOuvert(0).Picture = picPictureOuvertUpA
-    PropertyChanged "ImgOuvert0"
+    PropertyChanged conImgOuvert0
     Dessine
 End Property
 
@@ -501,7 +530,7 @@ End Property
 Public Property Set PictureOuvertDown(ByVal picPictureOuvertDownA As Picture)
 Attribute PictureOuvertDown.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set ImgOuvert(1).Picture = picPictureOuvertDownA
-    PropertyChanged "ImgOuvert1"
+    PropertyChanged conImgOuvert1
     Dessine
 End Property
 
@@ -512,7 +541,7 @@ End Property
 Public Property Let CouleurFond(ByVal lngBackColorA As OLE_COLOR)
 Attribute CouleurFond.VB_ProcData.VB_Invoke_PropertyPut = ";Apparence"
     BackColor = lngBackColorA
-    PropertyChanged "CouleurFond"
+    PropertyChanged conCouleurFond
 End Property
 
 Public Property Get CouleurFond() As OLE_COLOR
@@ -522,7 +551,7 @@ End Property
 Public Property Let CouleurFondTitre(ByVal lngCouleurFondTitreA As OLE_COLOR)
 Attribute CouleurFondTitre.VB_ProcData.VB_Invoke_PropertyPut = ";Apparence"
     PicTitre.BackColor = lngCouleurFondTitreA
-    PropertyChanged "CouleurFondTitre"
+    PropertyChanged conCouleurFondTitre
     Dessine
 End Property
 
@@ -533,7 +562,7 @@ End Property
 Public Property Let CouleurTexteTitre(ByVal lngCouleurTexteTitreA As OLE_COLOR)
 Attribute CouleurTexteTitre.VB_ProcData.VB_Invoke_PropertyPut = ";Apparence"
     PicTitre.ForeColor = lngCouleurTexteTitreA
-    PropertyChanged "CouleurTexteTitre"
+    PropertyChanged conCouleurTexteTitre
     Dessine
 End Property
 
@@ -543,7 +572,7 @@ End Property
 
 Public Property Let Hauteur(ByVal sngHauteurA As Single)
     sngHauteur = sngHauteurA
-    PropertyChanged "Hauteur"
+    PropertyChanged conHauteur
     Dessine
 End Property
 
@@ -553,7 +582,7 @@ End Property
 
 Public Property Let Automatique(ByVal bFermetureAutomatiqueA As Boolean)
     bFermetureAutomatique = bFermetureAutomatiqueA
-    PropertyChanged "Automatique"
+    PropertyChanged conAutomatique
 End Property
 
 Public Property Get Automatique() As Boolean
@@ -562,7 +591,7 @@ End Property
 
 Public Property Let Border(ByVal bBorderA As Boolean)
     bBorder = bBorderA
-    PropertyChanged "Border"
+    PropertyChanged conBorder
     Dessine
 End Property
 
@@ -581,7 +610,7 @@ End Property
 Public Property Set PictureFond(ByVal picPictureFondA As Picture)
 Attribute PictureFond.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set picFond.Picture = picPictureFondA
-    PropertyChanged "PicFond"
+    PropertyChanged conPicFond
     Dessine
 End Property
 
@@ -592,7 +621,7 @@ End Property
 Public Property Set PictureTitleFond(ByVal picPictureTitleFondA As Picture)
 Attribute PictureTitleFond.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set picTitleFond.Picture = picPictureTitleFondA
-    PropertyChanged "PictureTitleFond"
+    PropertyChanged conPictureTitleFond
     Dessine
 End Property
 
@@ -612,5 +641,5 @@ End Property
 Public Property Set Font(FontA As StdFont)
     Set PicTitre.Font = FontA
     DessineTitre
-    PropertyChanged "Font"
+    PropertyChanged conFont
 End Property

@@ -100,6 +100,7 @@ Begin VB.Form frmDuree
       Width           =   735
    End
    Begin VB.Label lblProjectName 
+      BackStyle       =   0  'Transparent
       Caption         =   "NomProjet"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -116,7 +117,8 @@ Begin VB.Form frmDuree
       Top             =   120
       Width           =   3510
    End
-   Begin VB.Label Label3 
+   Begin VB.Label lblTemps 
+      BackStyle       =   0  'Transparent
       Caption         =   "s"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -128,12 +130,14 @@ Begin VB.Form frmDuree
          Strikethrough   =   0   'False
       EndProperty
       Height          =   255
+      Index           =   2
       Left            =   3240
       TabIndex        =   4
       Top             =   660
       Width           =   255
    End
-   Begin VB.Label Label2 
+   Begin VB.Label lblTemps 
+      BackStyle       =   0  'Transparent
       Caption         =   "mn"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -145,12 +149,14 @@ Begin VB.Form frmDuree
          Strikethrough   =   0   'False
       EndProperty
       Height          =   255
+      Index           =   1
       Left            =   2040
       TabIndex        =   2
       Top             =   660
       Width           =   375
    End
-   Begin VB.Label Label1 
+   Begin VB.Label lblTemps 
+      BackStyle       =   0  'Transparent
       Caption         =   "h"
       BeginProperty Font 
          Name            =   "Tahoma"
@@ -162,6 +168,7 @@ Begin VB.Form frmDuree
          Strikethrough   =   0   'False
       EndProperty
       Height          =   255
+      Index           =   0
       Left            =   960
       TabIndex        =   0
       Top             =   660
@@ -200,30 +207,37 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+' Procédure modifiée par René Rhéaume le 2 août 2001, 18 août 2001
+' et 5 janvier 2002
 Private Sub cmdAppliquer_Click()
     Dim lngTime As Long, iNumPrj As Long
     Dim bTrouve As Boolean
+    Dim lngFinDureePrj As Long
+    Dim strNomProjet As String
 
-    ' Modification par René Rhéaume 18 août 2001
-    Call txtH_LostFocus
-    Call txtMn_LostFocus
-    Call txtS_LostFocus
+    Call GestionLostFocus(txtH, 1000)
+    Call GestionLostFocus(txtMn)
+    Call GestionLostFocus(txtS)
     lngTime = CLng(txtH) * 3600 + CLng(txtMn) * 60 + CLng(txtS)
-
-    bTrouve = conFaux
-    For iNumPrj = 0 To UBound(DuréePrj)
-        If DuréePrj(iNumPrj).Filename = lblProjectName Then
+    strNomProjet = lblProjectName.Caption
+'    bTrouve = conFaux
+'    iNumPrj = 0
+    lngFinDureePrj = UBound(DuréePrj)
+    
+    Do Until ((bTrouve) Or (iNumPrj > lngFinDureePrj))
+        If (DuréePrj(iNumPrj).Filename = strNomProjet) Then
             bTrouve = conVrai
-            Exit For
+        Else
+            iNumPrj = iNumPrj + 1
         End If
-    Next
-    If bTrouve Then
+    Loop
+    
+    If (bTrouve) Then
         lngTime = lngTime - timeGetTime / 1000 + DuréePrj(iNumPrj).Durée
     End If
 
-    'Modification par René Rhéaume 2 août 2001
-'    SaveSetting App.EXEName, "Durees", lblProjectName, CStr(lngTime)
-    Call WritePrivateProfileString("Durees", lblProjectName, CStr(lngTime), c2iINIFile)
+'    SaveSetting App.EXEName, conSecDurees, strNomProjet, CStr(lngTime)
+    Call WritePrivateProfileString(conSecDurees, strNomProjet, CStr(lngTime), c2iINIFile)
     Unload Me
 End Sub
 
@@ -232,64 +246,66 @@ Private Sub cmdQuit_Click()
 End Sub
 
 Private Sub txtH_LostFocus()
-    Dim lngVal As Long
-
-    On Error GoTo Fin
-    If Not IsNumeric(txtH) Then
-        Err.Raise 13
-    End If
-    lngVal = CLng(Val(txtH))
-    If CStr(lngVal) <> txtH Then
-        Err.Raise 13
-    End If
-    If lngVal < 0 Or lngVal > 1000 Then
-        Err.Raise 13
-    End If
-
-    Exit Sub
-
-Fin:
-    txtH = "0"
+    Call GestionLostFocus(txtH, 1000)
 End Sub
 
 Private Sub txtMn_LostFocus()
-    Dim lngVal As Long
-
-    On Error GoTo Fin
-    If Not IsNumeric(txtMn) Then
-        Err.Raise 13
-    End If
-    lngVal = CLng(Val(txtMn))
-    If CStr(lngVal) <> txtMn Then
-        Err.Raise 13
-    End If
-    If lngVal < 0 Or lngVal > 60 Then
-        Err.Raise 13
-    End If
-
-    Exit Sub
-
-Fin:
-    txtMn = "0"
+    Call GestionLostFocus(txtMn)
 End Sub
 
 Private Sub txtS_LostFocus()
-    Dim lngVal As Long
-
-    On Error GoTo Fin
-    If Not IsNumeric(txtS) Then
-        Err.Raise 13
-    End If
-    lngVal = CLng(Val(txtS))
-    If CStr(lngVal) <> txtS Then
-        Err.Raise 13
-    End If
-    If lngVal < 0 Or lngVal > 60 Then
-        Err.Raise 13
-    End If
-
-    Exit Sub
-
-Fin:
-    txtS = "0"
+    Call GestionLostFocus(txtS)
 End Sub
+
+' Procédure ajoutée par René Rhéaume le 5 janvier 2002
+' ============================ ALGORITHME ============================
+' - DÉCLARATION CONSTANTES
+'     zeroANum <-- «0» : alphanumérique
+' - DÉCLARATION VARIABLES
+'     temps    <--  «» : alphanumérique
+'     val      <--   0 : numérique
+'     max      <--  60 : numérique
+' - ENTRÉE
+'     Lire temps, max
+' - TRAITEMENT
+'     Si (temps contient du numérique = Vrai) Alors
+'       val <-- Convertir en numérique(temps)
+'       Si ((val < 0) OU (val > max)) Alors
+'         temps <-- zeroANum
+'       Sinon
+'         temps <-- Convertir en alphanumérique(val)
+'       FinSi
+'     Sinon
+'       temps <-- zeroANum
+'     FinSi
+' - SORTIE
+'     Afficher temps
+' ============================ PROCÉDURE ============================
+Private Sub GestionLostFocus(ByRef txtTemps As TextBox, Optional ByVal lngMax As Long = 60)
+    ' -------------------- DÉCLARATION CONSTANTES --------------------
+    Const conZeroANum As String = "0"
+    ' -------------------- DÉCLARATION VARIABLES ---------------------
+    Dim lngVal As Long
+    Dim strTemps As String
+    ' ENTRÉE FAITE PAR LES PARAMÈTRES DE LA PROCÉDURE
+    ' --------------------- TRAITEMENT ET SORTIE ---------------------
+    ' Vérification de l'argument lngMax
+    If (lngMax < 0) Then
+        Err.Raise 6
+    End If
+    ' Vérification générale
+    strTemps = txtTemps.Text
+    If (IsNumeric(strTemps)) Then
+        lngVal = CLng(Int(Val(strTemps)))
+        Select Case True
+            Case (lngVal < 0), lngVal > lngMax
+                strTemps = conZeroANum
+            Case Else
+                strTemps = CStr(lngVal)
+        End Select
+    Else
+        strTemps = conZeroANum
+    End If
+    txtTemps.Text = strTemps
+End Sub
+

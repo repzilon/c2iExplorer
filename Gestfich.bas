@@ -85,7 +85,7 @@ End Function
 '
 'Function NormalizePath(sPath As String) As String
 '    NormalizePath = sPath
-'    If Right$(sPath, 1) <> "\" Then NormalizePath = sPath & "\"
+'    If Right$(sPath, 1) <> conBS Then NormalizePath = sPath & conBS
 'End Function
 '
 'Function GetExtPos(sSpec As String) As Integer
@@ -98,7 +98,7 @@ End Function
 '        Case "."
 '            ' Le premier . à partir de la droite est le début de l'extension
 '            Exit For
-'        Case "\"
+'        Case conBS
 '            ' Le premier \ à partir de la droite est le début du nom
 '            iExt = iLast + 1
 '            Exit For
@@ -130,7 +130,7 @@ End Function
 '
 'RepertoireExiste = conFaux
 'MonNom = Dir(sChemin, vbDirectory)    ' Sélectionne la première entrée.
-'Do While MonNom <> ""       ' Début de la boucle.
+'Do While MonNom <> vbNullString       ' Début de la boucle.
 '    ' Ignore le répertoire courant et le répertoire supérieur.
 '    If MonNom <> "." And MonNom <> ".." Then
 '        ' Utilise une comparaison bit à bit pour s'assurer que MonNom
@@ -152,7 +152,7 @@ Public Function LireChaineFichierINI(ByVal chnSection As String, _
         ByVal chnFichierIni As String) As String
 
     Dim chnTemp As String, lngLongueurChaine As Long
-    chnTemp = String(512, 0)
+    chnTemp = String$(512, 0)
     lngLongueurChaine = GetPrivateProfileString(chnSection, chnClef, chnValeurDefaut, chnTemp, Len(chnTemp), chnFichierIni)
     LireChaineFichierINI = Left$(chnTemp, lngLongueurChaine)
 End Function
@@ -162,7 +162,7 @@ Public Function LireSectionFichierINI(ByVal chnSection As String, _
         ByVal chnFichierIni As String) As String
 
     Dim chnTemp As String, lngLongueurChaine As Long
-    chnTemp = String(2048, 0)
+    chnTemp = String$(2048, 0)
     lngLongueurChaine = GetPrivateProfileSection(chnSection, chnTemp, Len(chnTemp), chnFichierIni)
     LireSectionFichierINI = Left$(chnTemp, lngLongueurChaine)
 End Function
@@ -181,8 +181,8 @@ Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFichier As
     Close #1
     Screen.MousePointer = 0
     
-    If Err Then
-        MsgBox "Impossible d'ouvrir le fichier: " & chnNomFichier
+    If (Err) Then
+        MsgBox "Impossible d'ouvrir le fichier: " & chnNomFichier, vbExclamation
         LireFichierTexte = -1
         Exit Function
     End If
@@ -210,7 +210,7 @@ GestErr:
         MsgBox "Le fichier vers lequel vous essayez de sauvegarder est verrouillé par une autre application. Fermez ce fichier dans cette application et recommencez.", vbExclamation
         Resume
     Case Else
-        MsgBox "Erreur numéro : " & Err.Number & vbCrLf & "Description : " & Err.Description, 48, App.Title
+        MsgBox conErrNo & Err.Number & vbCrLf & "Description : " & Err.Description, 48, App.Title
         EcrireFichier = -1
     End Select
 End Function

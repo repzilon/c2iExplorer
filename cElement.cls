@@ -30,10 +30,11 @@ Attribute VB_Ext_KEY = "Top_Level" ,"Yes"
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
 '
 ' ***** END LICENSE BLOCK *****
 Option Explicit
-
+Private Const conSlash As String = "/"
 '//************Généré par c2iExplorer*******************
 Private sNom As String
 Private sDescription As String
@@ -43,8 +44,9 @@ Private sHeadProc As String
 Private sDeclareProc As String
 
 Public Property Let Nom(ByVal sNomA As String)
-    If Len(sNomA) > 255 Then
-        sNom = Left$(sNomA, 255)
+    Const conLongueurMax As Long = 255
+    If Len(sNomA) > conLongueurMax Then
+        sNom = Left$(sNomA, conLongueurMax)
     Else
         sNom = sNomA
     End If
@@ -58,18 +60,19 @@ Public Property Get Titre() As String
     Dim iPos As Long, iDeb As Long
 
     iDeb = 1
-    iPos = InStr(iDeb, sNom, "/")
+    iPos = InStr(iDeb, sNom, conSlash)
     Do Until iPos = 0
         iDeb = iPos
-        iPos = InStr(iPos + 1, sNom, "/")
+        iPos = InStr(iPos + 1, sNom, conSlash)
     Loop
     Titre = Right$(sNom, Len(sNom) - iDeb)
 
 End Property
 
 Public Property Let Description(ByVal sDescriptionA As String)
-    If Len(sDescriptionA) > 255 Then
-        sDescription = Left$(sDescriptionA, 255)
+    Const conLongueurMax As Long = 255
+    If Len(sDescriptionA) > conLongueurMax Then
+        sDescription = Left$(sDescriptionA, conLongueurMax)
     Else
         sDescription = sDescriptionA
     End If
@@ -123,12 +126,12 @@ Public Property Get Ident() As Long
     Dim iPos As Long
 
     iPos = 1
-    iPos = InStr(iPos, sNom, "/")
+    iPos = InStr(iPos, sNom, conSlash)
 
     On Error Resume Next
     Do Until iPos = 0
         Ident = Ident + 1
-        iPos = InStr(iPos + 1, sNom, "/")
+        iPos = InStr(iPos + 1, sNom, conSlash)
     Loop
 
 End Property
@@ -140,18 +143,18 @@ Public Property Get NomRepertoire(ByVal iIdent As Long) As String
     'Ident=3
 
     If iIdent > Ident - 1 Or Ident < 0 Then
-        NomRepertoire = ""
+        NomRepertoire = vbNullString
         Exit Property
     End If
 
     On Error Resume Next
     iPos = 1
-    iPosNext = InStr(iPos, sNom, "/")
+    iPosNext = InStr(iPos, sNom, conSlash)
     iNum = 0
     NomRepertoire = Mid$(sNom, iPos, iPosNext - iPos)
     Do Until iNum = iIdent
         iPos = iPosNext + 1
-        iPosNext = InStr(iPos, sNom, "/")
+        iPosNext = InStr(iPos, sNom, conSlash)
         NomRepertoire = Mid$(sNom, iPos, iPosNext - iPos)
         iNum = iNum + 1
     Loop
@@ -165,17 +168,17 @@ Public Property Get CheminComplet(ByVal iIdent As Long) As String
     'Ident=3
 
     If iIdent > Ident - 1 Or Ident < 0 Then
-        CheminComplet = ""
+        CheminComplet = vbNullString
         Exit Property
     End If
 
     On Error Resume Next
     iPos = 1
-    iPosNext = InStr(iPos, sNom, "/")
+    iPosNext = InStr(iPos, sNom, conSlash)
     iNum = 0
     Do Until iNum = iIdent
         iPos = iPosNext + 1
-        iPosNext = InStr(iPos, sNom, "/")
+        iPosNext = InStr(iPos, sNom, conSlash)
         iNum = iNum + 1
     Loop
 

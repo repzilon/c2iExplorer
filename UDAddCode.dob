@@ -6,47 +6,12 @@ Begin VB.UserDocument UDAddCode
    ClientTop       =   495
    ClientWidth     =   8565
    HScrollSmallChange=   225
+   LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   5880
    ScaleWidth      =   8565
    ScrollBars      =   0  'None
    VScrollSmallChange=   225
-   Begin VB.ComboBox cmbObjV 
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   315
-      Left            =   600
-      TabIndex        =   15
-      Text            =   "Combo1"
-      Top             =   840
-      Visible         =   0   'False
-      Width           =   2535
-   End
-   Begin VB.ComboBox cmbLstDeb 
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      Height          =   315
-      Left            =   600
-      Style           =   2  'Dropdown List
-      TabIndex        =   14
-      Top             =   360
-      Visible         =   0   'False
-      Width           =   2535
-   End
    Begin MSComctlLib.ImageList imgTB 
       Left            =   1440
       Top             =   5160
@@ -104,7 +69,6 @@ Begin VB.UserDocument UDAddCode
       BorderStyle     =   1
    End
    Begin VB.Frame FrameCode 
-      Caption         =   "Code généré"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -177,7 +141,6 @@ Begin VB.UserDocument UDAddCode
       End
    End
    Begin VB.Frame frameLstProp 
-      Caption         =   "Liste des propriétés"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -219,7 +182,6 @@ Begin VB.UserDocument UDAddCode
       End
    End
    Begin VB.Frame FrameProp 
-      Caption         =   "Propriété"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -296,7 +258,7 @@ Begin VB.UserDocument UDAddCode
             EndProperty
             BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "ecriture"
-               Object.ToolTipText     =   "Let (or Set)"
+               Object.ToolTipText     =   "Let/Set"
                ImageKey        =   "ecriture"
                Style           =   2
             EndProperty
@@ -317,6 +279,15 @@ Begin VB.UserDocument UDAddCode
          BorderStyle     =   1
       End
       Begin VB.TextBox txtName 
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   285
          Left            =   720
          TabIndex        =   0
@@ -341,7 +312,6 @@ Begin VB.UserDocument UDAddCode
          Width           =   495
       End
       Begin VB.Label lblNom 
-         Caption         =   "Nom :"
          BeginProperty Font 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -418,15 +388,15 @@ Begin VB.UserDocument UDAddCode
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDAddCode.dox":4F04
-            Key             =   "let"
+            Key             =   "Let"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDAddCode.dox":5092
-            Key             =   "get"
+            Key             =   "Get"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDAddCode.dox":5220
-            Key             =   "set"
+            Key             =   "Set"
          EndProperty
       EndProperty
    End
@@ -463,7 +433,17 @@ Attribute VB_Exposed = True
 
 Option Explicit
 
+Private Const conObjet As String = "objet"
+Private Const conProp As String = "prop"
+Private Const conAddprop As String = "addprop"
+Private Const conDelprop As String = "delprop"
+Private Const conDelete As String = "delete"
+Private Const conCopie As String = "copie"
+Private strarCatDonnes() As String
+Private strarPrefixes() As String
+
 'Modifié par René Rhéaume le 28 juillet 2001
+'Optimisé par René Rhéaume le 6 janvier 2002
 'Utilise un fichier INI et des fonctions API
 Private Sub UserDocument_Initialize()
 '    'Ancienne version
@@ -475,28 +455,31 @@ Private Sub UserDocument_Initialize()
     'Nouvelle version
     Dim chnContenuSectionTypes As String, tblSectionTypes() As String
     Dim I As Long, iPos As Long, iPos2 As Long
-
+    Dim lngFinTab As Long
     On Error GoTo Fin
     
     'Nouvelle version
-    lngDeb = GetPrivateProfileInt("General", "DefaultType", 6, c2iINIFile)
+    lngDeb = GetPrivateProfileInt(conSecGen, "DefaultType", 6, c2iINIFile)
     chnContenuSectionTypes = LireSectionFichierINI("Types", c2iINIFile)
     SplitB chnContenuSectionTypes, tblSectionTypes(), vbNullChar
     
-    For I = 0 To UBound(tblSectionTypes()) - 1
+    lngFinTab = UBound(tblSectionTypes()) - 1
+    ReDim strarCatDonnes(0 To lngFinTab)
+    ReDim strarPrefixes(0 To lngFinTab)
+    For I = 0 To lngFinTab
         iPos = InStr(1, tblSectionTypes(I), "=")
         sName = Trim$(Left$(tblSectionTypes(I), iPos - 1))
         cmbLstType.AddItem sName
         iPos2 = InStr(iPos + 1, tblSectionTypes(I), ";")
         sObj = Trim$(Mid$(tblSectionTypes(I), iPos + 1, iPos2 - iPos - 1))
-        cmbObjV.AddItem sObj
+        strarCatDonnes(I) = sObj
         sType = Trim$(Right$(tblSectionTypes(I), Len(tblSectionTypes(I)) - iPos2))
-        cmbLstDeb.AddItem sType
+        strarPrefixes(I) = sType
     Next I
     cmbLstType.ListIndex = lngDeb
     
 '    'Ancienne version
-'    c2iTypeFile = App.Path + "\data\types.txt"
+'    c2iTypeFile = strCheminApp + "\data\types.txt"
 '
 '    Set fso = New FileSystemObject
 '    Set txtFile = fso.OpenTextFile(c2iTypeFile)
@@ -517,38 +500,32 @@ Private Sub UserDocument_Initialize()
 '    Set fso = Nothing
 
     MakeToolBar
-    If lngLanguage = c2i_Langue_Français Then
-        FrameProp.Caption = "Propriété :"
-        lblNom = "Nom :"
-        frameLstProp.Caption = "Liste des propriétés"
-        FrameCode.Caption = "Code généré"
-    Else
+    If (lngLanguage = c2i_Langue_Anglais) Then
         FrameProp.Caption = "Property :"
         lblNom = "Name :"
         frameLstProp.Caption = "Properties list"
         FrameCode.Caption = "Generated code"
+    Else
+        FrameProp.Caption = "Propriété :"
+        lblNom = "Nom :"
+        frameLstProp.Caption = "Liste des propriétés"
+        FrameCode.Caption = "Code généré"
     End If
     UserDocument_Resize
     Exit Sub
 Fin:
-    'Nouvelle version
-    If lngLanguage = c2i_Langue_Français Then
-        MsgBox "Erreur au chargement de " & c2iINIFile & vbCrLf & _
-            "Numéro d'erreur : " & Err.Number & vbCrLf & _
-            "Description : " & Err.Description & vbCrLf & _
-            "Source : " & Err.Source, vbInformation
-    Else
+    If (lngLanguage = c2i_Langue_Anglais) Then
         MsgBox "Error when loading file" & c2iINIFile & vbCrLf & _
             "Error number : " & Err.Number & vbCrLf & _
             "Description : " & Err.Description & vbCrLf & _
-            "Source : " & Err.Source, vbInformation
+            "Source : " & Err.Source, vbExclamation
+    Else
+        MsgBox "Erreur au chargement de " & c2iINIFile & vbCrLf & _
+            "Numéro d'erreur : " & Err.Number & vbCrLf & _
+            "Description : " & Err.Description & vbCrLf & _
+            "Source : " & Err.Source, vbExclamation
     End If
 '    'Ancienne version
-'    If lngLanguage = c2i_Langue_Français Then
-'        MsgBox "Erreur au chargement de " & c2iTypeFile, vbInformation
-'    Else
-'        MsgBox "Error in loading document" & c2iTypeFile, vbInformation
-'    End If
 '    Set txtFile = Nothing
 '    Set fso = Nothing
 End Sub
@@ -565,75 +542,83 @@ Private Function ExtractType(ByVal sText As String) As String
     ExtractType = Mid$(sText, lDeb + 1, Len(sText) - lDeb - 1)
 End Function
 
+' Optimisé par René Rhéaume le 6 janvier 2002
 Private Sub AjouteProp()
-    If txtName = "" Then Exit Sub
-    If cmbLstType.ListIndex = -1 Then Exit Sub
-
+    ' -------------------- DÉCLARATION VARIABLES ---------------------
     Dim mN As Node, mNFils As Node
     Dim sType As String
-
-    On Error GoTo GestErr
-    'ajoute la nouvelle propriété au treeview, si elle existe ->GestErr
-
-    sType = txtName + " (" + cmbLstType.List(cmbLstType.ListIndex) + ")"
-    If cmbObjV.List(cmbLstType.ListIndex) = "o" Then
-        Set mN = tvCode.Nodes.Add(, , txtName, sType, "objet")
-    Else
-        Set mN = tvCode.Nodes.Add(, , txtName, sType, "prop")
-    End If
-    mN.Tag = cmbLstDeb.List(cmbLstType.ListIndex)
-
-    'couleur suivant la portée
-    If tb.Buttons("pub").Value = tbrPressed Then mN.ForeColor = vbBlue
-    If tb.Buttons("priv").Value = tbrPressed Then mN.ForeColor = vbBlack
-    If tb.Buttons("frie").Value = tbrPressed Then mN.ForeColor = vbRed
-
-    'Lecture ecriture
-    If tb.Buttons("lectureecriture").Value = tbrPressed Then
-        If cmbObjV.List(cmbLstType.ListIndex) = "o" Then
-            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Set", "set")
-        Else
-            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Let", "let")
+    Dim blnLecture As Boolean
+    Dim blnEcriture As Boolean
+    Dim blnObjet As Boolean
+    Dim lngIdxSel As Long
+    Dim strNom As String
+    Dim lngCouleur As Long
+    ' ---------------------------- ENTRÉE ----------------------------
+    strNom = txtName.Text
+    lngIdxSel = cmbLstType.ListIndex
+    ' -------------------------- TRAITEMENT --------------------------
+    If (strNom <> vbNullString) Then
+        If (lngIdxSel > -1) Then
+            On Error GoTo GestErr
+            sType = strNom & " (" & cmbLstType.List(lngIdxSel) & ")"
+            blnObjet = (strarCatDonnes(lngIdxSel) = "o")
+            
+            'ajoute la nouvelle propriété au treeview, si elle existe ->GestErr
+            If (blnObjet) Then
+                Set mN = tvCode.Nodes.Add(, , strNom, sType, conObjet)
+            Else
+                Set mN = tvCode.Nodes.Add(, , strNom, sType, conProp)
+            End If
+            mN.Tag = strarPrefixes(lngIdxSel)
+            
+            'couleur suivant la portée
+            Select Case tbrPressed
+                Case tb.Buttons("pub").Value
+                    lngCouleur = Mem_Public
+                Case tb.Buttons("priv").Value
+                    lngCouleur = Mem_Privee
+                Case tb.Buttons("frie").Value
+                    lngCouleur = Mem_Friend
+            End Select
+            mN.ForeColor = lngCouleur
+            
+            Select Case tbrPressed
+                Case tb.Buttons("lectureecriture").Value
+                    blnLecture = conVrai
+                    blnEcriture = conVrai
+                Case tb.Buttons("lecture").Value
+                    blnLecture = conVrai
+                Case tb.Buttons("ecriture").Value
+                    blnEcriture = conVrai
+            End Select
+            
+            If (blnEcriture) Then
+                If (blnObjet) Then
+                    Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conSet, conSet)
+                Else
+                    Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conLet, conLet)
+                End If
+                mNFils.ForeColor = lngCouleur
+            End If
+            If (blnLecture) Then
+                Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conGet, conGet)
+                mNFils.ForeColor = lngCouleur
+            End If
+            
+            Set mNFils = Nothing
+            Set mN = Nothing
+            VoirCode
+            Exit Sub
         End If
-        mNFils.ForeColor = mNFils.Parent.ForeColor
-
-        Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Get", "get")
-        mNFils.ForeColor = mNFils.Parent.ForeColor
-        Set mNFils = Nothing
-        Set mN = Nothing
-        VoirCode
-        Exit Sub
-    End If
-
-    'lecture
-    If tb.Buttons("lecture").Value = tbrPressed Then
-        Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Get", "get")
-        mNFils.ForeColor = mNFils.Parent.ForeColor
-        Set mNFils = Nothing
-        Set mN = Nothing
-        VoirCode
-        Exit Sub
-    End If
-
-    'Lecture ecriture
-    If tb.Buttons("ecriture").Value = tbrPressed Then
-        If cmbObjV.List(cmbLstType.ListIndex) = "o" Then
-            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Set", "set")
-        Else
-            Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , "Let", "let")
-        End If
-        mNFils.ForeColor = mNFils.Parent.ForeColor
-        Set mNFils = Nothing
-        Set mN = Nothing
-        VoirCode
-        Exit Sub
     End If
 
 GestErr:
-    If Err.Number = 35602 Then
+    Set mNFils = Nothing
+    Set mN = Nothing
+    If (Err.Number) = 35602 Then
         MsgBox "Cette propriété existe déjà", vbInformation
     Else
-        MsgBox "Erreur inconnue : " + CStr(Err.Description), vbCritical
+        MsgBox "Erreur inconnue : " & CStr(Err.Description), vbCritical
     End If
 End Sub
 
@@ -643,70 +628,93 @@ Private Sub Effacer()
 End Sub
 
 Private Sub DelProp()
-    If tvCode.SelectedItem Is Nothing Then Exit Sub
-    'vérif que ce n'est pas le dernier child
-    If Not tvCode.SelectedItem.Parent Is Nothing Then
-        If tvCode.SelectedItem.Parent.Children = 1 Then
-            tvCode.Nodes.Remove tvCode.SelectedItem.Parent.Index
-            VoirCode
-            Exit Sub
-        End If
+'    If (tvCode.SelectedItem Is Nothing) Then Exit Sub
+'    'vérif que ce n'est pas le dernier child
+'    If (Not tvCode.SelectedItem.Parent Is Nothing) Then
+'        If (tvCode.SelectedItem.Parent.Children = 1) Then
+'            tvCode.Nodes.Remove tvCode.SelectedItem.Parent.Index
+'            VoirCode
+'            Exit Sub
+'        End If
+'    End If
+'    tvCode.Nodes.Remove tvCode.SelectedItem.Index
+'    VoirCode
+    Dim nodSelection As Node
+    Set nodSelection = tvCode.SelectedItem
+    If (Not nodSelection Is Nothing) Then
+        Select Case conVrai
+            Case nodSelection.Parent Is Nothing, nodSelection.Parent.Children <> 1
+                tvCode.Nodes.Remove nodSelection.Index
+            Case Else
+                tvCode.Nodes.Remove nodSelection.Parent.Index
+        End Select
+        VoirCode
     End If
-    tvCode.Nodes.Remove tvCode.SelectedItem.Index
-    VoirCode
+    Set nodSelection = Nothing
 End Sub
 
 Private Sub VoirCode()
+    Const conEspace As String = " "
+    Const conAs As String = " As "
+    Const conEgal As String = " = "
+    Const conSetEsp As String = conSet & conEspace
     Dim sDeclaration As String, sCode As String
     Dim mN As Node, mNFils As Node
-
-    txtCodeDeclarationView = ""
-    txtCodeView = ""
+    Dim strTagmN As String
+    Dim strNom As String
+    Dim strType As String
+    Dim strTexteFils As String
+    
+    txtCodeDeclarationView = vbNullString
+    txtCodeView = vbNullString
 
     If tvCode.Nodes.Count = 0 Then Exit Sub
 
     Set mN = tvCode.Nodes(1)
     Do Until mN Is Nothing
+        strTagmN = mN.Tag
+        strNom = ExtractName(mN.Text)
+        strType = ExtractType(mN.Text)
         'dans la zone déclaration
-        sDeclaration = sDeclaration + "Private " + _
-                mN.Tag + ExtractName(mN.Text) + _
-                " As " + ExtractType(mN.Text) + vbCrLf
+        sDeclaration = sDeclaration & "Private " & strTagmN & strNom & _
+                        conAs & strType & vbCrLf
         'dans la zone code
+        'détermination de la portée
+        Select Case mN.ForeColor
+            Case Mem_Public                         'public
+                sCode = "Public Property "
+            Case Mem_Privee                         'private
+                sCode = "Private Property "
+            Case Mem_Friend                         'friend
+                sCode = "Friend Property "
+        End Select
         Set mNFils = mN.Child
         Do Until mNFils Is Nothing
-            'détermination de la portée
-            Select Case mN.ForeColor
-                Case vbBlue                                'public
-                    sCode = sCode + "Public Property "
-                Case vbBlack                               'private
-                    sCode = sCode + "Private Property "
-                Case vbRed                                 'friend
-                    sCode = sCode + "Friend Property "
-            End Select
-            Select Case mNFils.Text
-                Case "Get"
-                    sCode = sCode + mNFils.Text + " " + ExtractName(mN.Text) + "()"
-                    sCode = sCode + " As " + ExtractType(mN.Text) + vbCrLf
-                    If mN.Image = "prop" Then
-                        sCode = sCode + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + vbCrLf
-                    Else
-                        sCode = sCode + "Set " + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + vbCrLf
+            ' Partie de l'en-tête
+            strTexteFils = mNFils.Text
+            sCode = sCode & strTexteFils & conEspace & strNom
+            Select Case strTexteFils
+                Case conGet
+                    sCode = sCode & "()" & conAs & strType & vbCrLf
+                    If (mN.Image = conObjet) Then
+                        sCode = sCode & conSetEsp
                     End If
-                Case "Set"
-                    sCode = sCode + mNFils.Text + " " + ExtractName(mN.Text) + "(ByVal " + mN.Tag + ExtractName(mN.Text) + "A As " + ExtractType(mN.Text) + ")" + vbCrLf
-                    sCode = sCode + "Set " + mN.Tag + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + "A" + vbCrLf
-                Case "Let"
-                    sCode = sCode + mNFils.Text + " " + ExtractName(mN.Text) + "(ByVal " + mN.Tag + ExtractName(mN.Text) + "A As " + ExtractType(mN.Text) + ")" + vbCrLf
-                    sCode = sCode + mN.Tag + ExtractName(mN.Text) + " = " + mN.Tag + ExtractName(mN.Text) + "A" + vbCrLf
+                    sCode = sCode & strNom & conEgal & strTagmN & strNom & vbCrLf
+                Case conSet, conLet
+                    sCode = sCode & "(ByVal " & strTagmN & strNom & "A As " & strType & ")" & vbCrLf
+                    If (strTexteFils = conSet) Then
+                        sCode = sCode & conSetEsp
+                    End If
+                    sCode = sCode & strTagmN & strNom & conEgal & strTagmN & strNom & "A" & vbCrLf
             End Select
-            sCode = sCode + "End Property" + vbCrLf + vbCrLf
+            sCode = sCode & ("End Property" & (vbCrLf & vbCrLf))
             Set mNFils = mNFils.Next
         Loop
 
         Set mN = mN.Next
     Loop
 
-    sDeclaration = "'//************Généré par c2iExplorer*******************" + vbCrLf + sDeclaration
+    sDeclaration = "'//************Généré par c2iExplorer*******************" & vbCrLf & sDeclaration
 
     txtCodeDeclarationView = sDeclaration
     txtCodeView = sCode
@@ -714,7 +722,7 @@ Private Sub VoirCode()
     Set mN = Nothing
 
     On Error Resume Next
-    txtName = ""
+    txtName = vbNullString
     txtName.SetFocus
 
 End Sub
@@ -737,25 +745,25 @@ Private Sub MakeToolBar()
     With tbMain
         Set .ImageList = imgTB
         Set .HotImageList = imgTB
-        Set objButton = .Buttons.Add(, "addprop", , , "addprop")
-        Set objButton = .Buttons.Add(, "delprop", , , "delprop")
+        Set objButton = .Buttons.Add(, conAddprop, , , conAddprop)
+        Set objButton = .Buttons.Add(, conDelprop, , , conDelprop)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        Set objButton = .Buttons.Add(, "delete", , , "delete")
+        Set objButton = .Buttons.Add(, conDelete, , , conDelete)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        Set objButton = .Buttons.Add(, "copie", , , "copie")
+        Set objButton = .Buttons.Add(, conCopie, , , conCopie)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
 
         Select Case lngLanguage
-            Case c2i_Langue_Français
-                .Buttons("addprop").ToolTipText = "Ajouter une propriétée"
-                .Buttons("delprop").ToolTipText = "Supprimer la propriété"
-                .Buttons("delete").ToolTipText = "Remise à zéro"
-                .Buttons("copie").ToolTipText = "Copier le code généré"
+            Case c2i_Langue_Anglais
+                .Buttons(conAddprop).ToolTipText = "Add a property"
+                .Buttons(conDelprop).ToolTipText = "Delete property"
+                .Buttons(conDelete).ToolTipText = "Delete all"
+                .Buttons(conCopie).ToolTipText = "Copy generated code"
             Case Else
-                .Buttons("addprop").ToolTipText = "Add a property"
-                .Buttons("delprop").ToolTipText = "Delete property"
-                .Buttons("delete").ToolTipText = "Delete all"
-                .Buttons("copie").ToolTipText = "Copy generated code"
+                .Buttons(conAddprop).ToolTipText = "Ajouter une propriété"
+                .Buttons(conDelprop).ToolTipText = "Supprimer la propriété"
+                .Buttons(conDelete).ToolTipText = "Remise à zéro"
+                .Buttons(conCopie).ToolTipText = "Copier le code généré"
         End Select
     End With
 
@@ -769,19 +777,19 @@ End Sub
 
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
-        Case "addprop"
+        Case conAddprop
             AjouteProp
-        Case "delprop"
+        Case conDelprop
             DelProp
-        Case "delete"
+        Case conDelete
             Effacer
-        Case "copie"
+        Case conCopie
             CopieCode
     End Select
 End Sub
 
 Private Sub CopieCode()
-    If VBInstance.ActiveCodePane Is Nothing Then
+    If (VBInstance.ActiveCodePane Is Nothing) Then
         MsgBox "Aucune fenêtre de code active", vbInformation
     Else
         With VBInstance.ActiveCodePane.CodeModule
@@ -790,17 +798,28 @@ Private Sub CopieCode()
         End With
         Effacer
     End If
-
 End Sub
 
 Private Sub UserDocument_Resize()
+    Const conEspaceLibre As Single = 120
+    Dim sngHauteurLstProp As Single
+    Dim sngLargeurFraCode As Single
+    Dim sngHauteurFraCode As Single
+    Dim sngHauteurEchelle As Single
+    Dim sngLargeurZoneCode As Single
+    
+    sngHauteurEchelle = ScaleHeight
+    sngHauteurLstProp = sngHauteurEchelle - frameLstProp.Top - conEspaceLibre
+    sngLargeurFraCode = ScaleWidth - FrameCode.Left - conEspaceLibre
+    sngHauteurFraCode = sngHauteurEchelle - FrameCode.Top - conEspaceLibre
+    sngLargeurZoneCode = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
+    
     On Error Resume Next
-    frameLstProp.Height = ScaleHeight - frameLstProp.Top - 120
-    tvCode.Height = frameLstProp.Height - tvCode.Top - 120
-
-    FrameCode.Height = ScaleHeight - FrameCode.Top - 120
-    FrameCode.Width = ScaleWidth - FrameCode.Left - 120
-    txtCodeDeclarationView.Width = FrameCode.Width - txtCodeDeclarationView.Left - 120
-    txtCodeView.Width = txtCodeDeclarationView.Width
-    txtCodeView.Height = FrameCode.Height - txtCodeView.Top - 120
+    frameLstProp.Height = sngHauteurLstProp
+    tvCode.Height = sngHauteurLstProp - tvCode.Top - conEspaceLibre
+    FrameCode.Height = sngHauteurFraCode
+    FrameCode.Width = sngLargeurFraCode
+    txtCodeDeclarationView.Width = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
+    txtCodeView.Width = sngLargeurZoneCode
+    txtCodeView.Height = sngHauteurFraCode - txtCodeView.Top - conEspaceLibre
 End Sub

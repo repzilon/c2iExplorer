@@ -28,6 +28,7 @@ Attribute VB_Exposed = False
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
 '
 ' ***** END LICENSE BLOCK *****
 
@@ -77,26 +78,26 @@ Private Declare Function GetOpenFileName Lib "comdlg32.dll" Alias "GetOpenFileNa
 Private Declare Function GetSaveFileName Lib "comdlg32.dll" Alias "GetSaveFileNameA" (pOpenfilename As OPENFILENAME) As Long
 
 Private Type OPENFILENAME
-        lStructSize As Long
-        hwndOwner As Long
-        hInstance As Long
-        lpstrFilter As String
-        lpstrCustomFilter As String
-        nMaxCustFilter As Long
-        nFilterIndex As Long
-        lpstrFile As String
-        nMaxFile As Long
-        lpstrFileTitle As String
-        nMaxFileTitle As Long
-        lpstrInitialDir As String
-        lpstrTitle As String
-        Flags As Long
-        nFileOffset As Integer
-        nFileExtension As Integer
-        lpstrDefExt As String
-        lCustData As Long
-        lpfnHook As Long
-        lpTemplateName As String
+    lStructSize As Long
+    hwndOwner As Long
+    hInstance As Long
+    lpstrFilter As String
+    lpstrCustomFilter As String
+    nMaxCustFilter As Long
+    nFilterIndex As Long
+    lpstrFile As String
+    nMaxFile As Long
+    lpstrFileTitle As String
+    nMaxFileTitle As Long
+    lpstrInitialDir As String
+    lpstrTitle As String
+    Flags As Long
+    nFileOffset As Integer
+    nFileExtension As Integer
+    lpstrDefExt As String
+    lCustData As Long
+    lpfnHook As Long
+    lpTemplateName As String
 End Type
 
 Public Enum ErrorConstants
@@ -153,13 +154,13 @@ Dim tOpFile As OPENFILENAME, s As String
 
 With tOpFile
     .lStructSize = Len(tOpFile)
-    If sFileTitle = "" Then sFileTitle = vbNullChar
-    If sFilter = "" Then sFilter = "Tous(*.*)|*.*"
+    If sFileTitle = vbNullString Then sFileTitle = vbNullChar
+    If sFilter = vbNullString Then sFilter = "Tous(*.*)|*.*"
     If lngFilterIndex = 0 Then lngFilterIndex = 1
     .hwndOwner = lnghdcOwner
     .lpstrInitialDir = sInitDir
     .lpstrDefExt = sDefaultEx
-    If sDialogTitle <> "" Then .lpstrTitle = sDialogTitle
+    If sDialogTitle <> vbNullString Then .lpstrTitle = sDialogTitle
     
     ' Pour faire un style type Windows, remplacer les | par des nuls
     Dim ch As String, I As Long
@@ -172,7 +173,7 @@ With tOpFile
         End If
     Next
     ' Mettre un double nul à la fin
-    s = s & vbNullChar & vbNullChar
+    s = s & (vbNullChar & vbNullChar)
     .lpstrFilter = s
     
     .nFilterIndex = lngFilterIndex
@@ -180,7 +181,7 @@ With tOpFile
     ' Bourrer les tampons fichier et "title" fichier jusqu'à la longueur maximum du chemin
     s = sFileName & String$(260 - Len(sFileName), 0)
     .lpstrFile = s
-    .nMaxFile = 255
+    .nMaxFile = 260
     s = sFileTitle & String$(260 - Len(sFileTitle), 0)
     .lpstrFileTitle = s
     .nMaxFileTitle = 260
@@ -188,39 +189,27 @@ With tOpFile
     ' Passer les drapeaux, en éliminant les drapeaux non VB
     .Flags = lngFlags And &H1FF1F
 
+    ' Optimisé en taille par René Rhéaume le 5 janvier 2002
     If bOpen Then
-        If GetOpenFileName(tOpFile) Then
-            ShowOpenSave = conVrai
-            sFileName = Left(.lpstrFile, InStr(.lpstrFile, vbNullChar) - 1)
-            sFileTitle = Left(.lpstrFileTitle, InStr(.lpstrFileTitle, vbNullChar) - 1)
-            sFolder = Left(sFileName, Len(sFileName) - Len(sFileTitle) - 1)
-            lngFlags = .Flags
-        Else
-            ShowOpenSave = conFaux
-            sFileName = ""
-            sFileTitle = ""
-            lngFlags = 0
-        End If
+        ShowOpenSave = CBool(GetOpenFileName(tOpFile))
     Else
-        If GetSaveFileName(tOpFile) Then
-            ShowOpenSave = conVrai
-            sFileName = Left(.lpstrFile, InStr(.lpstrFile, vbNullChar) - 1)
-            sFileTitle = Left(.lpstrFileTitle, InStr(.lpstrFileTitle, vbNullChar) - 1)
-            sFolder = Left(sFileName, Len(sFileName) - Len(sFileTitle) - 1)
-            lngFlags = .Flags
-        Else
-            ShowOpenSave = conFaux
-            sFileName = ""
-            sFileTitle = ""
-            lngFlags = 0
-        End If
-    
+        ShowOpenSave = CBool(GetSaveFileName(tOpFile))
+    End If
+    If (ShowOpenSave) Then
+        sFileName = Left$(.lpstrFile, InStr(.lpstrFile, vbNullChar) - 1)
+        sFileTitle = Left$(.lpstrFileTitle, InStr(.lpstrFileTitle, vbNullChar) - 1)
+        sFolder = Left$(sFileName, Len(sFileName) - Len(sFileTitle) - 1)
+        lngFlags = .Flags
+    Else
+        sFileName = vbNullString
+        sFileTitle = vbNullString
+        lngFlags = 0
     End If
 End With
 End Function
 
 Public Function ShowSave() As Boolean
-ShowSave = ShowOpenSave(conFaux)
+    ShowSave = ShowOpenSave(conFaux)
 End Function
 
 'Public Function ShowOpenFolder() As Boolean
@@ -230,14 +219,14 @@ End Function
 '
 'With tBrowseInfo
 '    .hwndOwner = lnghdcOwner
-'    .lpszTitle = lstrcat(sDialogTitle, "")
+'    .lpszTitle = lstrcat(sDialogTitle, vbNullString)
 '    .ulFlags = BIF_RETURNONLYFSDIRS + BIF_DONTGOBELOWDOMAIN
 'End With
 '
 'lngRet = SHBrowseForFolder(tBrowseInfo)
 '
 'If lngRet Then
-'    sDummy = Space(255)
+'    sDummy = Space$(255)
 '    SHGetPathFromIDList lngRet, sDummy
 '    sDummy = Left(sDummy, InStr(sDummy, vbNullChar) - 1)
 '    ShowOpenFolder = conVrai

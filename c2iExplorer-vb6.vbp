@@ -33,16 +33,17 @@ HelpContextID="0"
 CompatibleMode="0"
 MajorVer=1
 MinorVer=60
-RevisionVer=120
+RevisionVer=126
 AutoIncrementVer=0
 ServerSupportFiles=0
-VersionComments="Explorateur d'événements pour VB 5/6 - Open Source sur c2i.fr."
+DllBaseAddress=&H3af70000
+VersionComments="Explorateur d'événements pour VB 5/6 - Open Source sur c2i.fr et sourceforge.net ."
 VersionCompanyName="c2i"
 VersionFileDescription="Complément explorateur de projet pour VB6"
-VersionLegalCopyright="c2i - Richard Clark, Fred Just, René Rhéaume"
+VersionLegalCopyright="c2i - Richard Clark, Fred Just, René Rhéaume. Programme couvert par la MPL 1.1 ."
 VersionLegalTrademarks="c2i - Richard Clark"
 VersionProductName="c2iExplorer"
-CondComp="VersionVB = 6"
+CondComp="VersionVB = 6 : OldC2iStyle = 0"
 CompilationType=0
 OptimizationType=0
 FavorPentiumPro(tm)=0

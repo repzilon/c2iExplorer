@@ -7,6 +7,7 @@ Begin VB.UserDocument UDClassViewer
    ClientTop       =   345
    ClientWidth     =   7335
    HScrollSmallChange=   15
+   LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   417
    ScaleMode       =   3  'Pixel
@@ -60,10 +61,10 @@ Begin VB.UserDocument UDClassViewer
       Top             =   1500
       _ExtentX        =   1005
       _ExtentY        =   1005
-      BackColor       =   128
+      BackColor       =   16777215
       ImageWidth      =   100
       ImageHeight     =   14
-      MaskColor       =   12632256
+      MaskColor       =   128
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   5
@@ -72,19 +73,19 @@ Begin VB.UserDocument UDClassViewer
             Key             =   "methode"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":036A
+            Picture         =   "UDClassViewer.dox":0170
             Key             =   "propgetlet"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":06D4
+            Picture         =   "UDClassViewer.dox":0304
             Key             =   "propget"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0A3E
+            Picture         =   "UDClassViewer.dox":04A0
             Key             =   "proplet"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0DA8
+            Picture         =   "UDClassViewer.dox":0638
             Key             =   "proppublic"
          EndProperty
       EndProperty
@@ -138,15 +139,15 @@ Begin VB.UserDocument UDClassViewer
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   3
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":1112
+            Picture         =   "UDClassViewer.dox":082C
             Key             =   "print"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":1670
+            Picture         =   "UDClassViewer.dox":0D8A
             Key             =   "actu"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":1812
+            Picture         =   "UDClassViewer.dox":0F2C
             Key             =   "descro"
          EndProperty
       EndProperty
@@ -155,7 +156,6 @@ Begin VB.UserDocument UDClassViewer
       Appearance      =   0  'Flat
       BackColor       =   &H8000000C&
       BorderStyle     =   1  'Fixed Single
-      Caption         =   "Private mFunction as Long"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -175,7 +175,6 @@ Begin VB.UserDocument UDClassViewer
    Begin VB.Label lblClassName 
       Alignment       =   2  'Center
       BackStyle       =   0  'Transparent
-      Caption         =   "cPersonnels"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   9.75
@@ -218,11 +217,14 @@ Attribute VB_Exposed = True
 ' the Initial Developer. All Rights Reserved.
 '
 ' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
 '
 ' ***** END LICENSE BLOCK *****
 
 Option Explicit
-
+Private Const conActu As String = "actu"
+Private Const conDescro As String = "descro"
+Private Const conPrint As String = "print"
 Private mobjCmp As VBIDE.VBComponent
 
 Private Sub UserDocument_Initialize()
@@ -238,22 +240,23 @@ End Sub
 
 Private Sub MakeToolBar()
     Dim objButton As Button
-    Set objButton = tbMain.Buttons.Add(, , , tbrSeparator)
-    Set objButton = tbMain.Buttons.Add(, "actu", , , "actu")
-    Set objButton = tbMain.Buttons.Add(, "descro", , tbrPressed, "descro")
-    Set objButton = tbMain.Buttons.Add(, , , tbrSeparator)
-    Set objButton = tbMain.Buttons.Add(, "print", , , "print")
-
     With tbMain.Buttons
+        Set objButton = .Add(, , , tbrSeparator)
+        Set objButton = .Add(, conActu, , , conActu)
+        Set objButton = .Add(, conDescro, , tbrPressed, conDescro)
+        Set objButton = .Add(, , , tbrSeparator)
+        Set objButton = .Add(, conPrint, , , conPrint)
+
+    
         Select Case lngLanguage
-            Case c2i_Langue_Français
-                .Item("actu").ToolTipText = "Actualisation"
-                .Item("descro").ToolTipText = "Description"
-                .Item("print").ToolTipText = "Imprimer"
+            Case c2i_Langue_Anglais
+                .Item(conActu).ToolTipText = "Refresh"
+                .Item(conDescro).ToolTipText = conLibelDescrpt
+                .Item(conPrint).ToolTipText = "Print"
             Case Else
-                .Item("actu").ToolTipText = "Refresh"
-                .Item("descro").ToolTipText = "Description"
-                .Item("print").ToolTipText = "Print"
+                .Item(conActu).ToolTipText = "Actualisation"
+                .Item(conDescro).ToolTipText = conLibelDescrpt
+                .Item(conPrint).ToolTipText = "Imprimer"
         End Select
     End With
 
@@ -261,102 +264,117 @@ Private Sub MakeToolBar()
 End Sub
 
 Private Sub UserDocument_Resize()
+    Dim sngHautEchelle As Single
+    Dim sngLargEchelle As Single
+    Dim sngHautLblInt As Single
+    Dim sngLargLvProp As Single
+    sngHautEchelle = ScaleHeight
+    sngLargEchelle = ScaleWidth
     On Error Resume Next
     With lblInt
-        .Height = ScaleHeight - .Top - 10
+        sngHautLblInt = sngHautEchelle - .Top - 10
+        .Height = sngHautLblInt
     End With
     With lvProp
-        .Width = ScaleWidth - .Left
-        .Height = lblInt.Height
-        .ColumnHeaders(1).Width = .Width * 0.9
+        sngLargLvProp = sngLargEchelle - .Left
+        .Width = sngLargLvProp
+        .Height = sngHautLblInt
+        .ColumnHeaders(1).Width = sngLargLvProp * 0.9
     End With
     With PicSource
-        .Width = ScaleWidth
-        .Height = ScaleHeight - tbMain.Height
+        .Width = sngLargEchelle
+        .Height = sngHautEchelle - tbMain.Height
     End With
 End Sub
 
 Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
+    Const conPropgetlet As String = "propgetlet"
+    Const conProplet As String = "proplet"
+    Const conPropget As String = "propget"
+    Const conProppublic As String = "proppublic"
+    
     Dim objMember As VBIDE.Member, lngColor As Long, lItem As ListItem
     Dim iGet As Long, iLet As Long, iSet As Long
     Dim sTexte As String
-
+    Dim blnAjoutProp As Boolean, strImgLV As String, strDescription As String
 
     lvProp.ListItems.Clear
-    lblInt = ""
+    lblInt = vbNullString
 
     Set mobjCmp = objCmp
 
     lblClassName = mobjCmp.Name
     For Each objMember In mobjCmp.CodeModule.Members
         sTexte = objMember.Name
-        If tbMain.Buttons("descro").Value = tbrUnpressed Then
-            If Trim$(objMember.Description) <> "" Then
-                sTexte = sTexte + " (" + Trim$(objMember.Description) + ")"
+        If (tbMain.Buttons(conDescro).Value = tbrPressed) Then
+            On Error Resume Next
+            strDescription = Trim$(objMember.Description)
+            On Error GoTo 0
+            If (strDescription <> vbNullString) Then
+                sTexte = sTexte & " (" & strDescription & ")"
             End If
         End If
 
         Select Case ExtraitIconeMembre(objMember, lngColor)
-            Case "methode"
-                If lngColor <> Mem_Privee Then
-                    Set lItem = lvProp.ListItems.Add(, , sTexte, "methode", "methode")
+            Case conMethode
+                If (lngColor <> Mem_Privee) Then
+                    Set lItem = lvProp.ListItems.Add(, , sTexte, conMethode, conMethode)
                     lItem.ForeColor = lngColor
                 End If
-            Case "propriete"
-                If lngColor <> Mem_Privee Then
+                
+            Case conPropriete
+                If (lngColor <> Mem_Privee) Then
+                    blnAjoutProp = conFaux
                     iGet = 0
                     iLet = 0
                     iSet = 0
                     On Error Resume Next
-                    iGet = objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Get)
-                    If iGet <> 0 Then
-                        Set lItem = lvProp.ListItems.Add(, , sTexte, "propget", "propget")
-                        lItem.ForeColor = lngColor
-                    End If
-                    iLet = objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Let)
-                    If iLet <> 0 Then
-                        If iGet <> 0 Then
-                            lItem.Icon = "propgetlet"
-                            lItem.SmallIcon = "propgetlet"
-                        Else
-                            Set lItem = lvProp.ListItems.Add(, , sTexte, "proplet", "proplet")
-                            lItem.ForeColor = lngColor
-                        End If
-                    End If
-                    iSet = objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Set)
-                    If iSet <> 0 Then
-                        If iGet <> 0 Then
-                            lItem.Icon = "propgetlet"
-                            lItem.SmallIcon = "propgetlet"
-                        Else
-                            Set lItem = lvProp.ListItems.Add(, , sTexte, "proplet", "proplet")
-                            lItem.ForeColor = lngColor
-                        End If
-                    End If
+                    With objMember.Collection.Parent
+                        iGet = .ProcBodyLine(objMember.Name, vbext_pk_Get)
+                        iLet = .ProcBodyLine(objMember.Name, vbext_pk_Let)
+                        iSet = .ProcBodyLine(objMember.Name, vbext_pk_Set)
+                    End With
+                     
+                    Select Case conVrai
+                        Case iLet <> 0, iSet <> 0
+                            blnAjoutProp = conVrai
+                            If (iGet <> 0) Then
+                                strImgLV = conPropgetlet
+                            Else
+                                strImgLV = conProplet
+                            End If
+                        Case iGet <> 0
+                            blnAjoutProp = conVrai
+                            strImgLV = conPropget
+                    End Select
+                End If
+                
+                If (blnAjoutProp) Then
+                    Set lItem = lvProp.ListItems.Add(, , sTexte, strImgLV, strImgLV)
+                    lItem.ForeColor = lngColor
                 End If
 
             Case "variable"
-                If lngColor = Mem_Public Then
-                    Set lItem = lvProp.ListItems.Add(, , sTexte, "proppublic", "proppublic")
+                If (lngColor = Mem_Public) Then
+                    Set lItem = lvProp.ListItems.Add(, , sTexte, conProppublic, conProppublic)
                     lItem.ForeColor = lngColor
                 Else
-                    lblInt = lblInt + objMember.Name + vbCrLf
+                    lblInt = lblInt & objMember.Name & vbCrLf
                 End If
         End Select
     Next
+    
     Set objMember = Nothing
-
     Set lvProp.SelectedItem = Nothing
-
 End Sub
 
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
-        Case "actu"
+        Case conActu
             Init mobjCmp
-        Case "print"
+        Case conPrint
             Imprime
-        Case "descro"
+        Case conDescro
             Init mobjCmp
     End Select
 End Sub
@@ -375,7 +393,7 @@ Private Sub Imprime()
 SortieProc:
     Exit Sub
 GestErr:
-    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
     Resume SortieProc
 End Sub
 

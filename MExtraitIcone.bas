@@ -1,6 +1,7 @@
 Attribute VB_Name = "MExtraitIcone"
 ' ***** BEGIN LICENSE BLOCK *****
 ' Version: MPL 1.1
+'
 ' The contents of this file are subject to the Mozilla Public License Version
 ' 1.1 (the "License"); you may not use this file except in compliance with
 ' the License. You may obtain a copy of the License at
@@ -35,7 +36,7 @@ Public Const sGuidClassViewer As String = "E462A150-5602-11d3-A5EA-0040056BD863"
 Public Const sGuidMsgBox As String = "531FEF91-74B9-11d3-A642-0040056BD863"
 Public Const sGuidCompteur As String = "6B752121-C791-11d3-A7B4-0040056BD863"
 #ElseIf VersionVB = 5 Then
-Public Const sGuid As String = "A9532500-998B-11d5-B256-80025919427B    'Guid du usrcomm"
+Public Const sGuid As String = "A9532500-998B-11d5-B256-80025919427B"    'Guid du usrcomm
 Public Const sGuidBiblio As String = "A9532501-998B-11d5-B256-80025919427B"
 Public Const sGuidAddCode As String = "A9532502-998B-11d5-B256-80025919427B"
 Public Const sGuidClassViewer As String = "A9532503-998B-11d5-B256-80025919427B"
@@ -49,6 +50,37 @@ Public Const Mem_Friend As Long = vbRed
 
 Public Const conFaux As Boolean = False
 Public Const conVrai As Boolean = True
+Public Const conCheminRelatifINI  As String = "\data\c2iExplorer.ini"
+Public Const conSecGen As String = "General"
+Public Const conSecDurees As String = "Durees"
+Public Const conValData As String = "Data"
+Public Const conNomApp As String = "c2iExplorer"
+Public Const conErrNo As String = "Erreur no "
+Public Const conBS As String = "\"
+Public Const conElement As String = "element"
+Public Const conInconnu As String = "Inconnu"
+Public Const conVariable As String = "variable"
+Public Const conConstante As String = "constante"
+Public Const conEvenement As String = "evenement"
+Public Const conAPI As String = "api"
+Public Const conMethode As String = "methode"
+Public Const conPropriete As String = "propriete"
+Public Const conActiveXDesigner As String = "ActiveXDesigner"
+Public Const conClassModule As String = "ClassModule"
+Public Const conDocObject As String = "DocObject"
+Public Const conMSForm As String = "MSForm"
+Public Const conPropPage As String = "PropPage"
+Public Const conRelatedDocument As String = "RelatedDocument"
+Public Const conResFile As String = "ResFile"
+Public Const conStdModule As String = "StdModule"
+Public Const conUserControl As String = "UserControl"
+Public Const conVBChildForm As String = "VBChildForm"
+Public Const conVBForm As String = "VBForm"
+Public Const conVBMDIForm As String = "VBMDIForm"
+Public Const conGet As String = "Get"
+Public Const conLet As String = "Let"
+Public Const conSet As String = "Set"
+Public Const conLibelDescrpt As String = "Description"
 
 'l'objet contenant notre UserControl
 Public objUD As UDExplorer                                 'objet contenant le document créé
@@ -69,15 +101,18 @@ Public objWindowCompteur As Window
 Public VBInstance As VBIDE.VBE
 Public VBPrjSelected As VBIDE.VBProject
 
-Public Type InfoProjet
+Private Type InfoProjet
     Filename As String
     Name As String
     Durée As Long
 End Type
 Public DuréePrj() As InfoProjet
 
+Public strCheminApp As String
 Public c2iHTMLFile As String
 Public c2iINIFile As String 'Ajout par René Rhéaume, 28 juillet 2001
+Public c2iDataFileNameOrigine As String
+Public c2iCurrentDataFileName As String
 
 'variables d'affichage dans le listview et le treeview
 Public bAfficheConstante As Boolean
@@ -90,8 +125,6 @@ Public bAffichePublic As Boolean
 Public bAffichePrive As Boolean
 Public bAfficheFriend As Boolean
 
-Public c2iDataFileNameOrigine As String
-Public c2iCurrentDataFileName As String
 Public Explorer As cExplorer
 
 Public lngLanguage As c2iLanguage
@@ -100,13 +133,13 @@ Public Enum c2iLanguage
     c2i_Langue_Anglais = 2
 End Enum
 
-Public Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
-Public Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
+Public Declare Function GetDC Lib "user32" (ByVal Hwnd As Long) As Long
+Public Declare Function ReleaseDC Lib "user32" (ByVal Hwnd As Long, ByVal hdc As Long) As Long
 Public Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 
 Public Declare Function timeGetTime Lib "winmm.dll" () As Long
 
-Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
+Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal Hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 Public Const SW_NORMAL = 1
 
 Public Declare Function GetInputState Lib "user32" () As Long
@@ -135,7 +168,7 @@ Public Function ExtraitIconeProjet(ByVal objVBPrj As VBIDE.VBProject) As String
         Case vbext_pt_StandardExe
             ExtraitIconeProjet = "VBproject"
         Case Else
-            ExtraitIconeProjet = "Inconnu"
+            ExtraitIconeProjet = conInconnu
     End Select
 
 End Function
@@ -143,22 +176,22 @@ End Function
 Public Function ExtraitIconeMembre(ByVal objMember As VBIDE.Member, ByRef CouleurPortee As Long) As String
     Select Case objMember.Type
         Case vbext_mt_Const
-            ExtraitIconeMembre = "constante"
+            ExtraitIconeMembre = conConstante
         Case vbext_mt_Event
-            ExtraitIconeMembre = "evenement"
+            ExtraitIconeMembre = conEvenement
         Case vbext_mt_Method
             'extraction de la ligne de code
             If objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1 Then
-                ExtraitIconeMembre = "methode"
+                ExtraitIconeMembre = conMethode
             Else
-                ExtraitIconeMembre = "api"
+                ExtraitIconeMembre = conAPI
             End If
         Case vbext_mt_Property
-            ExtraitIconeMembre = "propriete"
+            ExtraitIconeMembre = conPropriete
         Case vbext_mt_Variable
-            ExtraitIconeMembre = "variable"
+            ExtraitIconeMembre = conVariable
         Case Else
-            ExtraitIconeMembre = "Inconnu"
+            ExtraitIconeMembre = conInconnu
     End Select
 
     'détermination de la couleur suivant le type de membre
@@ -176,33 +209,33 @@ Public Function ExtraitIconeComponent(ByVal VBCmp As VBIDE.VBComponent) As Strin
 
     Select Case VBCmp.Type
         Case vbext_ct_ActiveXDesigner
-            ExtraitIconeComponent = "ActiveXDesigner"
+            ExtraitIconeComponent = conActiveXDesigner
         Case vbext_ct_ClassModule
-            ExtraitIconeComponent = "ClassModule"
+            ExtraitIconeComponent = conClassModule
         Case vbext_ct_DocObject
-            ExtraitIconeComponent = "DocObject"
+            ExtraitIconeComponent = conDocObject
         Case vbext_ct_MSForm
-            ExtraitIconeComponent = "MSForm"
+            ExtraitIconeComponent = conMSForm
         Case vbext_ct_PropPage
-            ExtraitIconeComponent = "PropPage"
+            ExtraitIconeComponent = conPropPage
         Case vbext_ct_RelatedDocument
-            ExtraitIconeComponent = "RelatedDocument"
+            ExtraitIconeComponent = conRelatedDocument
         Case vbext_ct_ResFile
-            ExtraitIconeComponent = "ResFile"
+            ExtraitIconeComponent = conResFile
         Case vbext_ct_StdModule
-            ExtraitIconeComponent = "StdModule"
+            ExtraitIconeComponent = conStdModule
         Case vbext_ct_UserControl
-            ExtraitIconeComponent = "UserControl"
+            ExtraitIconeComponent = conUserControl
         Case vbext_ct_VBForm
-            If VBCmp.Properties("MDIChild") = conVrai Then
-                ExtraitIconeComponent = "VBChildForm"
+            If (VBCmp.Properties("MDIChild")) Then
+                ExtraitIconeComponent = conVBChildForm
             Else
-                ExtraitIconeComponent = "VBForm"
+                ExtraitIconeComponent = conVBForm
             End If
         Case vbext_ct_VBMDIForm
-            ExtraitIconeComponent = "VBMDIForm"
+            ExtraitIconeComponent = conVBMDIForm
         Case Else
-            ExtraitIconeComponent = "Inconnu"
+            ExtraitIconeComponent = conInconnu
     End Select
 
 End Function
@@ -213,14 +246,14 @@ Public Function GetDuree(ByVal sFileName As String) As Long
 
     iNumPrj = -1
 
-    If sFileName = "" Then
+    If (sFileName = vbNullString) Then
         GetDuree = -1
         Exit Function
     End If
 
     On Error GoTo Suivant
     For I = 0 To UBound(DuréePrj)
-        If DuréePrj(I).Filename = sFileName Then
+        If (DuréePrj(I).Filename = sFileName) Then
             iNumPrj = I
             Exit For
         End If
@@ -230,10 +263,10 @@ Suivant:
     On Error GoTo Fin
 
     ' Modification par René Rhéaume 2 août 2001
-'    sM = GetSetting(App.EXEName, "Durees", sFileName, "")
-    sM = LireChaineFichierINI("Durees", sFileName, "", c2iINIFile)
-    If sM <> "" Then            'on la trouvé dans le fichier INI
-        If iNumPrj = -1 Then
+'    sM = GetSetting(App.EXEName, conSecDurees, sFileName, vbNullString)
+    sM = LireChaineFichierINI(conSecDurees, sFileName, vbNullString, c2iINIFile)
+    If (sM <> vbNullString) Then            'on la trouvé dans le fichier INI
+        If (iNumPrj = -1) Then
             GetDuree = CLng(sM)
         Else
             GetDuree = timeGetTime / 1000 - DuréePrj(iNumPrj).Durée + CLng(sM)
@@ -255,66 +288,6 @@ End Function
 '    End If
 'End Function
 
-'Optimisé par René Rhéaume 2 septembre 2001
-Public Sub TypePropriete(ByVal objCodeModule As VBIDE.CodeModule, ByRef lngStartLine As Long)
-    'retourne la ligne de début de la propriété
-    Dim lngDummy As Long, bTrouve As Boolean, sTexte As String
-    'on stocke la valeur initiale
-    lngDummy = lngStartLine
-
-    bTrouve = conFaux
-    On Error Resume Next
-    Do Until bTrouve
-        sTexte = objCodeModule.Lines(lngStartLine, 1)
-        If Err.Number <> 0 Then Exit Do
-        If lngStartLine > objCodeModule.CountOfLines Then Exit Do
-        ' Si sTexte contient soit "Property Let", "Property Get" ou "Property Set"
-        Select Case conVrai
-            Case InStr(1, sTexte, "Property Let") > 0, InStr(1, sTexte, "Property Get") > 0, InStr(1, sTexte, "Property Set") > 0
-                If Left$(sTexte, 1) <> "'" Then
-                    bTrouve = conVrai
-                    Exit Do
-                End If
-        End Select
-        If RechercheString(sTexte, "End Property") Then
-            bTrouve = conFaux
-            Exit Do
-        End If
-        lngStartLine = lngStartLine + 1
-    Loop
-    'si bTrouve, on se casse
-    If bTrouve Then Exit Sub
-    'sinon, il faut faire une recherche arrière
-    lngStartLine = lngDummy                                'on recommence du début
-    Do Until bTrouve
-        sTexte = objCodeModule.Lines(lngStartLine, 1)
-        If Err.Number <> 0 Then Exit Do
-        ' Si sTexte contient soit "Property Let", "Property Get" ou "Property Set"
-        Select Case conVrai
-            Case InStr(1, sTexte, "Property Let") > 0, InStr(1, sTexte, "Property Get") > 0, InStr(1, sTexte, "Property Set") > 0
-                If Left$(sTexte, 1) <> "'" Then
-                    bTrouve = conVrai
-                    Exit Do
-                End If
-        End Select
-        If RechercheString(sTexte, "End Property") Then
-            lngStartLine = lngStartLine + 1
-            Exit Do
-        End If
-        lngStartLine = lngStartLine - 1
-    Loop
-
-End Sub
-
-Public Function RechercheString(ByVal sTexte As String, sM As String) As Boolean
-'    RechercheString = conFaux
-'    If InStr(1, sTexte, sM) > 0 Then                       'recherche
-        If Left$(sTexte, Len(sM)) = sM Then
-            RechercheString = conVrai
-        End If
-'    End If
-End Function
-
 Public Sub ConnectionInternet(ByVal sURL As String)
     Dim lngRep As Long
     lngRep = ShellExecute(0, "open", sURL, vbNullString, vbNullString, SW_NORMAL)
@@ -333,16 +306,16 @@ Public Sub SauveDuree(objPrj As VBProject)
 
     On Error GoTo Fin
     lngDuree = GetDuree(objPrj.Filename)
-    If lngDuree <> -1 Then
+    If (lngDuree <> -1) Then
         ' Modification par René Rhéaume 2 août 2001
-        Call WritePrivateProfileString("Durees", CStr(objPrj.Filename), CStr(lngDuree), c2iINIFile)
-'        SaveSetting App.EXEName, "Durees", objPrj.Filename, lngDuree
+        Call WritePrivateProfileString(conSecDurees, CStr(objPrj.Filename), CStr(lngDuree), c2iINIFile)
+'        SaveSetting App.EXEName, conSecDurees, objPrj.Filename, lngDuree
     End If
 
 Fin:
 End Sub
 
-'Ajout par René Rhéaume le 28 juillet 2001
+'Ajout par René Rhéaume en décembre 2001
 'Routine d'émulation de la fonction Split de VB6 ultra-rapide
 'Trouvé sur http://www.xbeat.net/vbspeed/
 Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = " ")
@@ -387,3 +360,52 @@ Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = " ")
         ResultSplit(c + 1) = Right$(Expression, SLen - Results(c) - DelLen + 1)
     End If
 End Sub
+
+'Public Sub LogMsg(ByVal strMessage As String)
+'    Const conCheminRelatifLog As String = "\c2iExplorer.log"
+'    Dim strCheminLog As String
+'
+'    strCheminLog = strCheminApp & conCheminRelatifLog
+'    With App
+'        .StartLogging strCheminLog, 2 'vbLogToFile
+'        .LogEvent strMessage, vbLogEventTypeInformation
+'    End With
+'End Sub
+
+Public Function AfficheMembre(ByVal objMember As VBIDE.Member) As Boolean
+    '=========================================
+    'Détermine si l'on affiche le membre sélectionné
+    'en fonction du filtre général
+    '=========================================
+
+    AfficheMembre = conFaux                                  'on n'affiche pas par default
+    Select Case objMember.Type
+        Case vbext_mt_Const
+            AfficheMembre = bAfficheConstante
+        Case vbext_mt_Event
+            AfficheMembre = bAfficheEvenement
+        Case vbext_mt_Method
+            'extraction de la ligne de code
+            If (objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1) Then
+                AfficheMembre = bAfficheMethode
+            Else
+                AfficheMembre = bAfficheAPI
+            End If
+        Case vbext_mt_Property
+            AfficheMembre = bAffichePropriete
+        Case vbext_mt_Variable
+            AfficheMembre = bAfficheVariable
+        Case Else
+            AfficheMembre = conVrai
+    End Select
+
+    Select Case objMember.Scope
+        Case vbext_Friend
+            AfficheMembre = (AfficheMembre And bAfficheFriend)
+        Case vbext_Private
+            AfficheMembre = (AfficheMembre And bAffichePrive)
+        Case vbext_Public
+            AfficheMembre = (AfficheMembre And bAffichePublic)
+    End Select
+
+End Function

@@ -2,7 +2,6 @@ VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmPrint 
    BorderStyle     =   4  'Fixed ToolWindow
-   Caption         =   "Impression"
    ClientHeight    =   4830
    ClientLeft      =   45
    ClientTop       =   285
@@ -132,7 +131,6 @@ Begin VB.Form frmPrint
       Width           =   3795
    End
    Begin VB.Label lblTitre 
-      Caption         =   "Elément sélectionné :"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -149,7 +147,6 @@ Begin VB.Form frmPrint
       Width           =   2415
    End
    Begin VB.Label lblInfos 
-      Caption         =   "Choisissez votre modèle :"
       BeginProperty Font 
          Name            =   "Tahoma"
          Size            =   8.25
@@ -197,26 +194,43 @@ Attribute VB_Exposed = False
 ' ***** END LICENSE BLOCK *****
 
 Option Explicit
+Private Const conVoir As String = "voir"
+Private Const conTous As String = "tous"
+Private Const conQuit As String = "quit"
+Private Const conDate As String = "Date"
+Private Const conAttribImg As String = ".gif' border='0' align='middle' hspace='5'>"
+Private Const conBaliseImg As String = "<img src='img/"
+Private Const conFormatDate As String = "dddddd"
+Private Const conComponents As String = "Components"
+Private Const conMembers As String = "Members"
 Private objVBPrjPrint As VBIDE.VBProject
 Private objVBCmpPrint As VBIDE.VBComponent
 
+'Optimisation par René Rhéaume les 31 juillet 2001 et 5 janvier 2002
 Private Sub OK()
-    'Petite optimisation par René Rhéaume 31/juil/2001
-    Dim chnFichierModele As String
-    chnFichierModele = File1.Path & "\" & File1.Filename
+    Dim strCheminModele As String
+    Dim strFichierModele As String
+    Dim blnCmpPresent As Boolean
+    strFichierModele = File1.Filename
+    strCheminModele = File1.Path & conBS & strFichierModele
     
-    If File1.Filename <> "" Then
-        If FichierExiste(chnFichierModele) Then
-            If objVBPrjPrint Is Nothing And objVBCmpPrint Is Nothing Then
-                ExportHTML chnFichierModele
-            ElseIf Not objVBCmpPrint Is Nothing Then
-                ExportHTMLComponent chnFichierModele, objVBCmpPrint
+    If (strFichierModele <> vbNullString) Then
+        If (FichierExiste(strCheminModele)) Then
+            blnCmpPresent = Not objVBCmpPrint Is Nothing
+            If (objVBPrjPrint Is Nothing) Then
+                If (blnCmpPresent = conFaux) Then
+                    ExportHTML strCheminModele
+                End If
             Else
-                ExportHTMLProject chnFichierModele, objVBPrjPrint
-            End If
+                If (blnCmpPresent) Then
+                    ExportHTMLComponent strCheminModele, objVBCmpPrint
+                Else
+                    ExportHTMLProject strCheminModele, objVBPrjPrint
+                End If
 '            Unload Me
+            End If
         Else
-            MsgBox "Le fichier [" & chnFichierModele & "] n'existe pas."
+            MsgBox "Le fichier [" & strCheminModele & "] n'existe pas."
         End If
     End If
 End Sub
@@ -226,29 +240,30 @@ Private Sub Quitter()
 End Sub
 
 Private Sub File1_DblClick()
-    If File1.Filename <> "" Then OK
+    If (File1.Filename <> vbNullString) Then OK
 End Sub
 
+' Modifié par René Rhéaume le 5 janvier 2002
 Private Sub Form_Load()
     Select Case lngLanguage
         Case c2i_Langue_Français
             Me.Caption = "Impression"
-            Toolbar1.Buttons("voir").ToolTipText = "Aperçu élément selectionné"
-            Toolbar1.Buttons("tous").ToolTipText = "Aperçu général"
-            Toolbar1.Buttons("quit").ToolTipText = "Quitter"
+            Toolbar1.Buttons(conVoir).ToolTipText = "Aperçu élément selectionné"
+            Toolbar1.Buttons(conTous).ToolTipText = "Aperçu général"
+            Toolbar1.Buttons(conQuit).ToolTipText = "Quitter"
             lblInfos = "Choisissez votre modèle :"
-            lblTitre = "Elément sélectionné :"
+            lblTitre = "Élément sélectionné :"
         Case Else
             Me.Caption = "Print"
-            Toolbar1.Buttons("voir").ToolTipText = "Preview"
-            Toolbar1.Buttons("tous").ToolTipText = "General Preview"
-            Toolbar1.Buttons("quit").ToolTipText = "Quit"
+            Toolbar1.Buttons(conVoir).ToolTipText = "Preview"
+            Toolbar1.Buttons(conTous).ToolTipText = "General Preview"
+            Toolbar1.Buttons(conQuit).ToolTipText = "Quit"
             lblInfos = "Choose your model :"
             lblTitre = "Selected element :"
     End Select
 
 '    PositionForm Me, conVrai
-    File1.Path = App.Path & "\html"
+    File1.Path = strCheminApp & "\html"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -257,15 +272,16 @@ Private Sub Form_Unload(Cancel As Integer)
     Set objVBCmpPrint = Nothing
 End Sub
 
+'Modifié par René Rhéaume le 5 janvier 2002
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim chnFichierModele As String
-    chnFichierModele = File1.Path & "\" & File1.Filename
     Select Case Button.Key
-        Case "voir"
+        Case conVoir
             OK
-        Case "quit"
+        Case conQuit
             Quitter
-        Case "tous"
+        Case conTous
+            chnFichierModele = File1.Path & conBS & File1.Filename
             If (chnFichierModele <> vbNullString) Then
                 If FichierExiste(chnFichierModele) Then
                     ExportHTML chnFichierModele
@@ -280,7 +296,7 @@ End Sub
 Public Sub ObjetSelectionnés(ByVal objVBPrj As VBIDE.VBProject, objVBCmp As VBIDE.VBComponent)
     Set objVBPrjPrint = objVBPrj
     Set objVBCmpPrint = objVBCmp
-    lblSelectedElement = ""
+    lblSelectedElement = vbNullString
     If Not objVBCmpPrint Is Nothing Then
         lblSelectedElement = objVBCmpPrint.Name
     End If
@@ -297,44 +313,45 @@ End Sub
 '//-------------------------------------------------------------//
 
 Private Sub AnalyseHTMLCmp(ByVal objVBCmp As VBIDE.VBComponent, sM As String)
-    sM = RemplaceString(sM, "Component-Name", objVBCmp.Name)
-    sM = RemplaceString(sM, "Component-Description", objVBCmp.Description)
-    sM = RemplaceString(sM, "Component-Img", "<IMG SRC='img/" + ExtraitIconeComponent(objVBCmp) + ".gif' BORDER=0 Align='middle' hspace='5'>")
-    sM = RemplaceString(sM, "Date", Format$(VBA.Date$, "dddddd"))
-    sM = RemplaceString(sM, "Component-NbrMember", CStr(objVBCmp.CodeModule.Members.Count))
-    sM = RemplaceString(sM, "Component-NbrLines", CStr(objVBCmp.CodeModule.CountOfLines))
+    Call RemplaceString(sM, "Component-Name", objVBCmp.Name)
+    Call RemplaceString(sM, "Component-Description", objVBCmp.Description)
+    Call RemplaceString(sM, "Component-Img", conBaliseImg + ExtraitIconeComponent(objVBCmp) + conAttribImg)
+    Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
+    Call RemplaceString(sM, "Component-NbrMember", CStr(objVBCmp.CodeModule.Members.Count))
+    Call RemplaceString(sM, "Component-NbrLines", CStr(objVBCmp.CodeModule.CountOfLines))
 End Sub
 
 Private Sub AnalyseHTMLMember(ByVal objVBMember As VBIDE.Member, sM As String)
     Dim lngC As Long
 
     On Error Resume Next
-    sM = RemplaceString(sM, "Member-Name", objVBMember.Name)
-    sM = RemplaceString(sM, "Member-Description", objVBMember.Description)
-    sM = RemplaceString(sM, "Member-Img", "<IMG SRC='img/" + ExtraitIconeMembre(objVBMember, lngC) + ".gif' BORDER=0 Align='middle' hspace='5'>")
-    sM = RemplaceString(sM, "Date", Format$(VBA.Date$, "dddddd"))
+    Call RemplaceString(sM, "Member-Name", objVBMember.Name)
+    Call RemplaceString(sM, "Member-Description", objVBMember.Description)
+    Call RemplaceString(sM, "Member-Img", conBaliseImg & ExtraitIconeMembre(objVBMember, lngC) & conAttribImg)
+    Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
 
 End Sub
 
 Private Sub AnalyseHTMLPrj(ByVal objVBPrj As VBIDE.VBProject, sM As String)
     On Error GoTo AffichErr
-    sM = RemplaceString(sM, "Project-Name", objVBPrj.Name)
-    sM = RemplaceString(sM, "Project-FileName", objVBPrj.Filename)
-    sM = RemplaceString(sM, "Project-BuildFileName", objVBPrj.BuildFileName)
-    sM = RemplaceString(sM, "Project-Description", objVBPrj.Description)
-    sM = RemplaceString(sM, "Project-Img", "<IMG SRC='img/" + ExtraitIconeProjet(objVBPrj) + ".gif' BORDER=0 Align='middle' hspace='5'>")
-    sM = RemplaceString(sM, "Date", Format$(VBA.Date$, "dddddd"))
-    sM = RemplaceString(sM, "Project-NbrComponent", CStr(objVBPrj.VBComponents.Count))
+    Call RemplaceString(sM, "Project-Name", objVBPrj.Name)
+    Call RemplaceString(sM, "Project-FileName", objVBPrj.Filename)
+    Call RemplaceString(sM, "Project-BuildFileName", objVBPrj.BuildFileName)
+    Call RemplaceString(sM, "Project-Description", objVBPrj.Description)
+    Call RemplaceString(sM, "Project-Img", conBaliseImg & ExtraitIconeProjet(objVBPrj) & conAttribImg)
+    Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
+    Call RemplaceString(sM, "Project-NbrComponent", CStr(objVBPrj.VBComponents.Count))
     Exit Sub
     
 AffichErr:
-    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "AnalyseHTMLPrj"
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "AnalyseHTMLPrj"
 End Sub
 
 Public Sub ExportHTML(ByVal sHTMLFileName As String)
 '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
     Dim lngRep As Long, objVBPrj As VBIDE.VBProject
     Dim sTete As String, sFin As String, sMiddle As String
+    Dim strDate As String
     
     Screen.MousePointer = vbHourglass
 
@@ -352,12 +369,12 @@ Public Sub ExportHTML(ByVal sHTMLFileName As String)
 '    txtIn.Close
 '    Set txtIn = Nothing
 '    If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
-'        sTete = RemplaceString(sTete, "Date", Format$(VBA.Date$, "dddddd"))
+'        sTete = RemplaceString(sTete, conDate, Format$(VBA.Date$, conFormatDate))
 '        txtOut.Write sTete
 '        For Each objVBPrj In VBInstance.VBProjects
 '            AddProject objVBPrj, txtOut, sMiddle
 '        Next
-'        sFin = RemplaceString(sFin, "Date", Format$(VBA.Date$, "dddddd"))
+'        sFin = RemplaceString(sFin, conDate, Format$(VBA.Date$, conFormatDate))
 '        txtOut.Write sFin
 '    End If
 '
@@ -367,26 +384,27 @@ Public Sub ExportHTML(ByVal sHTMLFileName As String)
 'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
-        sTete = RemplaceString(sTete, "Date", Format$(VBA.Date$, "dddddd"))
+        strDate = Format$(VBA.Date$, conFormatDate)
+        RemplaceString sTete, conDate, strDate
         Call EcrireFichier(sTete, c2iHTMLFile)
         For Each objVBPrj In VBInstance.VBProjects
             AddProject objVBPrj, sMiddle
         Next
-        sFin = RemplaceString(sFin, "Date", Format$(VBA.Date$, "dddddd"))
+        RemplaceString sFin, conDate, strDate
         Call EcrireFichier(sFin, c2iHTMLFile)
     End If
 
     Screen.MousePointer = vbDefault
 
     lngRep = ShellExecute(0, "open", c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
-    If lngRep = 0 Then GoTo GestErr
+    If (lngRep = 0) Then GoTo GestErr
 
     Exit Sub
 GestErr:
 '    txtOut.Close
 '    Set txtOut = Nothing
 '    Set fso = Nothing
-    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
 End Sub
 
 Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VBIDE.VBProject)
@@ -410,7 +428,7 @@ Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VB
 '    txtIn.Close
 '    Set txtIn = Nothing
 '
-'    If ExtraitHTML(sTete, sFin, sMiddle, "Components") Then
+'    If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
 '        AnalyseHTMLPrj objVBPrj, sTete
 '        txtOut.Write sTete
 '
@@ -432,7 +450,7 @@ Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VB
     
 'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
-    If ExtraitHTML(sTete, sFin, sMiddle, "Components") Then
+    If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
         AnalyseHTMLPrj objVBPrj, sTete
         Call EcrireFichier(sTete, c2iHTMLFile)
 
@@ -462,7 +480,7 @@ GestErr:
 '    Set txtOut = Nothing
 '    Set fso = Nothing
     Screen.MousePointer = vbDefault
-    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "ExportHTMLProject"
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "ExportHTMLProject"
 End Sub
 
 Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As VBIDE.VBComponent)
@@ -486,7 +504,7 @@ Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As 
 '    txtIn.Close
 '    Set txtIn = Nothing
 '
-'    If ExtraitHTML(sTete, sFin, sMiddle, "Members") Then
+'    If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
 '        AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
 '        AnalyseHTMLCmp objVBCmp, sTete
 '        txtOut.Write sTete
@@ -511,7 +529,7 @@ Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As 
 
 'Nouvelle version utilisant les instructions E/S de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
-    If ExtraitHTML(sTete, sFin, sMiddle, "Members") Then
+    If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
         AnalyseHTMLCmp objVBCmp, sTete
         Call EcrireFichier(sTete, c2iHTMLFile)
@@ -544,7 +562,7 @@ GestErr:
 '    Set txtOut = Nothing
 '    Set fso = Nothing
     Screen.MousePointer = vbDefault
-    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
 End Sub
 
 'Modifié par René Rhéaume 1er août 2001
@@ -554,7 +572,7 @@ Private Sub AddProject(ByVal objVBPrj As VBIDE.VBProject, ByVal sMiddle As Strin
     Dim sTete As String, sFin As String
     'add project
 
-    If ExtraitHTML(sTete, sFin, sMiddle, "Components") Then
+    If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
         AnalyseHTMLPrj objVBPrj, sTete
         Call EcrireFichier(sTete, c2iHTMLFile)
 
@@ -582,7 +600,7 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
     Dim objVBMember As VBIDE.Member
     Dim sTete As String, sFin As String
 
-    If ExtraitHTML(sTete, sFin, sMiddle, "Members") Then
+    If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
 
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
         AnalyseHTMLCmp objVBCmp, sTete
@@ -601,69 +619,34 @@ End Sub
 'Retrait du paramètre TextStream et nouvel appel pour écriture de fichier
 Private Sub AddMember(ByVal objVBMember As VBIDE.Member, ByVal sMiddle As String)
 
-    If AffMembre(objVBMember) Then
-        AnalyseHTMLPrj objVBMember.Collection.Parent.Parent.Collection.Parent, sMiddle
-        AnalyseHTMLCmp objVBMember.Collection.Parent.Parent, sMiddle
-        AnalyseHTMLMember objVBMember, sMiddle
-
+    If (AfficheMembre(objVBMember)) Then
+        With objVBMember.Collection.Parent
+            AnalyseHTMLPrj .Parent.Collection.Parent, sMiddle
+            AnalyseHTMLCmp .Parent, sMiddle
+            AnalyseHTMLMember objVBMember, sMiddle
+        End With
         Call EcrireFichier(sMiddle, c2iHTMLFile)
     End If
 
 End Sub
 
-Private Function AffMembre(objMember As VBIDE.Member) As Boolean
-    '=========================================
-    'Détermine si l'on affiche le membre sélectionné
-    'en fonction du filtre général
-    '=========================================
-
-    AffMembre = conFaux                                      'on n'affiche pas par default
-    Select Case objMember.Type
-        Case vbext_mt_Const
-            AffMembre = bAfficheConstante
-        Case vbext_mt_Event
-            AffMembre = bAfficheEvenement
-        Case vbext_mt_Method
-            'extraction de la ligne de code
-            If objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1 Then
-                AffMembre = bAfficheMethode
-            Else
-                AffMembre = bAfficheAPI
-            End If
-        Case vbext_mt_Property
-            AffMembre = bAffichePropriete
-        Case vbext_mt_Variable
-            AffMembre = bAfficheVariable
-        Case Else
-            AffMembre = conVrai
-    End Select
-
-    Select Case objMember.Scope
-        Case vbext_Friend
-            If Not bAfficheFriend Then AffMembre = conFaux
-        Case vbext_Private
-            If Not bAffichePrive Then AffMembre = conFaux
-        Case vbext_Public
-            If Not bAffichePublic Then AffMembre = conFaux
-    End Select
-
-End Function
-
 Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String, ByVal sSearch As String) As Boolean
+    Const conHTMLCmmtEnd As String = " -->"
     Dim iDeb As Long, iFin As Long
     Dim sSearchDeb As String, sSearchFin As String
 
     On Error GoTo Fin
-    sSearchDeb = "<!-- " + sSearch + " -->"
-    sSearchFin = "<!-- /" + sSearch + " -->"
+    sSearchDeb = "<!-- " & sSearch & conHTMLCmmtEnd
+    sSearchFin = "<!-- /" & sSearch & conHTMLCmmtEnd
     iDeb = InStr(1, sMiddle, sSearchDeb)
     iFin = InStr(1, sMiddle, sSearchFin)
 
-    If iDeb = 0 Or iFin = 0 Then
-        ExtraitHTML = conFaux
-        MsgBox "Format non valable", vbExclamation
-        Exit Function
-    End If
+    Select Case True
+        Case iDeb = 0, iFin = 0
+            ExtraitHTML = conFaux
+            MsgBox "Format non valable", vbExclamation
+            Exit Function
+    End Select
 
     sTete = Left$(sMiddle, iDeb - 1)
     sFin = Right$(sMiddle, Len(sMiddle) - iFin - Len(sSearchFin) + 1)
@@ -675,16 +658,18 @@ Fin:
     ExtraitHTML = conFaux
 End Function
 
-Private Function RemplaceString(sString As String, ByVal sSearch As String, ByVal sValeur As String) As String
+' Modifié par René Rhéaume le 18 janvier 2002
+' Transformation de la fonction en Sub
+Private Sub RemplaceString(ByRef sString As String, ByVal sSearch As String, ByVal sValeur As String)
     Dim iPos As Long
     sSearch = "[c2i" & sSearch & "]"
 
     iPos = InStr(1, sString, sSearch)
     Do Until iPos = 0
         iPos = InStr(1, sString, sSearch)
-        If iPos > 0 Then
+        If (iPos > 0) Then
             sString = Left$(sString, iPos - 1) & sValeur & Right$(sString, Len(sString) - iPos - Len(sSearch) + 1)
         End If
     Loop
-    RemplaceString = sString
-End Function
+'    RemplaceString = sString
+End Sub
