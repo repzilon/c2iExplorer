@@ -1097,6 +1097,7 @@ Private Function RetourneDefaultBoutons() As String
     End Select
 End Function
 
+'Optimisé par René Rhéaume le 10 janvier 2002
 Private Function lngRetourneDefaultBoutons() As Long
     '    Dim iNum As Long
     '

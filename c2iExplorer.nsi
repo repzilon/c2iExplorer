@@ -24,29 +24,32 @@
 ; 
 ; ***** END LICENSE BLOCK *****
 
-; <!DOCTYPE Nullsoft-SuperPiMPScript 1.91>
+; <!DOCTYPE Nullsoft-SuperPiMPScript 1.94>
 ; Script NSIS pour c2iExplorer 1.60.${Revision} VB5/6 Beta
 
+!ifdef VB6
+!define VersionVB 6
+!endif
 !ifndef VersionVB
 !define VersionVB 5
 !endif
-;!define VB6
-!define Revision 126
+!define Revision 128
+!define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 
 Name "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
 Caption "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
 CRCCheck On
 LicenseText "Lisez et approuvez la licence ci-dessous avant de continuer l'installation."
-LicenseData "C:\Mes documents\c2iexplorer\Source\Modifications René Rhéaume.txt"
+LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
 ComponentText "Sélectionnez les composants de c2iExplorer que vous souhaitez installer."
 DirText "Indiquez dans quel dossier est installé Visual Basic ${VersionVB}.0 sur votre ordinateur."
 UninstallText "Ceci supprimera c2iExplorer de votre ordinateur. Cliquez sur «Désinstaller» pour désinstaller ou sur «Annuler» pour quitter."
-!packhdr "temp.dat" "c:\progra~1\console\upx120w\upx.exe -q --best --compress-icons=1 temp.dat"
+!packhdr "temp.dat" "E:\progra~1\console\upx120w\upx.exe -q --best --compress-icons=1 temp.dat"
 ;UninstallExeName uninst-c2iexplorer.exe
-OutFile "C:\Mes documents\c2iexplorer\c2iexplorer-VB${VersionVB}.exe"
-Icon "C:\Mes documents\c2iexplorer\Source\c2iExplorer.ico"
-EnabledBitmap "C:\Mes documents\c2iexplorer\Source\checked16.bmp"
-DisabledBitmap "C:\Mes documents\c2iexplorer\Source\unchecked16.bmp"
+OutFile "${CheminBase}\c2iexplorer-VB${VersionVB}.exe"
+Icon "${CheminBase}\Source\c2iExplorer.ico"
+EnabledBitmap "${CheminBase}\Source\checked16.bmp"
+DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
 !ifdef VB6
 InstallDir "$PROGRAMFILES\Microsoft Visual Studio\VB98"
 !else
@@ -67,18 +70,18 @@ Section "c2iExplorer pour VB${VersionVB}"
 	; RegDLL $SYSDIR\mscomctl.ocx
 	SetOverwrite On
 	SetOutPath "$INSTDIR\Wizards"
-	File "C:\Mes documents\c2iexplorer\Source\FredJust modifications.txt"
-	File "C:\Mes documents\c2iexplorer\Source\Modifications René Rhéaume.txt"
-	File "C:\Mes documents\c2iexplorer\ReleaseVB${VersionVB}\c2iexplorer.dll"
-	File "C:\Mes documents\c2iexplorer\ReleaseVB${VersionVB}\c2iexplorer.lib"
-	File "C:\Mes documents\c2iexplorer\ReleaseVB${VersionVB}\c2iexplorer.exp"
-	File "C:\Mes documents\c2iexplorer\ReleaseVB${VersionVB}\UD*.vbd"
+	File "${CheminBase}\Source\FredJust modifications.txt"
+	File "${CheminBase}\Source\Modifications René Rhéaume.txt"
+	File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.dll"
+	File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.lib"
+	File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.exp"
+	File "${CheminBase}\ReleaseVB${VersionVB}\UD*.vbd"
 	SetOutPath "$INSTDIR\Wizards\Data"
-	File "C:\Mes documents\c2iexplorer\Data\*.*"
+	File "${CheminBase}\Data\*.*"
 	SetOutPath "$INSTDIR\Wizards\Html"
-	File "C:\Mes documents\c2iexplorer\Html\*.*"
+	File "${CheminBase}\Html\*.*"
 	SetOutPath "$INSTDIR\Wizards\Html\Img"
-	File "C:\Mes documents\c2iexplorer\Html\Img\*.*"
+	File "${CheminBase}\Html\Img\*.*"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElements"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cExplorer"
@@ -98,7 +101,7 @@ Section "Code source VB 5/6"
 	SetCompress Auto
 	SetOverwrite On
 	SetOutPath "$INSTDIR\Wizards\c2iexplorer-source"
-	File "C:\Mes documents\c2iexplorer\Source\*.*"
+	File "${CheminBase}\Source\*.*"
 	Exec "$WINDIR\explorer.exe /n,$INSTDIR\Wizards\c2iexplorer-source"
 SectionEnd
 
@@ -227,6 +230,8 @@ Section Uninstall
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\archive.zip"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\cDlgCom.cls"
 	Delete "$INSTDIR\Wizards\c2iexplorer-source\images.zip"
+	Delete "$INSTDIR\Wizards\c2iexplorer-source\RapportModificationsRR.*"
+	Delete "$INSTDIR\Wizards\c2iexplorer-source\InsertCode.txt"
 	RmDir "$INSTDIR\Wizards\Data"
 	RmDir "$INSTDIR\Wizards\Html\Img"
 	RmDir "$INSTDIR\Wizards\Html"

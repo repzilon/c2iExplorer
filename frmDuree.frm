@@ -297,7 +297,7 @@ Private Sub GestionLostFocus(ByRef txtTemps As TextBox, Optional ByVal lngMax As
     strTemps = txtTemps.Text
     If (IsNumeric(strTemps)) Then
         lngVal = CLng(Int(Val(strTemps)))
-        Select Case True
+        Select Case conVrai
             Case (lngVal < 0), lngVal > lngMax
                 strTemps = conZeroANum
             Case Else

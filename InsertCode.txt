@@ -1,0 +1,34 @@
+c2iExplorer - Spécifications de la nouvelle version de UDBiblio.InsertCode
+Où doit-on insérer le code ?
+==========================================================================
+
+                     A     B     C     C     C     D     D     E     E     D     D     C     C     C     B     A
+                | 0000  0001  0011  0010  0110  0111  0101  0100  1100  1101  1111  1110  1010  1011  1001  1000
+----------------+-----------------------------------------------------------------------------------------------
+Dans section    | 0000  0000  0055  0050  0550  0555  0505  0200  1200  1505  1555  1550  1050  1055  1000  1000
+déclarations (1)|
+Entre section   | 0000  0000  0022  0020  0220  0222  0202  0200  1200  1202  1222  1220  1020  1022  1000  1000
+déclarations    |
+et 1re          |
+procédure (2)   |
+Entre deux      | 0000  0000  0033  0030  0330  0333  0303  0300  1300  1303  1333  1330  1030  1033  1000  1000
+procédures (3)  |
+Dans une        | 0000  0004  0044  0040  0440  0555  0505  0500  1500  1505  1555  1440  1040  1044  1004  1000
+procédure (4)   |
+À la fin du     | 0000  0005  0055  0050  0550  0555  0505  0500  1500  1505  1555  1550  1050  1055  1005  1000
+module (5)      |
+
+La 1re rangée indique les diverses combinaisons d'options d'ajout possibles où 1
+indique que l'on veut insérer cette partie et 0 le contraire.
+0000
+^----Déclarations dans le module
+ ^---En-tête de procédure
+  ^--Code de la procédure
+   ^-Fin de procédure
+
+Les codes dans les autres cellules indiquent quelles parties doit on insérer et
+où dans le module. La signification des chiffres est indiquée dans la première
+colonne et suit le même guide que pour la première rangée.
+
+Les lettres en haut de chaque en-tête de de colonne indique des motifs
+d'insertion semblables.

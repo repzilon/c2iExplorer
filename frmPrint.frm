@@ -641,7 +641,7 @@ Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String,
     iDeb = InStr(1, sMiddle, sSearchDeb)
     iFin = InStr(1, sMiddle, sSearchFin)
 
-    Select Case True
+    Select Case conVrai
         Case iDeb = 0, iFin = 0
             ExtraitHTML = conFaux
             MsgBox "Format non valable", vbExclamation

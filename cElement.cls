@@ -136,51 +136,48 @@ Public Property Get Ident() As Long
 
 End Property
 
+'Modification par René Rhéaume le 9 mars 2002
+'Réduction de taille
 Public Property Get NomRepertoire(ByVal iIdent As Long) As String
-    Dim iPos As Long, iNum As Long, iPosNext As Long
     'c2i/API/GRAPHICS/BitBlt
     'Renvoi API pour iIdent=1
     'Ident=3
-
-    If iIdent > Ident - 1 Or Ident < 0 Then
-        NomRepertoire = vbNullString
-        Exit Property
-    End If
-
-    On Error Resume Next
-    iPos = 1
-    iPosNext = InStr(iPos, sNom, conSlash)
-    iNum = 0
-    NomRepertoire = Mid$(sNom, iPos, iPosNext - iPos)
-    Do Until iNum = iIdent
-        iPos = iPosNext + 1
-        iPosNext = InStr(iPos, sNom, conSlash)
-        NomRepertoire = Mid$(sNom, iPos, iPosNext - iPos)
-        iNum = iNum + 1
-    Loop
-
+    NomRepertoire = ChercherNomDossier(iIdent, conFaux)
+'    MsgBox "NomRepertoire = " & NomRepertoire, vbInformation
 End Property
 
+'Modification par René Rhéaume le 9 mars 2002
+'Réduction de taille
 Public Property Get CheminComplet(ByVal iIdent As Long) As String
-    Dim iPos As Long, iNum As Long, iPosNext As Long
     'c2i/API/GRAPHICS/BitBlt
     'Renvoi c2i/API pour iIdent=1
     'Ident=3
-
-    If iIdent > Ident - 1 Or Ident < 0 Then
-        CheminComplet = vbNullString
-        Exit Property
-    End If
-
-    On Error Resume Next
-    iPos = 1
-    iPosNext = InStr(iPos, sNom, conSlash)
-    iNum = 0
-    Do Until iNum = iIdent
-        iPos = iPosNext + 1
-        iPosNext = InStr(iPos, sNom, conSlash)
-        iNum = iNum + 1
-    Loop
-
-    CheminComplet = Left$(sNom, iPosNext - 1)
+    CheminComplet = ChercherNomDossier(iIdent, conVrai)
+'    MsgBox "CheminComplet = " & CheminComplet, vbInformation
 End Property
+
+'Ajout par René Rhéaume le 9 mars 2002
+'Regroupement du traitement de NomRepertoire et de CheminComplet
+Private Function ChercherNomDossier(ByVal iIdent As Long, ByVal blnCheminComplet As Boolean) As String
+    Dim iPos As Long, iNum As Long, iPosNext As Long
+    
+    Select Case conVrai
+        Case iIdent > Ident - 1, Ident < 0
+            ChercherNomDossier = vbNullString
+        Case Else
+'            On Error Resume Next
+            iPos = 1
+            iPosNext = InStr(iPos, sNom, conSlash)
+            iNum = 0
+            Do Until (iNum = iIdent)
+                iPos = iPosNext + 1
+                iPosNext = InStr(iPos, sNom, conSlash)
+                iNum = iNum + 1
+            Loop
+            If (blnCheminComplet) Then
+                ChercherNomDossier = Left$(sNom, iPosNext - 1)
+            Else
+                ChercherNomDossier = Mid$(sNom, iPos, iPosNext - iPos)
+            End If
+    End Select
+End Function

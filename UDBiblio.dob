@@ -320,8 +320,8 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
         Case conElement
             Set objE = Explorer.Elements(Node.FullPath)
             'Optimisation par René Rhéaume 2 septembre 2001
-            'Ne fonctionnerait pas sous .net car conVrai = 1 sur .net
-            'alors que dans VB 5/6, conVrai = -1
+            'Ne fonctionnerait pas sous .net car True = 1 sur .net
+            'alors que dans VB 5/6, True = -1
             'Équivalent à :
             '            If Trim$(objE.DeclareProc) = vbNullString Then
             '                tbMain.Buttons(conDeclareProc).Value = tbrUnpressed
@@ -352,7 +352,7 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
 End Sub
 
 Private Sub UserDocument_Initialize()
-    'Modifié par rené Rhéaume 29 juillet 2001
+    'Modifié par René Rhéaume 29 juillet 2001
     c2iCurrentDataFileName = LireChaineFichierINI(conSecGen, conValData, vbNullString, c2iINIFile)
     'Fin de modification
 
@@ -381,8 +381,10 @@ Public Sub AddElement(ByVal objElement As cElement)
     Dim mNodeParent As Node, mNodeNewRep As Node, sM As String
 
     On Error Resume Next
+'    MsgBox objElement.Ident, vbInformation
     For iNum = 0 To objElement.Ident - 1
         sM = objElement.CheminComplet(iNum)
+'        MsgBox sM, vbInformation
         Set mNodeNewRep = Nothing
         Set mNodeNewRep = tv.Nodes(sM)
         If (mNodeNewRep Is Nothing) Then

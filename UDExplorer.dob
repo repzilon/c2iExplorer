@@ -1168,8 +1168,8 @@ End Sub
 
 ' Modification par René Rhéaume le 23 février 2002
 ' Correction du bogue d'affichage des barres d'outils
-' en forcant l'affichage des 2 barres d'outils du bas
-' (les deux variables commneçant par «blnAff»)
+' en forçant l'affichage des 2 barres d'outils du bas
+' (les deux variables commençant par «blnAff»)
 Private Sub UserDocument_Initialize()
     Set tv.ImageList = ImgLSttv
     'par défaut, on affiche tout
@@ -1671,8 +1671,6 @@ End Sub
 Private Sub UserDocument_Show()
     UserDocument_Resize
 End Sub
-
-
 
 Private Sub InitToolbar()
     Const conLanguage As String = "Language"
