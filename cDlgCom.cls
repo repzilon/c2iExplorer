@@ -150,6 +150,7 @@ End Function
 
 'Fonction modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Fonction optimisée par René Rhéaume le 5 juillet 2002
 Private Function ShowOpenSave(bOpen As Boolean) As Boolean
     Static mlgDebutDefaultFilter As String
     If (mlgDebutDefaultFilter = vbNullString) Then
@@ -157,7 +158,9 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
             "Code.ShowOpenSave.mlgDebutDefaultFilter", "Tous")
     End If
     
+    Const conLongMaxNomFich As Integer = 260
     Dim tOpFile As OPENFILENAME, s As String
+    Dim lngLenS As Long
 
     With tOpFile
         .lStructSize = Len(tOpFile)
@@ -170,13 +173,12 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
         If sDialogTitle <> vbNullString Then .lpstrTitle = sDialogTitle
 
         ' Pour faire un style type Windows, remplacer les | par des nuls
-        Dim ch As String, I As Long
-        For I = 1 To Len(sFilter)
-            ch = Mid$(sFilter, I, 1)
-            If ch = "|" Then
-                s = s & vbNullChar
-            Else
-                s = s & ch
+        Dim I As Long
+        s = sFilter
+        lngLenS = Len(s)
+        For I = 1 To lngLenS
+            If (Mid$(s, I, 1) = "|") Then
+                Mid$(s, I, 1) = vbNullChar
             End If
         Next
         ' Mettre un double nul à la fin
@@ -186,12 +188,12 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
         .nFilterIndex = lngFilterIndex
 
         ' Bourrer les tampons fichier et "title" fichier jusqu'à la longueur maximum du chemin
-        s = sFileName & String$(260 - Len(sFileName), 0)
+        s = sFileName & String$(conLongMaxNomFich - Len(sFileName), 0)
         .lpstrFile = s
-        .nMaxFile = 260
-        s = sFileTitle & String$(260 - Len(sFileTitle), 0)
+        .nMaxFile = conLongMaxNomFich
+        s = sFileTitle & String$(conLongMaxNomFich - Len(sFileTitle), 0)
         .lpstrFileTitle = s
-        .nMaxFileTitle = 260
+        .nMaxFileTitle = conLongMaxNomFich
 
         ' Passer les drapeaux, en éliminant les drapeaux non VB
         .Flags = lngFlags And &H1FF1F
@@ -210,6 +212,7 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
         Else
             sFileName = vbNullString
             sFileTitle = vbNullString
+            sFolder = vbNullString
             lngFlags = 0
         End If
     End With
@@ -235,9 +238,8 @@ End Function
 'If lngRet Then
 '    sDummy = Space$(255)
 '    SHGetPathFromIDList lngRet, sDummy
-'    sDummy = Left(sDummy, InStr(sDummy, vbNullChar) - 1)
+'    sFolder = Left$(sDummy, InStr(sDummy, vbNullChar) - 1)
 '    ShowOpenFolder = conVrai
-'    sFolder = sDummy
 'Else
 '    ShowOpenFolder = conFaux
 'End If

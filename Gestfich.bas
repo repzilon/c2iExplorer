@@ -165,15 +165,10 @@ Public Function ValiderFichierLangue(ByVal strFichierLangue As String) As Boolea
     End If
 End Function
 
-'Ajouté par René Rhéaume le le 18 juin 2002
+'Ajouté par René Rhéaume le 18 juin 2002
 ' Fait partie du système multilingue
+'Modifié par René Rhéaume le 30 juin 2002
 Public Function LireChaineLocalisee(ByVal strModule As String, _
         ByVal strClef As String, ByVal strValeurDefaut As String) As String
-
-    Dim chnTemp As String, lngLongueurChaine As Long
-    chnTemp = String$(512, 0)
-    lngLongueurChaine = GetPrivateProfileString(strModule, strClef, strValeurDefaut, chnTemp, _
-                            Len(chnTemp), strFichLangueActuel)
-    LireChaineLocalisee = Left$(chnTemp, lngLongueurChaine)
+    LireChaineLocalisee = LireChaineFichierINI(strModule, strClef, strValeurDefaut, strFichLangueActuel)
 End Function
-

@@ -175,23 +175,41 @@ Private Const conAddprj As String = "addprj"
 Private Const conProp As String = "prop"
 Private Const conNomUD As String = "UDCompteur"
 
-' Note par René Rhaume, 7 janvier 2002
+'Note par René Rhéaume, 7 janvier 2002 (RÉSOLUE)
 ' Il semble y avoir une ou des erreurs algorithmiques
-Private Function ExtraitFileTitle(ByVal sFileName As String) As String
-    Dim sM As String, iPos As Long
-    On Error GoTo GestErr
-    sM = sFileName
-    iPos = 1
-    Do Until iPos = 0
-        iPos = InStr(1, sM, conBS)
-        If iPos = 0 Then Exit Do
-        sM = Right$(sM, Len(sM) - iPos)
-    Loop
-    ExtraitFileTitle = sM
-    Exit Function
+'Note par René Rhéaume le 5 juillet 2002
+' La soit disant erreur algorithmique était causée par le nom de la fonction
+'Fonction modifiée par René Rhéaume le 5 juillet 2002
+' Tiré de http://www.xbeat.net/vbspeed/c_GetFile.htm
+' L'ancienne fonction faisait un Right$ à l'intérieur de la boucle
+Private Function ExtraireNomFichier(ByVal strChemin As String) As String
+' by Donald, donald@xbeat.net, 20001010
+' by Peter Weighill, pweighill@btinternet.com, 20001020
+    Dim iPos As Long
+#If VersionVB <> 6 Then
+    Dim iPosPrev As Long
+#End If
+  
+    ' search last backslash
+#If VersionVB = 6 Then
+    iPos = InStrRev(strChemin, "\", -1, vbBinaryCompare)
+#Else
+    Do
+        iPosPrev = iPos
+        iPos = InStr(iPos + 1, strChemin, "\", vbBinaryCompare)
+    Loop While iPos > 0
+#End If
 
-GestErr:
-    ExtraitFileTitle = sFileName
+#If VersionVB = 6 Then
+    If iPos > 0 Then
+        ExtraireNomFichier = Mid$(strChemin, iPos + 1)
+#Else
+    If iPosPrev > 0 Then
+        ExtraireNomFichier = Mid$(strChemin, iPosPrev + 1)
+#End If
+    Else
+        ExtraireNomFichier = strChemin
+    End If
 End Function
 
 Private Sub lv_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
@@ -249,7 +267,7 @@ Private Sub AjouteProjet()
     If (Not blnLangOK) Then
         StrArray mlgarMsgImpossibleAjouterPrj, _
             "Impossible d'ajouter le projet", "Sauvegardez-le avant."
-        StrArray mlgarQuestionAjouterPrj, "Voulez-vous ajouter le projet ", "à vos compteurs ?"
+        StrArray mlgarQuestionAjouterPrj, "Voulez-vous ajouter le projet", "à vos compteurs ?"
         If (blnMultilingueActive) Then
             For I = 0 To 1
                 mlgarMsgImpossibleAjouterPrj(I) = LireChaineLocalisee(conNomUD, _
@@ -360,7 +378,7 @@ Public Sub ActuCompteur()
     '    lv.ListItems.Clear
     '    For I = 0 To UBound(tbSettings)
     '        sFileName = tbSettings(I, 0)
-    '        sFileTitle = ExtraitFileTitle(sFileName)
+    '        sFileTitle = ExtraireNomFichier(sFileName)
     '        Set lItem = lv.ListItems.Add(, sFileName, sFileTitle)
     '        lItem.SubItems(1) = ConvertHeuresMinutesSecondes(GetDuree(sFileName))
     '        lItem.SubItems(2) = sFileName
@@ -402,7 +420,7 @@ Public Sub ActuCompteur()
     For I = 0 To lngDernIdxATraiter
         iPos = InStr(1, tblSectionDurees(I), "=")
         chnCheminFichier = Trim$(Left$(tblSectionDurees(I), iPos - 1))
-        chnTitreProjet = ExtraitFileTitle(chnCheminFichier)
+        chnTitreProjet = ExtraireNomFichier(chnCheminFichier)
         Set lItem = lv.ListItems.Add(, chnCheminFichier, chnTitreProjet)
         lItem.SubItems(1) = ConvertHeuresMinutesSecondes(GetDuree(chnCheminFichier))
         lItem.SubItems(2) = chnCheminFichier
@@ -421,7 +439,6 @@ Fin:
 End Sub
 
 Private Function ConvertHeuresMinutesSecondes(ByVal lngTime As Long) As String
-    Const conEsp As String = " "
     Dim lngH As Long, lngMn As Long, lngS As Long
 
     lngH = lngTime \ conSecH
@@ -483,8 +500,8 @@ Public Function ImporterDurees() As Byte
     Static blnLangOK As Boolean
     Dim J As Long
     If (Not blnLangOK) Then
-        StrArray mlgarErrImportation, "Une erreur est survenue lors de l'importation des durées ", _
-            "de la base de registres vers le fichier INI.", "Lignes réussies : "
+        StrArray mlgarErrImportation, "Une erreur est survenue lors de l'importation des durées", _
+            "de la base de registres vers le fichier INI.", "Lignes réussies :"
         If (blnMultilingueActive) Then
             For J = 0 To 2
                 mlgarErrImportation(J) = LireChaineLocalisee(conNomUD, _
@@ -525,7 +542,7 @@ Fin:
 GestErr:
     GererErrInattendue mlgarErrImportation(0) & vbNewLine & _
                         mlgarErrImportation(1) & vbNewLine & _
-                        mlgarErrImportation(2) & lngLigneCode, "UDCompteur.ImporterDurees"
+                        mlgarErrImportation(2) & conEsp & lngLigneCode, "UDCompteur.ImporterDurees"
     ImporterDurees = 1
 End Function
 #End If

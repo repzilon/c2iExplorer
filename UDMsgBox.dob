@@ -63,14 +63,14 @@ Begin VB.UserDocument UDMsgBox
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
          NumButtons      =   3
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "voir"
+            Key             =   "copie"
             ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            Key             =   "copie"
+            Key             =   "voir"
             ImageIndex      =   2
          EndProperty
       EndProperty
@@ -141,7 +141,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   3
             Left            =   360
-            Picture         =   "UDMsgBox.dox":066A
+            Picture         =   "UDMsgBox.dox":04D4
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   40
@@ -156,7 +156,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   2
             Left            =   360
-            Picture         =   "UDMsgBox.dox":08C7
+            Picture         =   "UDMsgBox.dox":059E
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   39
@@ -171,7 +171,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   1
             Left            =   360
-            Picture         =   "UDMsgBox.dox":0B3A
+            Picture         =   "UDMsgBox.dox":067D
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   38
@@ -185,7 +185,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   270
             Index           =   0
             Left            =   360
-            Picture         =   "UDMsgBox.dox":0DCD
+            Picture         =   "UDMsgBox.dox":0763
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   37
@@ -279,17 +279,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Boutons"
          Ouvert          =   0   'False
          Hauteur         =   2415
-         ImgOuvert0      =   "UDMsgBox.dox":0E66
-         ImgOuvert1      =   "UDMsgBox.dox":0E82
-         ImgFermée0      =   "UDMsgBox.dox":0E9E
-         ImgFermée1      =   "UDMsgBox.dox":0EBA
+         ImgOuvert0      =   "UDMsgBox.dox":07FC
+         ImgOuvert1      =   "UDMsgBox.dox":0818
+         ImgFermée0      =   "UDMsgBox.dox":0834
+         ImgFermée1      =   "UDMsgBox.dox":0850
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483625
          CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":0ED6
-         PictureTitleFond=   "UDMsgBox.dox":0EF2
+         PicFond         =   "UDMsgBox.dox":086C
+         PictureTitleFond=   "UDMsgBox.dox":0888
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -406,17 +406,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Bouton par défaut"
          Ouvert          =   0   'False
          Hauteur         =   1815
-         ImgOuvert0      =   "UDMsgBox.dox":0F0E
-         ImgOuvert1      =   "UDMsgBox.dox":0F2A
-         ImgFermée0      =   "UDMsgBox.dox":0F46
-         ImgFermée1      =   "UDMsgBox.dox":0F62
+         ImgOuvert0      =   "UDMsgBox.dox":08A4
+         ImgOuvert1      =   "UDMsgBox.dox":08C0
+         ImgFermée0      =   "UDMsgBox.dox":08DC
+         ImgFermée1      =   "UDMsgBox.dox":08F8
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":0F7E
-         PictureTitleFond=   "UDMsgBox.dox":0F9A
+         PicFond         =   "UDMsgBox.dox":0914
+         PictureTitleFond=   "UDMsgBox.dox":0930
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -501,17 +501,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Modalité"
          Ouvert          =   0   'False
          Hauteur         =   1095
-         ImgOuvert0      =   "UDMsgBox.dox":0FB6
-         ImgOuvert1      =   "UDMsgBox.dox":0FD2
-         ImgFermée0      =   "UDMsgBox.dox":0FEE
-         ImgFermée1      =   "UDMsgBox.dox":100A
+         ImgOuvert0      =   "UDMsgBox.dox":094C
+         ImgOuvert1      =   "UDMsgBox.dox":0968
+         ImgFermée0      =   "UDMsgBox.dox":0984
+         ImgFermée1      =   "UDMsgBox.dox":09A0
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483625
          CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1026
-         PictureTitleFond=   "UDMsgBox.dox":1042
+         PicFond         =   "UDMsgBox.dox":09BC
+         PictureTitleFond=   "UDMsgBox.dox":09D8
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -570,17 +570,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Aide"
          Ouvert          =   0   'False
          Hauteur         =   1455
-         ImgOuvert0      =   "UDMsgBox.dox":105E
-         ImgOuvert1      =   "UDMsgBox.dox":107A
-         ImgFermée0      =   "UDMsgBox.dox":1096
-         ImgFermée1      =   "UDMsgBox.dox":10B2
+         ImgOuvert0      =   "UDMsgBox.dox":09F4
+         ImgOuvert1      =   "UDMsgBox.dox":0A10
+         ImgFermée0      =   "UDMsgBox.dox":0A2C
+         ImgFermée1      =   "UDMsgBox.dox":0A48
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":10CE
-         PictureTitleFond=   "UDMsgBox.dox":10EA
+         PicFond         =   "UDMsgBox.dox":0A64
+         PictureTitleFond=   "UDMsgBox.dox":0A80
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -655,17 +655,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Divers"
          Ouvert          =   0   'False
          Hauteur         =   1455
-         ImgOuvert0      =   "UDMsgBox.dox":1106
-         ImgOuvert1      =   "UDMsgBox.dox":1122
-         ImgFermée0      =   "UDMsgBox.dox":113E
-         ImgFermée1      =   "UDMsgBox.dox":115A
+         ImgOuvert0      =   "UDMsgBox.dox":0A9C
+         ImgOuvert1      =   "UDMsgBox.dox":0AB8
+         ImgFermée0      =   "UDMsgBox.dox":0AD4
+         ImgFermée1      =   "UDMsgBox.dox":0AF0
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483625
          CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1176
-         PictureTitleFond=   "UDMsgBox.dox":1192
+         PicFond         =   "UDMsgBox.dox":0B0C
+         PictureTitleFond=   "UDMsgBox.dox":0B28
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -709,17 +709,17 @@ Begin VB.UserDocument UDMsgBox
          Alignement      =   2
          Caption         =   "Message - Titre"
          Hauteur         =   3015
-         ImgOuvert0      =   "UDMsgBox.dox":11AE
-         ImgOuvert1      =   "UDMsgBox.dox":11CA
-         ImgFermée0      =   "UDMsgBox.dox":11E6
-         ImgFermée1      =   "UDMsgBox.dox":1202
+         ImgOuvert0      =   "UDMsgBox.dox":0B44
+         ImgOuvert1      =   "UDMsgBox.dox":0B60
+         ImgFermée0      =   "UDMsgBox.dox":0B7C
+         ImgFermée1      =   "UDMsgBox.dox":0B98
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":121E
-         PictureTitleFond=   "UDMsgBox.dox":123A
+         PicFond         =   "UDMsgBox.dox":0BB4
+         PictureTitleFond=   "UDMsgBox.dox":0BD0
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -779,7 +779,7 @@ Begin VB.UserDocument UDMsgBox
    Begin VB.Image imgOuvert 
       Height          =   240
       Left            =   5100
-      Picture         =   "UDMsgBox.dox":1256
+      Picture         =   "UDMsgBox.dox":0BEC
       Top             =   480
       Visible         =   0   'False
       Width           =   240
@@ -787,7 +787,7 @@ Begin VB.UserDocument UDMsgBox
    Begin VB.Image imgFermee 
       Height          =   240
       Left            =   4740
-      Picture         =   "UDMsgBox.dox":1333
+      Picture         =   "UDMsgBox.dox":0CC9
       Top             =   480
       Visible         =   0   'False
       Width           =   240
@@ -846,48 +846,59 @@ Private lngIdxButtons As Long
 Private lngIdxDefaultButton As Long
 Private lngIdxIcones As Long
 Private lngIdxModal As Long
+Private intIdxPannOuvert As Integer
 
 'Note par René Rhéaume 1er août 2001
 'Avant de compiler :
-'Seul le dernier c2iContainerIntMsg (index 6) doit être ouvert
+'Seul le dernier c2iContainerIntMsg (indice 6) doit être ouvert
 '(Ouvert = conVrai) dans la fenêtre de conception. Tous les autres doivent
 'être fermés.
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Private Sub c2iContainerIntMsg_OuvertureChange(Index As Integer)
-    Dim iNum As Long
-    Dim intDernIdx As Integer, sngGaucheCont As Single
-    intDernIdx = c2iContainerIntMsg.UBound
-    If (c2iContainerIntMsg(Index).Ouvert) Then
-        For iNum = 0 To intDernIdx
-            If (iNum <> Index) Then
-                c2iContainerIntMsg(iNum).Ouvert = conFaux
-            End If
-        Next
+    Dim intPrem As Integer
+    Dim intNum As Integer
+
+    If (intIdxPannOuvert <> Index) Then
+'        If (c2iContainerIntMsg(Index).Ouvert) Then
+            c2iContainerIntMsg(intIdxPannOuvert).SilentClose
+'        End If
     End If
-    sngGaucheCont = c2iContainerIntMsg(0).Left
-    For iNum = 1 To intDernIdx
-        c2iContainerIntMsg(iNum).Top = c2iContainerIntMsg(iNum - 1).Top + c2iContainerIntMsg(iNum - 1).Height
-        c2iContainerIntMsg(iNum).Left = sngGaucheCont
-    Next
+    
+    If (intIdxPannOuvert < Index) Then
+        intPrem = intIdxPannOuvert
+    Else
+        intPrem = Index
+    End If
+    If (intPrem < 1) Then
+        intPrem = 1
+    End If
+    
+    For intNum = intPrem To 6
+        c2iContainerIntMsg(intNum).Move 0, _
+                c2iContainerIntMsg(intNum - 1).Top + c2iContainerIntMsg(intNum - 1).Height
+    Next intNum
+    
+    intIdxPannOuvert = Index
 End Sub
 
 Private Sub c2iContainerIntMsg_TitleDblClick(Index As Integer)
     c2iContainerIntMsg(Index).Ouvert = Not c2iContainerIntMsg(Index).Ouvert
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Private Sub picIcones_Click(Index As Integer)
-    Dim iNum As Long, iUnPixel As Long, intFinTab As Integer
-
-    iUnPixel = ScaleX(2, vbPixels, vbTwips)
-    intFinTab = picIcones.UBound
-    For iNum = 0 To intFinTab
-        picIcones(iNum).BorderStyle = 0
-        lblIconesInfos(iNum).FontBold = conFaux
-    Next
+    Dim iUnPixel As Long
+    
+    picIcones(lngIdxIcones).BorderStyle = 0
+    lblIconesInfos(lngIdxIcones).FontBold = conFaux
+    
     picIcones(Index).BorderStyle = 1
     lblIconesInfos(Index).FontBold = conVrai
-    shpIconesOmbre.Left = picIcones(Index).Left + iUnPixel
-    shpIconesOmbre.Top = picIcones(Index).Top + iUnPixel
+    
+    iUnPixel = ScaleX(2, vbPixels, vbTwips)
+    shpIconesOmbre.Move picIcones(Index).Left + iUnPixel, picIcones(Index).Top + iUnPixel
+    
     lngIdxIcones = Index
     MiseAJourCode
 End Sub
@@ -896,7 +907,7 @@ End Sub
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim lngStartLine As Long, lngStartColumn As Long, lngEndLine As Long, lngEndColumn As Long
 
-    Select Case Button.Image
+    Select Case Button.Key
         Case "voir"
             ShowMsgBox
         Case "copie"
@@ -933,6 +944,7 @@ Private Sub UserDocument_Initialize()
             
     ChargerChainesLocales
     
+    intIdxPannOuvert = 6
     picIcones_Click 0
     lblButtons_Click 0
     lblDefaultButton_Click 0
@@ -940,6 +952,8 @@ Private Sub UserDocument_Initialize()
 '    ExtraireImageList ImageList1, "UDMsgBox.ImageList1"
 End Sub
 
+'Fonction modifiée par René Rhéaume le 22 juillet 2002
+' Affiche "" s'il n'y a pas de texte
 Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String
     Dim lngPos As Long
 
@@ -949,11 +963,7 @@ Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String
         lngPos = InStr(lngPos + 2, sMessage, vbCrLf)
     Loop
 
-    If (sMessage = vbNullString) Then
-        ExtraitSautDeLigne = vbNullString
-    Else
-        ExtraitSautDeLigne = conGlmt & sMessage & conGlmt
-    End If
+    ExtraitSautDeLigne = conGlmt & sMessage & conGlmt
 End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
@@ -1046,6 +1056,7 @@ End Sub
 ' et de lngRetourneIcones
 'Procédure modifiée par René Rhéaume le 21 juin 2002
 ' Support multilingue
+'Procédure optimisée par René Rhéaume le 5 juillet 2002
 Private Sub ShowMsgBox()
     Static mlgMsgErrCode As String
     If (mlgMsgErrCode = vbNullString) Then
@@ -1067,17 +1078,9 @@ Private Sub ShowMsgBox()
     lngButtonsDef = lngButtonsDef + (lngIdxModal * vbSystemModal) '- (lblModal(1).FontBold * vbSystemModal) ' Parce que True vaut -1 sous VB classique
 
     'les divers
-    If (chkHelpButton.Value = vbChecked) Then
-        lngButtonsDef = lngButtonsDef + vbMsgBoxHelpButton
-    End If
-
-    If (chk1Plan.Value = vbChecked) Then
-        lngButtonsDef = lngButtonsDef + vbMsgBoxSetForeground
-    End If
-
-    If (chkTextAlign.Value = vbChecked) Then
-        lngButtonsDef = lngButtonsDef + vbMsgBoxRight
-    End If
+    lngButtonsDef = lngButtonsDef + (chkHelpButton.Value * vbMsgBoxHelpButton)
+    lngButtonsDef = lngButtonsDef + (chk1Plan.Value * vbMsgBoxSetForeground)
+    lngButtonsDef = lngButtonsDef + (chkTextAlign.Value * vbMsgBoxRight)
     ' fin des options
     
     On Error GoTo Fin
@@ -1100,28 +1103,26 @@ Fin:
     MsgBox mlgMsgErrCode, vbExclamation
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Private Sub lblButtons_Click(Index As Integer)
-    Dim iNum As Long
+    lblButtons(lngIdxButtons).FontBold = conFaux
+    lblButtons(lngIdxButtons).BorderStyle = 0
 
-    For iNum = 0 To lblButtons.UBound
-        lblButtons(iNum).FontBold = conFaux
-        lblButtons(iNum).BorderStyle = 0
-    Next
     lblButtons(Index).FontBold = conVrai
     lblButtons(Index).BorderStyle = 1
+    
     lngIdxButtons = Index
     MiseAJourCode
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Private Sub lblDefaultButton_Click(Index As Integer)
-    Dim iNum As Long
+    lblDefaultButton(lngIdxDefaultButton).FontBold = conFaux
+    lblDefaultButton(lngIdxDefaultButton).BorderStyle = 0
 
-    For iNum = 0 To lblDefaultButton.UBound
-        lblDefaultButton(iNum).FontBold = conFaux
-        lblDefaultButton(iNum).BorderStyle = 0
-    Next
     lblDefaultButton(Index).FontBold = conVrai
     lblDefaultButton(Index).BorderStyle = 1
+    
     lngIdxDefaultButton = Index
     MiseAJourCode
 End Sub
@@ -1130,15 +1131,14 @@ Private Sub lblIconesInfos_Click(Index As Integer)
     picIcones_Click Index
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Private Sub lblModal_Click(Index As Integer)
-    Dim iNum As Long
+    lblModal(lngIdxModal).FontBold = conFaux
+    lblModal(lngIdxModal).BorderStyle = 0
 
-    For iNum = 0 To lblModal.UBound
-        lblModal(iNum).FontBold = conFaux
-        lblModal(iNum).BorderStyle = 0
-    Next
     lblModal(Index).FontBold = conVrai
     lblModal(Index).BorderStyle = 1
+    
     lngIdxModal = Index
     MiseAJourCode
 End Sub
@@ -1334,7 +1334,7 @@ Private Sub ChargerChainesLocales()
             strIdTexte = CStr(I + 1)
             strarRangs(I) = LireChaineLocalisee(conNomUD, _
                     conClefL10nProc & "strarRangs(" & strIdTexte & ")", strarRangs(I))
-            lblDefaultButton(I).Caption = strIdTexte & strarRangs(I) & " " & strBouton
+            lblDefaultButton(I).Caption = strIdTexte & strarRangs(I) & conEsp & strBouton
         Next I
         For I = 0 To 1
             strarModality(I) = LireChaineLocalisee(conNomUD, _

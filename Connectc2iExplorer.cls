@@ -66,6 +66,7 @@ End Sub
 'Procédure modifiée par René Rhéaume le 29 avril 2002
 ' Meilleure conditions et vérification de l'existence
 ' de c2iExplorer.ini
+
 Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectMode As vbext_ConnectMode, ByVal AddInInst As VBIDE.AddIn, custom() As Variant)
     '=================================================
     'connection du complément
@@ -99,6 +100,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
                     strFichLangueActuel = strFichierLangue
                     blnMultilingueActive = conVrai
                 End If
+                
                 ChargerChainesGlobales
                 'pour stocker les durées
                 ReDim DuréePrj(0)
@@ -118,7 +120,8 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
                 AddToAddInCommandBar
             Case Else ' Abandon
                 Set Connection = Nothing
-                Err.Raise conErrFichIntrouvable, conNomApp & "." & conNomMeth, _
+                'Optimisé par René Rhéaume le 5 juillet 2002
+                Err.Raise conErrFichIntrouvable ', conNomApp & "." & conNomMeth, _
                             "c2iExplorer.ini est introuvable malgré l'intervention de l'utilsateur."
         End Select
     End If

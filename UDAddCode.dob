@@ -463,7 +463,7 @@ Private Sub UserDocument_Initialize()
             "Obj.FrameProp.Caption", "Propriété :")
     frameLstProp.Caption = LireChaineLocalisee(conNomUD, _
             "Obj.frameLstProp.Caption", "Liste des propriétés")
-    Framecode.Caption = LireChaineLocalisee(conNomUD, "Obj.FrameCode.Caption", "Code généré")
+    FrameCode.Caption = LireChaineLocalisee(conNomUD, "Obj.FrameCode.Caption", "Code généré")
     lblCode(0).Caption = LireChaineLocalisee(conNomUD, "Obj.lblCode(0).Caption", "Déclarations")
     lblCode(1).Caption = LireChaineLocalisee(conNomUD, "Obj.lblCode(1).Caption", "Code")
     lblNom.Caption = LireChaineLocalisee(conNomUD, "Obj.lblNom.Caption", "Nom :")
@@ -491,6 +491,7 @@ End Function
 'Optimisé par René Rhéaume le 6 janvier 2002
 'Procédure modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Procédure optimisée par René Rhéaume le 5 juillet 2002
 Private Sub AjouteProp()
     Static mlgMsgPropExisteDeja As String
     If (mlgMsgPropExisteDeja = vbNullString) Then
@@ -506,6 +507,7 @@ Private Sub AjouteProp()
     Dim lngIdxSel As Long
     Dim strNom As String
     Dim lngCouleur As Long
+    Dim strClefImg As String
     ' ---------------------------- ENTRÉE ----------------------------
     strNom = txtName.Text
     lngIdxSel = cmbLstType.ListIndex
@@ -518,10 +520,11 @@ Private Sub AjouteProp()
 
             'ajoute la nouvelle propriété au treeview, si elle existe ->GestErr
             If (blnObjet) Then
-                Set mN = tvCode.Nodes.Add(, , strNom, sType, conObjet)
+                strClefImg = conObjet
             Else
-                Set mN = tvCode.Nodes.Add(, , strNom, sType, conProp)
+                strClefImg = conProp
             End If
+            Set mN = tvCode.Nodes.Add(, , strNom, sType, conProp)
             mN.Tag = strarPrefixes(lngIdxSel)
 
             'couleur suivant la portée
@@ -547,10 +550,11 @@ Private Sub AjouteProp()
 
             If (blnEcriture) Then
                 If (blnObjet) Then
-                    Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conSet, conSet)
+                    strClefImg = conSet
                 Else
-                    Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conLet, conLet)
+                    strClefImg = conLet
                 End If
+                Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , strClefImg, strClefImg)
                 mNFils.ForeColor = lngCouleur
             End If
             If (blnLecture) Then
@@ -611,16 +615,17 @@ End Sub
 ' 2e élément d'une propriété en lecture/écriture
 'Procédure modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Procédure modifiée par René Rhéaume le 22 juillet 2002
+' Ajout de la tabulation dans le corps des propriétés
 Private Sub VoirCode()
     Static mlgGenerePar As String
     If (mlgGenerePar = vbNullString) Then
         mlgGenerePar = LireChaineLocalisee(conNomUD, "Code.VoirCode.mlgGenerePar", "Généré par")
     End If
 
-    Const conEspace As String = " "
     Const conAs As String = " As "
     Const conEgal As String = " = "
-    Const conSetEsp As String = conSet & conEspace
+    Const conSetEsp As String = conSet & conEsp
     
     Dim sDeclaration As String, sCode As String
     Dim mN As Node, mNFils As Node
@@ -657,16 +662,16 @@ Private Sub VoirCode()
         Do Until mNFils Is Nothing
             ' Partie de l'en-tête
             strTexteFils = mNFils.Text
-            sCode = sCode & strPorteeProp & strTexteFils & conEspace & strNom
+            sCode = sCode & strPorteeProp & strTexteFils & conEsp & strNom
             Select Case strTexteFils
                 Case conGet
-                    sCode = sCode & "()" & conAs & strType & vbCrLf
+                    sCode = sCode & "()" & conAs & strType & vbCrLf & vbTab
                     If (mN.Image = conObjet) Then
                         sCode = sCode & conSetEsp
                     End If
                     sCode = sCode & strNom & conEgal & strTagmN & strNom & vbCrLf
                 Case conSet, conLet
-                    sCode = sCode & "(ByVal " & strTagmN & strNom & "A As " & strType & conPF & vbCrLf
+                    sCode = sCode & "(ByVal " & strTagmN & strNom & "A As " & strType & conPF & vbCrLf & vbTab
                     If (strTexteFils = conSet) Then
                         sCode = sCode & conSetEsp
                     End If
@@ -772,15 +777,15 @@ Private Sub UserDocument_Resize()
 
     sngHauteurEchelle = ScaleHeight
     sngHauteurLstProp = sngHauteurEchelle - frameLstProp.Top - conEspaceLibre
-    sngLargeurFraCode = ScaleWidth - Framecode.Left - conEspaceLibre
-    sngHauteurFraCode = sngHauteurEchelle - Framecode.Top - conEspaceLibre
+    sngLargeurFraCode = ScaleWidth - FrameCode.Left - conEspaceLibre
+    sngHauteurFraCode = sngHauteurEchelle - FrameCode.Top - conEspaceLibre
     sngLargeurZoneCode = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
 
     On Error Resume Next
     frameLstProp.Height = sngHauteurLstProp
     tvCode.Height = sngHauteurLstProp - tvCode.Top - conEspaceLibre
-    Framecode.Height = sngHauteurFraCode
-    Framecode.Width = sngLargeurFraCode
+    FrameCode.Height = sngHauteurFraCode
+    FrameCode.Width = sngLargeurFraCode
     txtCodeDeclarationView.Width = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
     txtCodeView.Width = sngLargeurZoneCode
     txtCodeView.Height = sngHauteurFraCode - txtCodeView.Top - conEspaceLibre

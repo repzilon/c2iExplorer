@@ -295,6 +295,15 @@ Property Let Alignement(iAlignA As AlignmentConstants)
     DessineTitre
 End Property
 
+'Procédure ajoutée par René Rhéaume le 30 juin 2002
+' Ferme le conteneur sans déclencher d'événement
+Public Sub SilentClose()
+    If (bOuvert) Then
+        bOuvert = conFaux
+        Dessine
+    End If
+End Sub
+
 ' Optimisé par René Rhéaume le 6 janvier 2002
 Private Sub DessineTitre()
     Dim sngLargImgFerm As Single
@@ -600,10 +609,10 @@ Public Property Get Border() As Boolean
 End Property
 
 'Problème avec cette propriété
-'VB5 n'aime pas ContainerHwnd (il le prend pour une variable non définie)
+'VB5 ne connaît pas ContainerHwnd (il le prend pour une variable non définie)
 #If VersionVB = 6 Then
 Public Property Get ParentHwnd() As Long
-        ParentHwnd = ContainerHwnd
+    ParentHwnd = ContainerHwnd
 End Property
 #End If
 

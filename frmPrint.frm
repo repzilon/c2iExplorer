@@ -181,6 +181,7 @@ Private Const conMembers As String = "Members"
 Private Const conNomForm As String = "frmPrint"
 Private objVBPrjPrint As VBIDE.VBProject
 Private objVBCmpPrint As VBIDE.VBComponent
+Private intNoFichier As Integer
 
 'Optimisation par René Rhéaume les 31 juillet 2001 et 5 janvier 2002
 'Procédure modifiée par René Rhéaume le 14 juin 2002
@@ -214,10 +215,6 @@ Private Sub OK(Optional ByVal blnTous As Boolean = conFaux)
             MsgBox mlgarFichExistePas(0) & strCheminModele & mlgarFichExistePas(1)
         End If
     End If
-End Sub
-
-Private Sub Quitter()
-    Unload Me
 End Sub
 
 Private Sub File1_DblClick()
@@ -254,12 +251,15 @@ End Sub
 'Modifié par René Rhéaume le 5 janvier 2002
 'Procédure modifiée par René Rhéaume le 14 juin 2002
 ' OK gère maintenant le cas «Exporter tout»
+'Procédure modifiée par René Rhéaume le 5 juillet 2002
+' La procédure Quitter a été «inliné»
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
         Case conVoir
             OK
         Case conQuit
-            Quitter
+            Unload Me
+            'Quitter
         Case conTous
             OK conVrai
     End Select
@@ -352,197 +352,142 @@ AffichErr:
     GererErrInattendue , "frmPrint.AnalyseHTMLPrj"
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Public Sub ExportHTML(ByVal sHTMLFileName As String)
-    Dim lngRep As Long, objVBPrj As VBIDE.VBProject
+    Dim objVBPrj As VBIDE.VBProject
     Dim sTete As String, sFin As String, sMiddle As String
     Dim strDate As String
 
     Screen.MousePointer = vbHourglass
-    
     On Error GoTo GestErr
-    If FichierExiste(c2iHTMLFile) Then
-        Kill c2iHTMLFile
-    End If
+    SupprimerFichTemp
 
     'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
-        strDate = Format$(VBA.Date$, conFormatDate)
-        RemplaceString sTete, conDate, strDate
-        Call EcrireFichier(sTete, c2iHTMLFile)
-        For Each objVBPrj In VBInstance.VBProjects
-            AddProject objVBPrj, sMiddle
-        Next
-        RemplaceString sFin, conDate, strDate
-        Call EcrireFichier(sFin, c2iHTMLFile)
+        intNoFichier = OuvrirFichierAjout(c2iHTMLFile)
+        If (intNoFichier <> -1) Then
+            strDate = Format$(VBA.Date$, conFormatDate)
+            RemplaceString sTete, conDate, strDate
+            EcrireFichier sTete, intNoFichier
+            
+            For Each objVBPrj In VBInstance.VBProjects
+                AddProject objVBPrj, sMiddle
+            Next
+            
+            RemplaceString sFin, conDate, strDate
+            EcrireFichier sFin, intNoFichier
+            
+            FermerFichier intNoFichier
+        End If
     End If
 
-    Screen.MousePointer = vbDefault
-
-    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
-    If (lngRep = 0) Then GoTo GestErr
-    Exit Sub
+    VoirFichApercu
     
+SortieProc:
+    Screen.MousePointer = vbDefault
+    Exit Sub
 GestErr:
     GererErrInattendue , "frmPrint.ExportHTML"
+    Resume SortieProc
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VBIDE.VBProject)
-    '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
-    Dim lngRep As Long, objVBCmp As VBIDE.VBComponent
+    Dim objVBCmp As VBIDE.VBComponent
     Dim sTete As String, sFin As String, sMiddle As String
 
     Screen.MousePointer = vbHourglass
 
     On Error GoTo GestErr
-    If FichierExiste(c2iHTMLFile) Then
-        Kill c2iHTMLFile
-    End If
-
-    'Ancienne version
-    '    'add projects
-    '    Set fso = New FileSystemObject
-    '    Set txtOut = fso.CreateTextFile(c2iHTMLFile)
-    '    Set txtIn = fso.OpenTextFile(sHTMLFileName)
-    '    sMiddle = txtIn.ReadAll
-    '    txtIn.Close
-    '    Set txtIn = Nothing
-    '
-    '    If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
-    '        AnalyseHTMLPrj objVBPrj, sTete
-    '        txtOut.Write sTete
-    '
-    '        'barre de progression
-    '        With frmPrint.pbPrint
-    '            .Min = 0
-    '            .Max = objVBPrj.VBComponents.Count
-    '            .Value = 0
-    '            For Each objVBCmp In objVBPrj.VBComponents
-    '                AddComponent objVBCmp, sMiddle
-    '                .Value = .Value + 1
-    '            Next
-    '        End With
-    '        AnalyseHTMLPrj objVBPrj, sFin
-    '        txtOut.Write sFin
-    '    End If
-    '    Set txtOut = Nothing
-    '    Set fso = Nothing
+    SupprimerFichTemp
 
     'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
-        AnalyseHTMLPrj objVBPrj, sTete
-        Call EcrireFichier(sTete, c2iHTMLFile)
-
-        'barre de progression
-        With frmPrint.pbPrint
-            .Min = 0
-            .Max = objVBPrj.VBComponents.Count
-            .Value = 0
-            For Each objVBCmp In objVBPrj.VBComponents
-                AddComponent objVBCmp, sMiddle
-                .Value = .Value + 1
-            Next
-        End With
-        AnalyseHTMLPrj objVBPrj, sFin
-        Call EcrireFichier(sFin, c2iHTMLFile)
+        intNoFichier = OuvrirFichierAjout(c2iHTMLFile)
+        If (intNoFichier <> -1) Then
+            AnalyseHTMLPrj objVBPrj, sTete
+            EcrireFichier sTete, intNoFichier
+    
+            'barre de progression
+            With frmPrint.pbPrint
+                .Min = 0
+                .Max = objVBPrj.VBComponents.Count
+                .Value = 0
+                For Each objVBCmp In objVBPrj.VBComponents
+                    AddComponent objVBCmp, sMiddle
+                    .Value = .Value + 1
+                Next
+            End With
+            
+            AnalyseHTMLPrj objVBPrj, sFin
+            EcrireFichier sFin, intNoFichier
+            
+            FermerFichier intNoFichier
+        End If
     End If
+    
+    VoirFichApercu
 
+SortieProc:
     Set objVBCmp = Nothing
     Screen.MousePointer = vbDefault
-
-    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
-    If lngRep = 0 Then GoTo GestErr
-
     Exit Sub
 GestErr:
-    '    txtOut.Close
-    '    Set txtOut = Nothing
-    '    Set fso = Nothing
-    Screen.MousePointer = vbDefault
     GererErrInattendue , "frmPrint.ExportHTMLProject"
+    Resume SortieProc
 End Sub
 
+'Procédure optimisée par René Rhéaume le 30 juin 2002
 Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As VBIDE.VBComponent)
-    '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
-    Dim lngRep As Long, objVBMember As VBIDE.Member
+    Dim objVBMember As VBIDE.Member
     Dim sTete As String, sFin As String, sMiddle As String
 
     Screen.MousePointer = vbHourglass
 
     On Error GoTo GestErr
-    If FichierExiste(c2iHTMLFile) Then
-        Kill c2iHTMLFile
-    End If
+    SupprimerFichTemp
 
-    ' Ancienne version
-    '    'add projects
-    '    Set fso = New FileSystemObject
-    '    Set txtOut = fso.CreateTextFile()
-    '    Set txtIn = fso.OpenTextFile(sHTMLFileName)
-    '    sMiddle = txtIn.ReadAll
-    '    txtIn.Close
-    '    Set txtIn = Nothing
-    '
-    '    If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
-    '        AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
-    '        AnalyseHTMLCmp objVBCmp, sTete
-    '        txtOut.Write sTete
-    '        'barre de progression
-    '        With frmPrint.pbPrint
-    '            .Min = 0
-    '            .Max = objVBCmp.CodeModule.Members.Count
-    '            .Value = 0
-    '
-    '            For Each objVBMember In objVBCmp.CodeModule.Members
-    '                AddMember objVBMember, sMiddle
-    '                .Value = .Value + 1
-    '                DoEvents
-    '            Next
-    '        End With
-    '        AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
-    '        AnalyseHTMLCmp objVBCmp, sFin
-    '        txtOut.Write sFin
-    '    End If
-    '    Set txtOut = Nothing
-    '    Set fso = Nothing
-
-    'Nouvelle version utilisant les instructions E/S de fichier de VB
+    'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
-        AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
-        AnalyseHTMLCmp objVBCmp, sTete
-        Call EcrireFichier(sTete, c2iHTMLFile)
-        'barre de progression
-        With frmPrint.pbPrint
-            .Min = 0
-            .Max = objVBCmp.CodeModule.Members.Count
-            .Value = 0
-
-            For Each objVBMember In objVBCmp.CodeModule.Members
-                AddMember objVBMember, sMiddle
-                .Value = .Value + 1
-                If GetInputState() Then DoEvents
-            Next
-        End With
-        AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
-        AnalyseHTMLCmp objVBCmp, sFin
-        Call EcrireFichier(sFin, c2iHTMLFile)
+        intNoFichier = OuvrirFichierAjout(c2iHTMLFile)
+        If (intNoFichier <> -1) Then
+            AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
+            AnalyseHTMLCmp objVBCmp, sTete
+            EcrireFichier sTete, intNoFichier
+            
+            'barre de progression
+            With frmPrint.pbPrint
+                .Min = 0
+                .Max = objVBCmp.CodeModule.Members.Count
+                .Value = 0
+    
+                For Each objVBMember In objVBCmp.CodeModule.Members
+                    AddMember objVBMember, sMiddle
+                    .Value = .Value + 1
+                    If GetInputState() Then DoEvents
+                Next
+            End With
+            
+            AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
+            AnalyseHTMLCmp objVBCmp, sFin
+            EcrireFichier sFin, intNoFichier
+            
+            FermerFichier intNoFichier
+        End If
     End If
+    
+    VoirFichApercu
 
+SortieProc:
     Set objVBMember = Nothing
     Screen.MousePointer = vbDefault
-
-    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
-    If lngRep = 0 Then GoTo GestErr
-
     Exit Sub
 GestErr:
-    '    txtOut.Close
-    '    Set txtOut = Nothing
-    '    Set fso = Nothing
-    Screen.MousePointer = vbDefault
     GererErrInattendue , "frmPrint.ExportHTMLComponent"
+    Resume SortieProc
 End Sub
 
 'Modifié par René Rhéaume 1er août 2001
@@ -554,7 +499,7 @@ Private Sub AddProject(ByVal objVBPrj As VBIDE.VBProject, ByVal sMiddle As Strin
 
     If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
         AnalyseHTMLPrj objVBPrj, sTete
-        Call EcrireFichier(sTete, c2iHTMLFile)
+        EcrireFichier sTete, intNoFichier
 
         'barre de progression
         With frmPrint.pbPrint
@@ -568,10 +513,12 @@ Private Sub AddProject(ByVal objVBPrj As VBIDE.VBProject, ByVal sMiddle As Strin
             Next
         End With
         AnalyseHTMLPrj objVBPrj, sFin
-        Call EcrireFichier(sFin, c2iHTMLFile)
+        EcrireFichier sFin, intNoFichier
     End If
     
     Set objVBCmp = Nothing
+    
+    Exit Sub
 End Sub
 
 ' Modifié par René Rhéaume 1er août 2001
@@ -585,7 +532,7 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
     If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
         AnalyseHTMLCmp objVBCmp, sTete
-        Call EcrireFichier(sTete, c2iHTMLFile)
+        EcrireFichier sTete, intNoFichier
         If (objVBCmp.Type <> vbext_ct_ResFile) Then 'les fichiers de ressource ne peuvent pas contenir de code
             For Each objVBMember In objVBCmp.CodeModule.Members
                 AddMember objVBMember, sMiddle
@@ -593,7 +540,7 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
         End If
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
         AnalyseHTMLCmp objVBCmp, sFin
-        Call EcrireFichier(sFin, c2iHTMLFile)
+        EcrireFichier sFin, intNoFichier
     End If
 
     Set objVBMember = Nothing
@@ -608,7 +555,7 @@ Private Sub AddMember(ByVal objVBMember As VBIDE.Member, ByVal sMiddle As String
             AnalyseHTMLCmp .Parent, sMiddle
             AnalyseHTMLMember objVBMember, sMiddle
         End With
-        Call EcrireFichier(sMiddle, c2iHTMLFile)
+        EcrireFichier sMiddle, intNoFichier
     End If
 End Sub
 
@@ -624,6 +571,7 @@ Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String,
     Const conHTMLCmmtEnd As String = " -->"
     Dim iDeb As Long, iFin As Long
     Dim sSearchDeb As String, sSearchFin As String
+    Dim lngLenDeb As Long
 
     On Error GoTo Fin
     sSearchDeb = "<!-- " & sSearch & conHTMLCmmtEnd
@@ -633,19 +581,20 @@ Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String,
 
     Select Case conVrai
         Case iDeb = 0, iFin = 0
-            ExtraitHTML = conFaux
+'            ExtraitHTML = conFaux
             MsgBox mlgMsgFmtNonValable, vbExclamation
-            Exit Function
+        Case Else
+            sTete = Left$(sMiddle, iDeb - 1)
+'            sFin = Right$(sMiddle, Len(sMiddle) - iFin - Len(sSearchFin) + 1)
+            sFin = Mid$(sMiddle, iFin + Len(sSearchFin))
+            lngLenDeb = Len(sSearchDeb)
+            sMiddle = Mid$(sMiddle, iDeb + lngLenDeb, iFin - iDeb - lngLenDeb)
+            ExtraitHTML = conVrai
     End Select
 
-    sTete = Left$(sMiddle, iDeb - 1)
-    sFin = Right$(sMiddle, Len(sMiddle) - iFin - Len(sSearchFin) + 1)
-    sMiddle = Mid$(sMiddle, iDeb + Len(sSearchDeb), iFin - iDeb - Len(sSearchDeb))
-
-    ExtraitHTML = conVrai
     Exit Function
 Fin:
-    ExtraitHTML = conFaux
+'    ExtraitHTML = conFaux
 End Function
 
 ' Modifié par René Rhéaume le 18 janvier 2002
@@ -680,23 +629,23 @@ Private Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFi
     Static mlgMsgImpossOuvrir As String
     If (mlgMsgImpossOuvrir = vbNullString) Then
         mlgMsgImpossOuvrir = LireChaineLocalisee(conNomForm, _
-            "Code.LireFichierTexte.mlgMsgImpossOuvrir", "Impossible d'ouvrir le fichier: ")
+            "Code.LireFichierTexte.mlgMsgImpossOuvrir", "Impossible d'ouvrir le fichier :")
     End If
     On Error GoTo GestErr
     LireFichierTexte = 0
-    Screen.MousePointer = 11
+    Screen.MousePointer = vbHourglass
 
     ' Ouvre le fichier indiqué.
     Open chnNomFichier For Input As #1
     ContenuFichier = Input(LOF(1), 1)
     Close #1
-    Screen.MousePointer = 0
+    Screen.MousePointer = vbDefault
     Exit Function
 
 GestErr:
-    MsgBox mlgMsgImpossOuvrir & chnNomFichier, vbExclamation
+    MsgBox mlgMsgImpossOuvrir & conEsp & chnNomFichier, vbExclamation
     LireFichierTexte = -1
-    Screen.MousePointer = 0
+    Screen.MousePointer = vbDefault
 End Function
 
 'Déplacé de GestFichier par René Rhéaume le 18 mai 2002
@@ -706,33 +655,98 @@ End Function
 ' Retourne 0 s'il n'y a pas eu d'erreur et -1 s'il y en a eu une.
 'Fonction modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
-Private Function EcrireFichier(ByVal chnContenu As String, ByVal chnNomFichier As String) As Integer
-    Static mlgMsgVerrouille As String
-    If (mlgMsgVerrouille = vbNullString) Then
-        mlgMsgVerrouille = LireChaineLocalisee(conNomForm, _
-            "Code.EcrireFichier.mlgMsgVerrouille", _
-            "» est verrouillé par une autre application. Fermez ce fichier dans cette application et cliquez sur OK.")
-    End If
+'Fonction modifiée par René Rhéaume le 30 juin 2002
+Private Function EcrireFichier(ByVal strContenu As String, ByVal intNoFich As Integer) _
+                                As Boolean
     ' Instructions d'entrée/sortie de VB
     On Error GoTo GestErr
-    ' Ouvre le fichier.
-    Open chnNomFichier For Append As #1
 
     ' Écrit le contenu du paramètre dans le fichier enregistré.
     ' Le caractère point-virgule (;) supprime le retour de chariot à la fin.
-    Print #1, chnContenu;
-    Close #1
-    EcrireFichier = 0
+    Print #intNoFich, strContenu;
+    EcrireFichier = conVrai
 
 SortieProc:
     Exit Function
 GestErr:
+    GererErrFichier intNoFich, "frmPrint.EcrireFichier"
+    EcrireFichier = conFaux
+End Function
+
+'Fonction ajoutée par René Rhéaume le 30 juin 2002
+Private Function OuvrirFichierAjout(ByVal strNomFich As String) As Integer
+    On Error GoTo GestErr
+    ' Ouvre le fichier.
+    OuvrirFichierAjout = FreeFile
+    Open strNomFich For Append As #OuvrirFichierAjout
+    
+SortieFunc:
+    Exit Function
+GestErr:
+    GererErrFichier OuvrirFichierAjout, "frmPrint.OuvrirFichierAjout"
+    OuvrirFichierAjout = -1
+End Function
+
+'Fonction ajoutée par René Rhéaume le 30 juin 2002
+Private Function FermerFichier(ByVal intNoFich As Integer) As Boolean
+    On Error GoTo GestErr
+    Close #intNoFich
+    FermerFichier = conVrai
+
+SortieFunc:
+    Exit Function
+GestErr:
+    GererErrFichier intNoFich, "frmPrint.FermerFichier"
+    FermerFichier = conFaux
+End Function
+
+'Procédure ajoutée par René Rhéaume le 30 juin 2002
+Private Sub GererErrFichier(ByVal intNoFich As Integer, ByVal strSource As String)
+    Static mlgMsgVerrouille As String
+    If (mlgMsgVerrouille = vbNullString) Then
+        mlgMsgVerrouille = LireChaineLocalisee(conNomForm, _
+            "Code.GererErrFichier.mlgMsgVerrouille", _
+            "» est verrouillé par une autre application ou est en lecture seule.")
+    End If
+    
     Select Case Err.Number
         Case 52
-            MsgBox mlgarFichExistePas(0) & chnNomFichier & mlgMsgVerrouille, vbExclamation
-            Resume
+            MsgBox mlgarFichExistePas(0) & "#" & intNoFich & mlgMsgVerrouille, vbExclamation
         Case Else
-            GererErrInattendue , "frmPrint.EcrireFichier"
-            EcrireFichier = -1
+            GererErrInattendue , strSource
     End Select
-End Function
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 30 juin 2002
+Private Sub SupprimerFichTemp()
+    If FichierExiste(c2iHTMLFile) Then
+        Kill c2iHTMLFile
+    End If
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 30 juin 2002
+Private Sub VoirFichApercu()
+    Static mlgarErrShellExec() As String
+    Static blnLangOK As Boolean
+    Dim I As Long
+    If (Not blnLangOK) Then
+        StrArray mlgarErrShellExec, "Impossible de voir l'aperçu", "Retour de ShellExecute : "
+        If (blnMultilingueActive) Then
+            For I = 0 To 1
+                mlgarErrShellExec(I) = LireChaineLocalisee(conNomForm, _
+                        "Code.VoirFichApercu.mlgarErrShellExec(" & I & conPF, _
+                        mlgarErrShellExec(I))
+            Next I
+        End If
+        blnLangOK = conVrai
+    End If
+    
+    Dim lngRep As Long
+    lngRep = ShellExecute(0, conOpen, c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
+    Select Case lngRep
+        Case Is <= 32
+'        Case 0, 2, 3, 5, 8, 11, 26, 27, 28, 29, 30, 31, 32
+            GererErrInattendue mlgarErrShellExec(0) & vbCrLf & "  " & _
+                mlgarErrShellExec(1) & lngRep, "frmPrint.VoirFichApercu"
+    End Select
+End Sub

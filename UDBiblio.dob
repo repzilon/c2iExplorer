@@ -425,6 +425,7 @@ End Sub
 Public Sub AddElement(ByVal objElement As cElement)
     Dim iNum As Long
     Dim mNodeParent As Node, mNodeNewRep As Node, sM As String
+    Dim strClefImg As String
 
     On Error Resume Next
 '    MsgBox objElement.Ident, vbInformation
@@ -444,14 +445,17 @@ Public Sub AddElement(ByVal objElement As cElement)
         End If
     Next
     'Optimisation par René Rhéaume 2 septembre 2001
+    'Optimisation par René Rhéaume 5 juillet 2002
     Select Case objElement.Titre
         Case "[Web Site]"
-            tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, conWeb
+            strClefImg = conWeb
         Case "[Mail]"
-            tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, conMail
+            strClefImg = conMail
         Case Else
-            tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, conElement
+            strClefImg = conElement
     End Select
+    tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, conElement
+    
     Set mNodeParent = Nothing
     Set mNodeNewRep = Nothing
 End Sub
@@ -531,7 +535,7 @@ Private Function DeterminerPositionCurseur(ByVal lngLigneCurseur As Long) As Typ
     
     DeterminerPositionCurseur = 0
     Set objCodeModule = VBInstance.ActiveCodePane.CodeModule
-    ' Gardez l'espace après pour rechercher le mor entier
+    ' Gardez l'espace après pour rechercher le mot entier
     strarDebutProc(0) = "Sub "
     strarDebutProc(1) = "Function "
     strarDebutProc(2) = "Property "
@@ -784,6 +788,7 @@ End Function
 
 'Procédure modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Procédure optimisée par René Rhéaume le 5 juillet 2002
 Private Sub ChargeBase(ByVal sFileName As String)
     Static mlgMsgErrChargeBase As String
     If (mlgMsgErrChargeBase = vbNullString) Then
@@ -804,28 +809,29 @@ Private Sub ChargeBase(ByVal sFileName As String)
     Set db = OpenDatabase(sFileName)
     Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
     Do Until rs.EOF
-        Explorer.Elements.Add AnnuleNull(rs, conDeclareProc), AnnuleNull(rs, conHeadProc), AnnuleNull(rs, conInLineProc), AnnuleNull(rs, conEndProc), AnnuleNull(rs, conDescription), AnnuleNull(rs, conNom), AnnuleNull(rs, conNom)
+        Explorer.Elements.Add AnnuleNull(rs, conDeclareProc), AnnuleNull(rs, conHeadProc), _
+                AnnuleNull(rs, conInLineProc), AnnuleNull(rs, conEndProc), _
+                AnnuleNull(rs, conDescription), AnnuleNull(rs, conNom), AnnuleNull(rs, conNom)
         rs.MoveNext
     Loop
 
     rs.Close
-    Set rs = Nothing
-    db.Close
-    Set db = Nothing
     'on lance le remplissage de la bibliothèque
     RempliTV
-    Exit Sub
-
-GestErr:
+    
+SortieProc:
     Set rs = Nothing
     If (Not db Is Nothing) Then
         db.Close
     End If
     Set db = Nothing
+    Exit Sub
+GestErr:
     GererErrInattendue mlgMsgErrChargeBase, "UDBiblio.ChargeBase"
     'destruction de la hiérarchie
     Set Explorer = Nothing
     Set Explorer = New cExplorer
+    Resume SortieProc
 End Sub
 
 Private Function AnnuleNull(rs As Recordset, sField As String) As String

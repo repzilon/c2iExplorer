@@ -50,8 +50,8 @@ Public Const Mem_Friend As Long = vbRed
 
 Public Const conFaux As Boolean = False
 Public Const conVrai As Boolean = True
-Public Const conCheminRelatifINI As String = "\DATA\c2iExplorer.ini"
 Public Const conDossierData As String = "\DATA"
+Public Const conCheminRelatifINI As String = conDossierData & "\c2iExplorer.ini"
 Public Const conSecGen As String = "General"
 Public Const conSecDurees As String = "Durees"
 Public Const conValData As String = "Data"
@@ -69,6 +69,7 @@ Public Const conFanionsOuvrir As Long = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + O
 Public Const conAZero As String = "0"
 Public Const conOpen As String = "open"
 Public Const conPF As String = ")"
+Public Const conEsp As String = " "
 Public Const conL10nWCap As String = "WProp.Caption"
 
 Public conarClefTypeModule() As String
@@ -147,13 +148,13 @@ Public Const SW_NORMAL = 1
 Public Declare Function GetInputState Lib "user32" () As Long
 
 'Private Declare Function SetWindowPos Lib "user32" ( _
- '        ByVal hwnd As Long, _
- '        ByVal hWndInsertAfter As Long, _
- '        ByVal X As Long, _
- '        ByVal Y As Long, _
- '        ByVal cx As Long, _
- '        ByVal cy As Long, _
- '        ByVal wFlags As Long) As Long
+'         ByVal hwnd As Long, _
+'         ByVal hWndInsertAfter As Long, _
+'         ByVal X As Long, _
+'         ByVal Y As Long, _
+'         ByVal cx As Long, _
+'         ByVal cy As Long, _
+'         ByVal wFlags As Long) As Long
 '
 'Private Const HWND_TOPMOST = -1
 'Private Const HWND_NOTOPMOST = -2
@@ -242,11 +243,15 @@ Public Function ExtraitIconeComponent(ByVal VBCmp As VBIDE.VBComponent) As Strin
 End Function
 
 'Public Function PositionForm(ByVal frmA As Form, Optional bDevant As Boolean = conVrai) As Long
-'    If bDevant Then
-'        PositionForm = SetWindowPos(frmA.hwnd, HWND_TOPMOST, frmA.Left \ Screen.TwipsPerPixelX, frmA.Top \ Screen.TwipsPerPixelY, frmA.Width \ Screen.TwipsPerPixelX, frmA.Height \ Screen.TwipsPerPixelY, 0)
+'    Dim lngOption As Long
+'    If (bDevant) Then
+'        lngOption = HWND_TOPMOST
 '    Else
-'        PositionForm = SetWindowPos(frmA.hwnd, HWND_NOTOPMOST, frmA.Left \ Screen.TwipsPerPixelX, frmA.Top \ Screen.TwipsPerPixelY, frmA.Width \ Screen.TwipsPerPixelX, frmA.Height \ Screen.TwipsPerPixelY, 0)
+'        lngOption = HWND_NOTOPMOST
 '    End If
+'    PositionForm = SetWindowPos(frmA.hwnd, lngOption, _
+'                    frmA.Left \ Screen.TwipsPerPixelX, frmA.Top \ Screen.TwipsPerPixelY, _
+'                    frmA.Width \ Screen.TwipsPerPixelX, frmA.Height \ Screen.TwipsPerPixelY, 0)
 'End Function
 
 'Procédure modifiée par René Rhéaume le 24 avril 2002
@@ -260,7 +265,7 @@ Public Sub ConnectionInternet(ByVal strAdresse As String, _
     Static mlgMsgPasConnInternet As String
     If (mlgMsgPasConnInternet = vbNullString) Then
         mlgMsgPasConnInternet = LireChaineLocalisee(conModGlob, conDecl & "mlgMsgPasConnInternet", _
-            "Impossible de lancer le navigateur Internet")
+            "Impossible de se connecter à Internet")
     End If
     
     Dim lngRep As Long
@@ -276,7 +281,7 @@ End Sub
 'Ajout par René Rhéaume en décembre 2001
 'Routine d'émulation de la fonction Split de VB6 ultra-rapide
 'Trouvé sur http://www.xbeat.net/vbspeed/
-Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = " ")
+Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = conEsp)
     ' By Chris Lucas, cdl1051@earthlink.net, 20011208
     Dim c&, SLen&, DelLen&, tmp&, Results&()
 
@@ -323,7 +328,7 @@ End Sub
 ' Gestionnaire centralisé des erreurs inattendues
 Public Sub GererErrInattendue(Optional ByVal strMessage As String, _
                                 Optional ByVal strSource As String)
-    Const conCheminRelatifLog As String = "\DATA\c2iExplorer.log"
+    Const conCheminRelatifLog As String = conDossierData & "\c2iExplorer.log"
     Dim strCheminLog As String
     Dim strVersion As String
     
