@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.Form frmBiblio 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Détails"
@@ -31,7 +31,7 @@ Begin VB.Form frmBiblio
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   -2147483643
-      ImageWidth      =   50
+      ImageWidth      =   25
       ImageHeight     =   17
       MaskColor       =   132
       _Version        =   393216
@@ -42,11 +42,11 @@ Begin VB.Form frmBiblio
             Key             =   "putinlib"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmBiblio.frx":047E
+            Picture         =   "frmBiblio.frx":047C
             Key             =   "quit"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmBiblio.frx":05C9
+            Picture         =   "frmBiblio.frx":05BA
             Key             =   "reset"
          EndProperty
       EndProperty
@@ -60,7 +60,7 @@ Begin VB.Form frmBiblio
       Width           =   6660
       _ExtentX        =   11748
       _ExtentY        =   661
-      ButtonWidth     =   1508
+      ButtonWidth     =   847
       ButtonHeight    =   609
       AllowCustomize  =   0   'False
       Wrappable       =   0   'False
@@ -99,6 +99,7 @@ Begin VB.Form frmBiblio
          ForeColor       =   &H00000000&
          Height          =   645
          Left            =   1320
+         MaxLength       =   255
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   2
@@ -107,12 +108,12 @@ Begin VB.Form frmBiblio
       End
       Begin VB.TextBox txtDeclaration 
          BackColor       =   &H00C0C0C0&
-         Height          =   855
+         Height          =   915
          Left            =   1320
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   3
-         Top             =   1560
+         Top             =   1500
          Width           =   5175
       End
       Begin VB.TextBox txtName 
@@ -121,12 +122,13 @@ Begin VB.Form frmBiblio
          ForeColor       =   &H00000000&
          Height          =   285
          Left            =   1320
+         MaxLength       =   255
          TabIndex        =   1
          Top             =   240
          Width           =   5175
       End
       Begin VB.TextBox txtHead 
-         Height          =   975
+         Height          =   495
          Left            =   1320
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
@@ -136,21 +138,21 @@ Begin VB.Form frmBiblio
       End
       Begin VB.TextBox txtInline 
          BackColor       =   &H00C0C0C0&
-         Height          =   975
+         Height          =   1925
          Left            =   1320
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   5
-         Top             =   3480
+         Top             =   3005
          Width           =   5175
       End
       Begin VB.TextBox txtEnd 
-         Height          =   975
+         Height          =   495
          Left            =   1320
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
          TabIndex        =   6
-         Top             =   4440
+         Top             =   4920
          Width           =   5175
       End
       Begin VB.Label lblDescription 
@@ -174,7 +176,7 @@ Begin VB.Form frmBiblio
          Height          =   195
          Left            =   120
          TabIndex        =   10
-         Top             =   4440
+         Top             =   4920
          Width           =   1095
          WordWrap        =   -1  'True
       End
@@ -183,7 +185,7 @@ Begin VB.Form frmBiblio
          Height          =   195
          Left            =   120
          TabIndex        =   9
-         Top             =   3480
+         Top             =   2935
          Width           =   45
       End
       Begin VB.Label lblHeadProc 
@@ -200,7 +202,7 @@ Begin VB.Form frmBiblio
          Height          =   195
          Left            =   120
          TabIndex        =   7
-         Top             =   1560
+         Top             =   1500
          Width           =   45
       End
    End
@@ -239,6 +241,7 @@ Option Explicit
 Private Const conQuit As String = "quit"
 Private Const conAdd As String = "add"
 Private Const conReset As String = "reset"
+Private Const conNomForm As String = "frmBiblio"
 Private mObjE As cElement
 
 'Modifié par René Rhéaume le 5 janvier 2002
@@ -248,12 +251,11 @@ Private mObjE As cElement
 ' Ajout d'une info-bulle
 Private Sub Form_Load()
     '    PositionForm Me
-    Const conNomForm As String = "frmBiblio"
     If (blnMultilingueActive) Then
         Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, Me.Caption)
     End If
     txtName.ToolTipText = LireChaineLocalisee(conNomForm, "Obj.txtName.ToolTipText", _
-            "Pour créer une sous-catégorie, tapez le nom de la catégorie, une barre oblique et le nom de l'élément.")
+            "La barre oblique est un caractère réservé et sera remplacée par «ou»")
     lblNom.Caption = LireChaineLocalisee(conNomForm, "Obj.lblNom.Caption", "Nom")
     lblDescription.Caption = mlgLibelDescrpt
     lblDeclare.Caption = LireChaineLocalisee(conNomForm, "Obj.lblDeclar.Caption", "Déclaration")
@@ -359,4 +361,33 @@ Private Sub RemettreAZero()
     txtHead.Text = vbNullString
     txtInline.Text = vbNullString
     txtEnd.Text = vbNullString
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 20 décembre 2002
+' Empêche l'écriture d'une barre oblique tapée au
+' clavier ou venant du presse-papiers.
+Private Sub txtName_Change()
+    Static mlgAlternative As String
+    If (LenB(mlgAlternative) = 0) Then
+        mlgAlternative = LireChaineLocalisee(conNomForm, _
+            "Code.txtName_Change.mlgAlternative", "ou")
+    End If
+    
+    Dim strNom As String
+    Dim intPosSep As Integer
+    Dim intPosPrec As Integer
+    
+    strNom = txtName.Text
+    intPosSep = InStr(1, strNom, conSepChemBiblio, vbBinaryCompare)
+    If (intPosSep <> 0) Then
+        ' On remplace la barre oblique par le mot «ou» de la langue choisie
+        Do Until (intPosSep = 0)
+            strNom = Left$(strNom, intPosSep - 1) & conEsp & mlgAlternative & _
+                conEsp & Mid$(strNom, intPosSep + 1)
+            intPosPrec = intPosSep
+            intPosSep = InStr(1, strNom, conSepChemBiblio, vbBinaryCompare)
+        Loop
+        txtName.Text = strNom
+        txtName.SelStart = intPosPrec + Len(mlgAlternative) + 1
+    End If
 End Sub

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.UserDocument UDExplorer 
    BackColor       =   &H00FFFFFF&
    ClientHeight    =   4920
@@ -874,11 +874,12 @@ End Sub
 'Modifié par René Rhéaume le 25 août 2002
 ' Met en premier plan la fenêtre de code si elle est
 ' en dessous de la fenêtre de conception correspondante
+'Optimisé par René Rhéaume le 18 décembre 2002
 Private Sub OuvrirFenetreCode(ByVal vbpProjet As VBIDE.VBProject, _
                                 ByVal vbcComposant As VBIDE.VBComponent)
-    If (Not vbpProjet Is VBInstance.ActiveVBProject) Then
+'    If (Not vbpProjet Is VBInstance.ActiveVBProject) Then
         Set VBInstance.ActiveVBProject = vbpProjet  'on le met actif
-    End If
+'    End If
     'connection pour l'ajout de références
     Set Connection.refEvent = VBInstance.Events.ReferencesEvents(vbpProjet)
     
@@ -997,12 +998,10 @@ Private Sub tbGene_ButtonClick(ByVal Button As MSComctlLib.Button)
 '    Dim nodSelection As Node
 
     Select Case Button.Key
-            'actualisation
-        Case conActu
+        Case conActu 'actualisation
             Init conVrai
-
-            'voir le designer
-        Case conVoir
+            
+        Case conVoir 'voir le designer
 '            Set nodSelection = tv.SelectedItem
             'Modification par René Rhéaume le 27 juillet 2001
             ' Permet d'afficher le code d'un module standard au lieu du
@@ -1034,8 +1033,7 @@ Private Sub tbGene_ButtonClick(ByVal Button As MSComctlLib.Button)
             'Fin de modification
 '            Set nodSelection = Nothing
 
-            'ajout de propriétés
-        Case conProp
+        Case conProp 'ajout de propriétés
             Select Case sSelectedTBButton
                 Case conarClefBtnMenu(2)
                     objWindowMsgBox.Visible = conVrai
@@ -1052,25 +1050,22 @@ Private Sub tbGene_ButtonClick(ByVal Button As MSComctlLib.Button)
                 Case conarClefBtnMenu(6)
                     frmOptions.Show 'vbModal
             End Select
-            'compilation
-        Case conCompile
-            'On s'assure qu'il y a un projet ouvert
-            If (VBInstance.VBProjects.Count > 0) Then
-                VBInstance.ActiveVBProject.MakeCompiledFile
-'                On Error Resume Next
-'                #If VersionVB = 5 Then
-'                    VBInstance.CommandBars(1).Controls(1).Controls(11).Execute
-'                #ElseIf VersionVB = 6 Then
-'                    VBInstance.CommandBars(1).Controls(1).Controls(13).Execute
-'                #End If
-            End If
 
-            'suppression
-        Case conDelete
+        Case conCompile 'compilation
+            On Error GoTo Fin
+            VBInstance.ActiveVBProject.MakeCompiledFile
+
+        Case conDelete 'suppression
             Suppression SelectedNode
     End Select
+    
+Fin:
+'
 End Sub
 
+'Modifié par René Rhéaume le 19 décembre 2002
+' Correction d'un plantage lorsqu'un composant est
+' sélectionné dans l'explorateur
 Public Sub Impression()
     Dim objPrj As VBProject, objCmp As VBComponent, objMember As Member
 '    Dim nodSelection As Node
@@ -1082,7 +1077,7 @@ Public Sub Impression()
         strDebTag = Left$(SelectedNode.Tag, 3)
         Select Case strDebTag
             Case conAbrTagCom, conAbrTagMet
-                If (strDebTag = conTagComponent) Then
+                If (strDebTag = conAbrTagCom) Then
                     Analyse_Component SelectedNode, objPrj, objCmp
                 Else
                     Analyse_Methode SelectedNode, objPrj, objCmp, objMember    'par référence
@@ -1099,6 +1094,8 @@ Public Sub Impression()
                 End If
         End Select
     End If
+    
+SortieProc:
     Set objMember = Nothing
     Set objCmp = Nothing
     Set objPrj = Nothing
@@ -1217,6 +1214,15 @@ End Sub
 'Procédure modifiée par René Rhéaume le 5 août 2002
 ' J'ai finalement trouvé le moyen de fermer la fenêtre de code.
 ' Il peut y avoir des petits accrocs parfois.
+'Note par René Rhéaume le 17 décembre 2002
+' Le bogue est réapparu et je n'ai pas trouvé un moyen pour
+' l'éradiquer. Si je clique sur la fenêtre de code ouverte
+' spécialement pour afficher le bon menu afin de masquer
+' celui-ci, celle-ci ne se fermera pas car elle est devenue
+' la fenêtre active. Aussi, masquer la fenêtre de code avant
+' d'afficher la fenêtre alors qu'une fenêtre est dans
+' l'espace de travail ne fonctionne pas car le «focus» est sur
+' une autre fenêtre.
 Private Sub AfficherMenuComposant(ByVal vbcComposant As VBIDE.VBComponent, ByVal lngIndiceMenu As Long)
     Dim blnDejaVisible As Boolean
     Dim strTitreFenetre As String
@@ -1899,10 +1905,6 @@ Private Sub UserDocument_Terminate()
     Set SelectedNode = Nothing
     Set Explorer = Nothing
 
-    '    If NombreInstancesClasses <> 0 Then
-    '        DétailInstancesClasses
-    '        Debug.Assert NombreInstancesClasses = 0
-    '    End If
     'Modifié par René Rhéaume 29 juillet 2001
     WritePrivateProfileString conSecGen, conValData, c2iCurrentDataFileName, c2iINIFile
 End Sub

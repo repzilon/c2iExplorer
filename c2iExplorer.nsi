@@ -32,7 +32,7 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 148
+!define Revision 149
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
@@ -138,7 +138,6 @@ Section "VB 5/6 source code"
   File "${CheminBase}\Source\*.res"
   File "${CheminBase}\Source\*.ctx"
   File "${CheminBase}\Source\*.bmp"
-  File "${CheminBase}\Source\*.zip"
   File "${CheminBase}\Source\*.gz"
 
   Exec "$WINDIR\explorer.exe /n,$INSTDIR\Wizards\c2iexplorer-source"
@@ -279,6 +278,7 @@ Section Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-vb6.vbp"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-vb?.vbw"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\archive.zip"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\archive.tar.gz"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\cDlgCom.cls"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\images.zip"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\RapportModificationsRR.*"

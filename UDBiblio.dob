@@ -386,6 +386,12 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     End Select
 End Sub
 
+'Procédure ajoutée par René Rhéaume le 19 décembre 2002.
+' Sauvegarde lors d'un masquage
+Private Sub UserDocument_Hide()
+    Sauvegarder conFaux
+End Sub
+
 'Procédure modifiée par René Rhéaume le 29 juillet 2001
 ' Lecture du fichier INI
 'Procédure modifiée par René Rhéaume le 3 mai 2002
@@ -963,13 +969,7 @@ End Sub
 'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
 Private Sub GererBoutonNouvBD()
-    If (tv.Nodes.Count > 0) Then
-        If (LenB(c2iCurrentDataFileName) > 0) Then
-            Enregistrement c2iCurrentDataFileName
-        Else
-            SaveLibrary
-        End If
-    End If
+    Sauvegarder conVrai
     tv.Nodes.Clear
     c2iCurrentDataFileName = vbNullString
 End Sub
@@ -1010,4 +1010,16 @@ Private Sub GererBoutonVoir()
             bFrmBiblio = conVrai
             frmBiblio.Show
     End Select
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 19 décembre 2002
+Public Sub Sauvegarder(ByVal blnInvite As Boolean)
+    If (tv.Nodes.Count > 0) Then
+        Select Case conVrai
+            Case LenB(c2iCurrentDataFileName) > 0
+                Enregistrement c2iCurrentDataFileName
+            Case blnInvite
+                SaveLibrary
+        End Select
+    End If
 End Sub
