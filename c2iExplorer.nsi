@@ -114,7 +114,7 @@ Section Uninstall
 	CopyFiles "$INSTDIR\Wizards\DATA\c2iExplorer.ini" "$DESKTOP" 1
 	DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 	DeleteRegKey HKEY_CURRENT_USER "Software\VB and VBA Program Settings\MesCompléments\c2iExplorer"
-WriteINIStr "$WINDIR\vbaddin.ini" "Add-Ins32" "c2iexplorer.Connectc2iExplorer" "0"
+	WriteINIStr "$WINDIR\vbaddin.ini" "Add-Ins32" "c2iexplorer.Connectc2iExplorer" "0"
 	UnRegDLL "$INSTDIR\Wizards\c2iexplorer.dll"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
 	DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElements"

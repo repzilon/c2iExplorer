@@ -527,6 +527,7 @@ Attribute VB_Exposed = True
 ' Contributor(s):
 ' Fred Just
 ' René Rhéaume (rener@mediom.qc.ca)
+' Joël Guelluy (jguelluy@belgacom.net)
 '
 ' ***** END LICENSE BLOCK *****
 
@@ -616,9 +617,9 @@ Private Sub ActuMembreComponent()
     Dim objVBMember As VBIDE.Member
     Dim objVBPrj As VBIDE.VBProject, objVBCmp As VBIDE.VBComponent
     Dim nodSelection As Node
-    
+
     Work
-    
+
     Set nodSelection = tv.SelectedItem
     Analyse_Component nodSelection, objVBPrj, objVBCmp
     Do Until nodSelection.Children = 0
@@ -626,7 +627,7 @@ Private Sub ActuMembreComponent()
     Loop
 
     On Error Resume Next
-    If (objVBCmp.Type <> vbext_ct_ResFile) Then             'on n'analyse pas les ressources files
+    If (objVBCmp.Type <> vbext_ct_ResFile) Then            'on n'analyse pas les ressources files
         For Each objVBMember In objVBCmp.CodeModule.Members
             AjouteMembre nodSelection, objVBMember
         Next
@@ -701,13 +702,18 @@ Private Sub AnalyseNode(ByVal Node As Node)
     End Select
 
 GestErr:
+    Select Case Err.Number
+        Case 35601, 35602
+            Err.Clear
+        Case Is <> 0
+            MsgBox conErrNo & Err.Number & vbNewLine & Err.Description, vbExclamation
+    End Select
     Set objMember = Nothing
     Set objCmp = Nothing
     If (Not objVBPrj Is Nothing) Then
         Set VBPrjSelected = objVBPrj
     End If
     Set objVBPrj = Nothing
-
 End Sub
 
 Private Sub Suppression(ByVal mNode As Node)
@@ -854,7 +860,7 @@ End Sub
 'Ajout par René Rhéaume 2 août 2001
 Private Sub mnuAffichageBarreDescription_Click()
     blnAffDesc = Not mnuAffichageBarreDescription.Checked
-'    mnuAffichageBarreDescription.Checked = blnAffDesc
+    '    mnuAffichageBarreDescription.Checked = blnAffDesc
     tbDescription.Visible = blnAffDesc
     UserDocument_Resize
 End Sub
@@ -862,7 +868,7 @@ End Sub
 'Ajout par René Rhéaume 2 août 2001
 Private Sub mnuAffichageBarreFiltres_Click()
     blnAffFiltres = Not mnuAffichageBarreFiltres.Checked
-'    mnuAffichageBarreFiltres.Checked = blnAffFiltres
+    '    mnuAffichageBarreFiltres.Checked = blnAffFiltres
     tbFiltre.Visible = blnAffFiltres
     UserDocument_Resize
 End Sub
@@ -877,7 +883,7 @@ Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
         Set nodSelection = tv.SelectedItem
         If (Not nodSelection Is Nothing) Then
             Select Case Left$(nodSelection.Tag, 3)
-                'on clique sur un component
+                    'on clique sur un component
                 Case conAbrTagCom
                     Analyse_Component nodSelection, objVBPrj, objCmp
                     If (Not objCmp Is Nothing) Then
@@ -891,13 +897,13 @@ Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
             End Select
         End If
     End If
-    
+
 SortieProc:
     Set nodSelection = Nothing
     Exit Sub
 Fin:
     MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
-'    Debug.Assert conFaux
+    '    Debug.Assert conFaux
     Resume SortieProc
 End Sub
 
@@ -1018,9 +1024,9 @@ Private Sub tbGene_ButtonClick(ByVal Button As MSComctlLib.Button)
             If (VBInstance.VBProjects.Count > 0) Then
                 On Error Resume Next
                 #If VersionVB = 5 Then
-                VBInstance.CommandBars(1).Controls(1).Controls(11).Execute
+                    VBInstance.CommandBars(1).Controls(1).Controls(11).Execute
                 #ElseIf VersionVB = 6 Then
-                VBInstance.CommandBars(1).Controls(1).Controls(13).Execute
+                    VBInstance.CommandBars(1).Controls(1).Controls(13).Execute
                 #End If
             End If
 
@@ -1080,18 +1086,76 @@ Private Sub tv_DblClick()
     ViewNode SelectedNode
 End Sub
 
-'Ajout par René Rhéaume le 28 juillet 2001
-'Affiche le «visualiseur de classes» sur un Ctrl+Double-clic
-'(supposé être Ctrl+Clic) d'un formulaire, module, etc.
+' Ajout par René Rhéaume le 28 juillet 2001
+'   Affiche le «visualiseur de classes» sur un Ctrl+Double-clic
+'   (supposé être Ctrl+Clic) d'un formulaire, module, etc.
+' Ajout le 1er février 2002
+'   Contribution par Joël Guelluy implémentée par René Rhéaume
+'   Ajout des menus contextuels.
+' Modification par René Rhéaume le 23 février 2002
+'   Le «visualiseur de classes» s'affiche sur un Ctrl+Clic,
+'   comme il devait l'être à l'origine.
 Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
+#If (JGuelluyRightMenu = 1) Then
+    #If (VersionVB = 6) Then
+        Const conIdxMnuProj As Long = 30
+        Const conIdxMnuForm As Long = 31
+        Const conIdxMnuModule As Long = 32
+    #ElseIf (VersionVB = 5) Then
+        Const conIdxMnuProj As Long = 24
+        Const conIdxMnuForm As Long = 25
+        Const conIdxMnuModule As Long = 26
+    #End If
+#End If
+
     Dim objPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
-    Select Case conFaux
-         Case Button = vbLeftButton, Shift = vbCtrlMask, tv.SelectedItem.Tag = conTagComponent
-         Case Else
-            Analyse_Component tv.SelectedItem, objPrj, objCmp
-            On Error Resume Next
-            objWindowClassViewer.Visible = conVrai
-            objUDClassViewer.Init objCmp
+    Dim strTag As String
+    
+#If (JGuelluyRightMenu = 1) Then
+    Dim strAbrTag As String, strComponentName As String
+    Dim lngTypeComponent As VBIDE.vbext_ComponentType
+    Dim strClefNoeud As String
+#End If
+    
+    AnalyseNode SelectedNode
+    strTag = tv.SelectedItem.Tag
+    Select Case Button
+        Case vbLeftButton
+            Select Case conFaux
+                Case Shift = vbCtrlMask, strTag = conTagComponent
+                Case Else
+                    Analyse_Component tv.SelectedItem, objPrj, objCmp
+                    On Error Resume Next
+                    objWindowClassViewer.Visible = conVrai
+                    objUDClassViewer.Init objCmp
+            End Select
+#If (JGuelluyRightMenu = 1) Then
+        Case vbRightButton
+            On Error GoTo Fin
+            strAbrTag = Left$(strTag, 3)
+            Select Case strAbrTag
+                Case conAbrTagCom
+                    strClefNoeud = tv.SelectedItem.Key
+                    strComponentName = Mid$(strClefNoeud, InStr(1, strClefNoeud, conBS, vbBinaryCompare) + 1)
+                    lngTypeComponent = VBInstance.ActiveVBProject.VBComponents(strComponentName).Type
+                    Select Case lngTypeComponent
+                        Case vbext_ct_VBForm, vbext_ct_UserControl, vbext_ct_DocObject, vbext_ct_VBMDIForm
+                            VBInstance.CommandBars(conIdxMnuForm).ShowPopup
+                        Case vbext_ct_StdModule, vbext_ct_ClassModule
+                            VBInstance.CommandBars(conIdxMnuModule).ShowPopup
+                    End Select
+                'Case conAbrTagMet
+                Case conAbrTagPro
+                    VBInstance.CommandBars(conIdxMnuProj).ShowPopup
+            End Select
+#End If
+    End Select
+
+Fin:
+    Select Case Err.Number
+        Case 0, 9
+        Case Else
+            MsgBox conErrNo & Err.Number, vbExclamation
     End Select
     Set objCmp = Nothing
     Set objPrj = Nothing
@@ -1099,9 +1163,13 @@ End Sub
 
 Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     Set SelectedNode = Node
-    AnalyseNode SelectedNode
+'    AnalyseNode SelectedNode
 End Sub
 
+' Modification par René Rhéaume le 23 février 2002
+' Correction du bogue d'affichage des barres d'outils
+' en forcant l'affichage des 2 barres d'outils du bas
+' (les deux variables commneçant par «blnAff»)
 Private Sub UserDocument_Initialize()
     Set tv.ImageList = ImgLSttv
     'par défaut, on affiche tout
@@ -1114,9 +1182,9 @@ Private Sub UserDocument_Initialize()
     bAfficheFriend = conVrai
     bAffichePrive = conVrai
     bAffichePublic = conVrai
-    
-    blnAffDesc = tbDescription.Visible
-    blnAffFiltres = tbFiltre.Visible
+
+    blnAffDesc = conVrai
+    blnAffFiltres = conVrai
 
     Set Explorer = New cExplorer
     InitToolbar
@@ -1125,17 +1193,19 @@ End Sub
 Private Sub UserDocument_Resize()
     Dim lngHauteurTV As Long
     Dim lngLargeurBtnDesc As Long
+
     On Error Resume Next
     lngHauteurTV = ScaleHeight - tbGene.Height
-    If (tbDescription.Visible) Then
+    If (blnAffDesc) Then
         lngHauteurTV = lngHauteurTV - tbDescription.Height
     End If
-    If (tbFiltre.Visible) Then
+    If (blnAffFiltres) Then
         lngHauteurTV = lngHauteurTV - tbFiltre.Height
     End If
-    tv.Move 0, tbGene.Top + tbGene.Height, tbFiltre.Width, lngHauteurTV
+        
+    tv.Move 0, tbGene.Height, tbFiltre.Width, lngHauteurTV
 
-    If (tbDescription.Visible) Then
+    If (blnAffDesc) Then
         lngLargeurBtnDesc = tbDescription.Buttons(1).Width
         txtDescription.Move lngLargeurBtnDesc, 0, ScaleWidth - lngLargeurBtnDesc, lngLargeurBtnDesc
     End If
@@ -1151,12 +1221,12 @@ Public Sub Init(Optional ByVal bClear As Boolean = conFaux)
             .Visible = conVrai
         End With
     End If
-    
+
     On Error Resume Next
     For Each objVBPrj In VBInstance.VBProjects
         AjouteProjet objVBPrj
     Next
-    
+
     Set objVBPrj = Nothing
 End Sub
 
@@ -1188,27 +1258,27 @@ Public Sub AjouteProjet(ByVal objVBPrj As VBIDE.VBProject)
 
     tv.Enabled = conFaux
     tv.Visible = conFaux
-    
-'    'Modification FredJust
-'    'Permet d'avoir les dossiers toujours dans le meme ordre
-'    Dim Neu As Node
-'    Set Neu = tv.Nodes.Add(tv.Nodes(objVBPrj.Name), tvwChild, objVBPrj.Name + ".." + "VBForm", "Feuilles", "dVBForm")
-'    Neu.Tag = "Dossier"
-'    Neu.Bold = conVrai
-'
-'    Set Neu = tv.Nodes.Add(tv.Nodes(objVBPrj.Name), tvwChild, objVBPrj.Name + ".." + "StdModule", "Modules", "dStdModule")
-'    Neu.Tag = "Dossier"
-'    Neu.Bold = conVrai
-'
-'
-'    Set Neu = tv.Nodes.Add(tv.Nodes(objVBPrj.Name), tvwChild, objVBPrj.Name + ".." + "ClassModule", "Modules de classe", "dClassModule")
-'    Neu.Tag = "Dossier"
-'    Neu.Bold = conVrai
-'    'Fin de modification
+
+    '    'Modification FredJust
+    '    'Permet d'avoir les dossiers toujours dans le meme ordre
+    '    Dim Neu As Node
+    '    Set Neu = tv.Nodes.Add(tv.Nodes(objVBPrj.Name), tvwChild, objVBPrj.Name + ".." + "VBForm", "Feuilles", "dVBForm")
+    '    Neu.Tag = "Dossier"
+    '    Neu.Bold = conVrai
+    '
+    '    Set Neu = tv.Nodes.Add(tv.Nodes(objVBPrj.Name), tvwChild, objVBPrj.Name + ".." + "StdModule", "Modules", "dStdModule")
+    '    Neu.Tag = "Dossier"
+    '    Neu.Bold = conVrai
+    '
+    '
+    '    Set Neu = tv.Nodes.Add(tv.Nodes(objVBPrj.Name), tvwChild, objVBPrj.Name + ".." + "ClassModule", "Modules de classe", "dClassModule")
+    '    Neu.Tag = "Dossier"
+    '    Neu.Bold = conVrai
+    '    'Fin de modification
     For Each objVBCmp In objVBPrj.VBComponents
         AjouteComponent objVBCmp
     Next
-    
+
     mNodePrj.Sorted = conFaux
     InitReferences objVBPrj
     tv.Enabled = conVrai
@@ -1250,7 +1320,7 @@ Public Sub AjouteComponent(ByVal objVBCmp As VBIDE.VBComponent)
     End If
     mNodeCmp.Tag = conTagComponent
     mNodeCmp.Sorted = conVrai
-    
+
 GestErr:
     Set mNodePrj = Nothing
     Set mNodeCmp = Nothing
@@ -1279,9 +1349,9 @@ GestErr:
 End Sub
 
 Public Function AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Member)
-#If OldC2iStyle <> 1 Then
-    Const conCmd As String = "cmd"
-#End If
+    #If OldC2iStyle <> 1 Then
+        Const conCmd As String = "cmd"
+    #End If
     Dim sImageKey As String, lngCouleurPortee As Long, sKey As String
     Dim mNodeMember As Node, mNodeProp As Node, Neu As Node
 
@@ -1297,35 +1367,35 @@ Public Function AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.
     '***********************************************
     On Error Resume Next
     If AfficheMembre(objVBMember) Then                     'on l'affiche ?
-        sImageKey = ExtraitIconeMembre(objVBMember, lngCouleurPortee) 'détermination de l'icone
+        sImageKey = ExtraitIconeMembre(objVBMember, lngCouleurPortee)    'détermination de l'icone
         ' Modifié par René Rhéaume le 9 janvier 2002
         ' Optimisation de la modification de FredJust
-        
-#If OldC2iStyle = 1 Then
-        With objVBMember.Collection.Parent.Parent
-            sKey = .Collection.Parent.Name & conBS & .Name & conBS & objVBMember.Name
-            Set mNodeMember = tv.Nodes.Add(mNodeCmp, tvwChild, sKey, objVBMember.Name, sImageKey)
-        End With
-#Else
-'//-------------------------------------------------------------//
-        'Modifications de FredJust le 10/10/2000 16:44:42
-        'Ajout d'un Node pour le dossier
-        With objVBMember.Collection.Parent.Parent
-            sKey = .Collection.Parent.Name & conBS & .Name & conBS
-            Set Neu = tv.Nodes(sKey & sImageKey)
-            Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & sImageKey, sImageKey, "d" & sImageKey)
-            Select Case conFaux
-                Case objVBMember.Type = vbext_mt_Method, InStr(1, objVBMember.Name, "_") <> 0
-                Case Else
-                    Set Neu = tv.Nodes(sKey & conCmd)
-                    Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & conCmd, "Objets", "dcmd")
-            End Select
-            sKey = sKey & objVBMember.Name
-            Set mNodeMember = tv.Nodes.Add(Neu, tvwChild, sKey, objVBMember.Name, sImageKey)
-        End With
-        'Fin de modification
-'//-------------------------------------------------------------//
-#End If
+
+        #If OldC2iStyle = 1 Then
+            With objVBMember.Collection.Parent.Parent
+                sKey = .Collection.Parent.Name & conBS & .Name & conBS & objVBMember.Name
+                Set mNodeMember = tv.Nodes.Add(mNodeCmp, tvwChild, sKey, objVBMember.Name, sImageKey)
+            End With
+        #Else
+            '//-------------------------------------------------------------//
+            'Modifications de FredJust le 10/10/2000 16:44:42
+            'Ajout d'un Node pour le dossier
+            With objVBMember.Collection.Parent.Parent
+                sKey = .Collection.Parent.Name & conBS & .Name & conBS
+                Set Neu = tv.Nodes(sKey & sImageKey)
+                Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & sImageKey, sImageKey, "d" & sImageKey)
+                Select Case conFaux
+                    Case objVBMember.Type = vbext_mt_Method, InStr(1, objVBMember.Name, "_") <> 0
+                    Case Else
+                        Set Neu = tv.Nodes(sKey & conCmd)
+                        Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & conCmd, "Objets", "dcmd")
+                End Select
+                sKey = sKey & objVBMember.Name
+                Set mNodeMember = tv.Nodes.Add(Neu, tvwChild, sKey, objVBMember.Name, sImageKey)
+            End With
+            'Fin de modification
+            '//-------------------------------------------------------------//
+        #End If
         ' Fin de la modification de René Rhéaume
         mNodeMember.Tag = conTagMethode
         mNodeMember.ForeColor = lngCouleurPortee
@@ -1361,7 +1431,7 @@ End Function
 Public Sub InitReferences(objVBPrj As VBIDE.VBProject)
     Dim mNodeRef As Node, mNodeComposant As Node, mNodePrj As Node
     Dim objRef As VBIDE.Reference
-    
+
     '***********************************************
     'CLE D'UN DOSSIER REFERENCE
     ' Nom du projet + ..reference ou ..composant
@@ -1369,7 +1439,7 @@ Public Sub InitReferences(objVBPrj As VBIDE.VBProject)
     'reference ou OCX
     '***********************************************
     On Error GoTo GestErr
-    
+
     Set mNodePrj = tv.Nodes(objVBPrj.Name)
     Set mNodeRef = tv.Nodes.Add(mNodePrj, tvwChild, mNodePrj.Key & conClefDossReference, "Références", "dreference")
     mNodeRef.Tag = "Reference"
@@ -1379,11 +1449,11 @@ Public Sub InitReferences(objVBPrj As VBIDE.VBProject)
     mNodeComposant.Tag = "OCX"
     'mNodeComposant.ForeColor = RGB(0, 0, 255)
     mNodeComposant.Bold = conVrai
-    
+
     For Each objRef In objVBPrj.References
         AjouteReference objVBPrj, objRef
     Next
-    
+
 SortieProc:
     Set mNodePrj = Nothing
     Set mNodeRef = Nothing
@@ -1412,13 +1482,13 @@ Fin:
     Set mCmp = tv.Nodes.Add(tv.Nodes(objVBPrj.Name & conClefDossComposant), tvwChild, tv.Nodes(objVBPrj.Name + conClefDossComposant).Key + objRef.Name, objRef.Name + " (" + CStr(objRef.Major) + "." + CStr(objRef.Minor) + ")", conImgComposant)
     mCmp.Tag = conTagOcx
     If (objRef.IsBroken) Then
-        mCmp.ForeColor = vbRed          'lien cassé
+        mCmp.ForeColor = vbRed                             'lien cassé
     Else
         If (objRef.BuiltIn) Then
-            mCmp.ForeColor = vbBlue     'ne peut être supprimé
+            mCmp.ForeColor = vbBlue                        'ne peut être supprimé
         End If
     End If
-    
+
     Set mCmp = Nothing
 End Sub
 
@@ -1435,10 +1505,10 @@ Private Sub AjouteOCX(ByRef objRef As VBIDE.Reference, ByRef mNodeComposant As N
     Set mCmp = tv.Nodes.Add(mNodeComposant, tvwChild, mNodeComposant.Key & objRef.Name, objRef.Description & " (" + CStr(objRef.Major) + "." & CStr(objRef.Minor) + ")", conImgComposant)
     mCmp.Tag = conTagOcx
     If (objRef.IsBroken) Then
-        mCmp.ForeColor = vbRed          'lien cassé
+        mCmp.ForeColor = vbRed                             'lien cassé
     Else
         If (objRef.BuiltIn) Then
-            mCmp.ForeColor = vbBlue     'ne peut être supprimé
+            mCmp.ForeColor = vbBlue                        'ne peut être supprimé
         End If
     End If
 
@@ -1458,10 +1528,10 @@ Private Sub AjouteBibliotheque(ByRef objRef As VBIDE.Reference, ByRef mNodeRef A
     Set mRef = tv.Nodes.Add(mNodeRef, tvwChild, mNodeRef.Key + objRef.Name, objRef.Description + " (" + CStr(objRef.Major) + "." + CStr(objRef.Minor) + ")", "reference")
     mRef.Tag = "ref"
     If (objRef.IsBroken) Then
-        mRef.ForeColor = vbRed          'lien cassé
+        mRef.ForeColor = vbRed                             'lien cassé
     Else
         If (objRef.BuiltIn) Then
-            mRef.ForeColor = vbBlue     'ne peut être supprimé
+            mRef.ForeColor = vbBlue                        'ne peut être supprimé
         End If
     End If
 
@@ -1567,7 +1637,7 @@ End Function
 Private Sub Analyse_Component(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProject, ByRef objCmp As VBIDE.VBComponent)
     Dim sKey As String
 
-    On Error Resume Next 'à cause des Resfile qui ont une clé =vbNullString et n'ont pas de Designer
+    On Error Resume Next                                   'à cause des Resfile qui ont une clé =vbNullString et n'ont pas de Designer
     Set objPrj = VBInstance.VBProjects(mNode.Parent.Parent.Key)    'on recherche le projet
     sKey = Right$(mNode.Key, Len(mNode.Key) - Len(mNode.Parent.Parent.Key) - 1)    'clé du component
     Set objCmp = objPrj.VBComponents(sKey)
@@ -1590,7 +1660,7 @@ Private Sub Analyse_Methode(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProject
         strClefPar = .Key
     End With
     lngLenCPar = Len(strClefPar)
-    Set objPrj = VBInstance.VBProjects(strClefPrj)    'on recherche le projet
+    Set objPrj = VBInstance.VBProjects(strClefPrj)         'on recherche le projet
     sKey = Right$(strClefPar, lngLenCPar - Len(strClefPrj) - 1)    'clé du component
     Set objCmp = objPrj.VBComponents(sKey)
     sKey = Right$(mNodeRecherche.Key, Len(mNodeRecherche.Key) - lngLenCPar - 1)    'clé du membre
@@ -1610,7 +1680,7 @@ Private Sub InitToolbar()
     Const conIdxResGen As Integer = 1000
     Dim objButton As Button, objButtonMenu As ButtonMenu
     Dim lngLanguageTemp As Long
-    
+
     'Sélection de la langue
     lngLanguageTemp = GetPrivateProfileInt(conSecGen, conLanguage, 1, c2iINIFile)
     Select Case lngLanguageTemp
@@ -1712,10 +1782,10 @@ Private Sub UserDocument_Terminate()
     Set SelectedNode = Nothing
     Set Explorer = Nothing
 
-'    If NombreInstancesClasses <> 0 Then
-'        DétailInstancesClasses
-'        Debug.Assert NombreInstancesClasses = 0
-'    End If
+    '    If NombreInstancesClasses <> 0 Then
+    '        DétailInstancesClasses
+    '        Debug.Assert NombreInstancesClasses = 0
+    '    End If
     'Modifié par René Rhéaume 29 juillet 2001
     WritePrivateProfileString conSecGen, conValData, c2iCurrentDataFileName, c2iINIFile
 End Sub

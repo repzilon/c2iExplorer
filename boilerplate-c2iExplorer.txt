@@ -21,5 +21,6 @@
 ' Contributor(s):
 ' Fred Just
 ' René Rhéaume (rener@mediom.qc.ca)
+' Joël Guelluy (jguelluy@belgacom.net)
 ' 
 ' ***** END LICENSE BLOCK *****

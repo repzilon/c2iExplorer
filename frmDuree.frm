@@ -220,10 +220,10 @@ Private Sub cmdAppliquer_Click()
     Call GestionLostFocus(txtS)
     lngTime = CLng(txtH) * 3600 + CLng(txtMn) * 60 + CLng(txtS)
     strNomProjet = lblProjectName.Caption
-'    bTrouve = conFaux
-'    iNumPrj = 0
+    '    bTrouve = conFaux
+    '    iNumPrj = 0
     lngFinDureePrj = UBound(DuréePrj)
-    
+
     Do Until ((bTrouve) Or (iNumPrj > lngFinDureePrj))
         If (DuréePrj(iNumPrj).Filename = strNomProjet) Then
             bTrouve = conVrai
@@ -231,12 +231,12 @@ Private Sub cmdAppliquer_Click()
             iNumPrj = iNumPrj + 1
         End If
     Loop
-    
+
     If (bTrouve) Then
         lngTime = lngTime - timeGetTime / 1000 + DuréePrj(iNumPrj).Durée
     End If
 
-'    SaveSetting App.EXEName, conSecDurees, strNomProjet, CStr(lngTime)
+    '    SaveSetting App.EXEName, conSecDurees, strNomProjet, CStr(lngTime)
     Call WritePrivateProfileString(conSecDurees, strNomProjet, CStr(lngTime), c2iINIFile)
     Unload Me
 End Sub

@@ -230,11 +230,11 @@ Private mobjCmp As VBIDE.VBComponent
 Private Sub UserDocument_Initialize()
     Set lvProp.SmallIcons = imgListView
     lvProp.View = lvwReport
-    
+
     Set tbMain.ImageList = ImgTBGene
     Set tbMain.HotImageList = ImgTBGene
     MakeToolBar
-    
+
     UserDocument_Resize
 End Sub
 
@@ -247,7 +247,7 @@ Private Sub MakeToolBar()
         Set objButton = .Add(, , , tbrSeparator)
         Set objButton = .Add(, conPrint, , , conPrint)
 
-    
+
         Select Case lngLanguage
             Case c2i_Langue_Anglais
                 .Item(conActu).ToolTipText = "Refresh"
@@ -292,7 +292,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
     Const conProplet As String = "proplet"
     Const conPropget As String = "propget"
     Const conProppublic As String = "proppublic"
-    
+
     Dim objMember As VBIDE.Member, lngColor As Long, lItem As ListItem
     Dim iGet As Long, iLet As Long, iSet As Long
     Dim sTexte As String
@@ -321,7 +321,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
                     Set lItem = lvProp.ListItems.Add(, , sTexte, conMethode, conMethode)
                     lItem.ForeColor = lngColor
                 End If
-                
+
             Case conPropriete
                 If (lngColor <> Mem_Privee) Then
                     blnAjoutProp = conFaux
@@ -334,7 +334,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
                         iLet = .ProcBodyLine(objMember.Name, vbext_pk_Let)
                         iSet = .ProcBodyLine(objMember.Name, vbext_pk_Set)
                     End With
-                     
+
                     Select Case conVrai
                         Case iLet <> 0, iSet <> 0
                             blnAjoutProp = conVrai
@@ -348,7 +348,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
                             strImgLV = conPropget
                     End Select
                 End If
-                
+
                 If (blnAjoutProp) Then
                     Set lItem = lvProp.ListItems.Add(, , sTexte, strImgLV, strImgLV)
                     lItem.ForeColor = lngColor
@@ -363,7 +363,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
                 End If
         End Select
     Next
-    
+
     Set objMember = Nothing
     Set lvProp.SelectedItem = Nothing
 End Sub
@@ -389,7 +389,7 @@ Private Sub Imprime()
     PicSource.Refresh
     Printer.PaintPicture PicSource.Image, 0, 0
     Printer.EndDoc
-    
+
 SortieProc:
     Exit Sub
 GestErr:

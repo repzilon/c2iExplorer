@@ -59,16 +59,16 @@ Option Explicit
 '    iImage         As Long
 'End Type
 '//*********************************
-Private sFileName As String 'nom du fichier
-Private sFileTitle As String    'titre du fichier
-Private sDefaultEx As String    'extension par default
-Private sInitDir As String  'répertoire d'ouverture
-Private lngFilterIndex As Long  'index du filtre
-Private sFilter As String   'filtre
-Private lnghdcOwner As Long 'propriétaire de la boite de dialogue
-Private lngFlags As Long        'les flags
-Private sDialogTitle As String  'titre de la boite de dialogue
-Private sFolder As String   'le dossier du fichier
+Private sFileName As String                                'nom du fichier
+Private sFileTitle As String                               'titre du fichier
+Private sDefaultEx As String                               'extension par default
+Private sInitDir As String                                 'répertoire d'ouverture
+Private lngFilterIndex As Long                             'index du filtre
+Private sFilter As String                                  'filtre
+Private lnghdcOwner As Long                                'propriétaire de la boite de dialogue
+Private lngFlags As Long                                   'les flags
+Private sDialogTitle As String                             'titre de la boite de dialogue
+Private sFolder As String                                  'le dossier du fichier
 
 '//*********************************
 'Déclarations pour boite open et save
@@ -149,63 +149,63 @@ Public Function ShowOpen() As Boolean
     ShowOpen = ShowOpenSave(conVrai)
 End Function
 Private Function ShowOpenSave(bOpen As Boolean) As Boolean
-            
-Dim tOpFile As OPENFILENAME, s As String
 
-With tOpFile
-    .lStructSize = Len(tOpFile)
-    If sFileTitle = vbNullString Then sFileTitle = vbNullChar
-    If sFilter = vbNullString Then sFilter = "Tous(*.*)|*.*"
-    If lngFilterIndex = 0 Then lngFilterIndex = 1
-    .hwndOwner = lnghdcOwner
-    .lpstrInitialDir = sInitDir
-    .lpstrDefExt = sDefaultEx
-    If sDialogTitle <> vbNullString Then .lpstrTitle = sDialogTitle
-    
-    ' Pour faire un style type Windows, remplacer les | par des nuls
-    Dim ch As String, I As Long
-    For I = 1 To Len(sFilter)
-        ch = Mid$(sFilter, I, 1)
-        If ch = "|" Then
-            s = s & vbNullChar
+    Dim tOpFile As OPENFILENAME, s As String
+
+    With tOpFile
+        .lStructSize = Len(tOpFile)
+        If sFileTitle = vbNullString Then sFileTitle = vbNullChar
+        If sFilter = vbNullString Then sFilter = "Tous(*.*)|*.*"
+        If lngFilterIndex = 0 Then lngFilterIndex = 1
+        .hwndOwner = lnghdcOwner
+        .lpstrInitialDir = sInitDir
+        .lpstrDefExt = sDefaultEx
+        If sDialogTitle <> vbNullString Then .lpstrTitle = sDialogTitle
+
+        ' Pour faire un style type Windows, remplacer les | par des nuls
+        Dim ch As String, I As Long
+        For I = 1 To Len(sFilter)
+            ch = Mid$(sFilter, I, 1)
+            If ch = "|" Then
+                s = s & vbNullChar
+            Else
+                s = s & ch
+            End If
+        Next
+        ' Mettre un double nul à la fin
+        s = s & (vbNullChar & vbNullChar)
+        .lpstrFilter = s
+
+        .nFilterIndex = lngFilterIndex
+
+        ' Bourrer les tampons fichier et "title" fichier jusqu'à la longueur maximum du chemin
+        s = sFileName & String$(260 - Len(sFileName), 0)
+        .lpstrFile = s
+        .nMaxFile = 260
+        s = sFileTitle & String$(260 - Len(sFileTitle), 0)
+        .lpstrFileTitle = s
+        .nMaxFileTitle = 260
+
+        ' Passer les drapeaux, en éliminant les drapeaux non VB
+        .Flags = lngFlags And &H1FF1F
+
+        ' Optimisé en taille par René Rhéaume le 5 janvier 2002
+        If bOpen Then
+            ShowOpenSave = CBool(GetOpenFileName(tOpFile))
         Else
-            s = s & ch
+            ShowOpenSave = CBool(GetSaveFileName(tOpFile))
         End If
-    Next
-    ' Mettre un double nul à la fin
-    s = s & (vbNullChar & vbNullChar)
-    .lpstrFilter = s
-    
-    .nFilterIndex = lngFilterIndex
-
-    ' Bourrer les tampons fichier et "title" fichier jusqu'à la longueur maximum du chemin
-    s = sFileName & String$(260 - Len(sFileName), 0)
-    .lpstrFile = s
-    .nMaxFile = 260
-    s = sFileTitle & String$(260 - Len(sFileTitle), 0)
-    .lpstrFileTitle = s
-    .nMaxFileTitle = 260
-
-    ' Passer les drapeaux, en éliminant les drapeaux non VB
-    .Flags = lngFlags And &H1FF1F
-
-    ' Optimisé en taille par René Rhéaume le 5 janvier 2002
-    If bOpen Then
-        ShowOpenSave = CBool(GetOpenFileName(tOpFile))
-    Else
-        ShowOpenSave = CBool(GetSaveFileName(tOpFile))
-    End If
-    If (ShowOpenSave) Then
-        sFileName = Left$(.lpstrFile, InStr(.lpstrFile, vbNullChar) - 1)
-        sFileTitle = Left$(.lpstrFileTitle, InStr(.lpstrFileTitle, vbNullChar) - 1)
-        sFolder = Left$(sFileName, Len(sFileName) - Len(sFileTitle) - 1)
-        lngFlags = .Flags
-    Else
-        sFileName = vbNullString
-        sFileTitle = vbNullString
-        lngFlags = 0
-    End If
-End With
+        If (ShowOpenSave) Then
+            sFileName = Left$(.lpstrFile, InStr(.lpstrFile, vbNullChar) - 1)
+            sFileTitle = Left$(.lpstrFileTitle, InStr(.lpstrFileTitle, vbNullChar) - 1)
+            sFolder = Left$(sFileName, Len(sFileName) - Len(sFileTitle) - 1)
+            lngFlags = .Flags
+        Else
+            sFileName = vbNullString
+            sFileTitle = vbNullString
+            lngFlags = 0
+        End If
+    End With
 End Function
 
 Public Function ShowSave() As Boolean

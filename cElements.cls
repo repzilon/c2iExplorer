@@ -87,10 +87,10 @@ End Property
 
 Private Sub Class_Initialize()
     Set mCol = New Collection
-'    InitClass 3, 1
+    '    InitClass 3, 1
 End Sub
 
 Private Sub Class_Terminate()
     Set mCol = Nothing
-'    InitClass 3, -1
+    '    InitClass 3, -1
 End Sub

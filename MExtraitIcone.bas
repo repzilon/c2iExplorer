@@ -29,19 +29,19 @@ Public Connection As Connectc2iExplorer
 
 'génération de notre GUID (avec l'utilitaire fournit avec vb dans le répertoire Tools
 #If VersionVB = 6 Then
-Public Const sGuid As String = "5F9236AD-D207-11d2-8133-0040056BD863"    'Guid du usrcomm
-Public Const sGuidBiblio As String = "C20EBD8D-E5B7-11d2-A4C5-0040056BD863"
-Public Const sGuidAddCode As String = "E462A14F-5602-11d3-A5EA-0040056BD863"
-Public Const sGuidClassViewer As String = "E462A150-5602-11d3-A5EA-0040056BD863"
-Public Const sGuidMsgBox As String = "531FEF91-74B9-11d3-A642-0040056BD863"
-Public Const sGuidCompteur As String = "6B752121-C791-11d3-A7B4-0040056BD863"
+    Public Const sGuid As String = "5F9236AD-D207-11d2-8133-0040056BD863"    'Guid du usrcomm
+    Public Const sGuidBiblio As String = "C20EBD8D-E5B7-11d2-A4C5-0040056BD863"
+    Public Const sGuidAddCode As String = "E462A14F-5602-11d3-A5EA-0040056BD863"
+    Public Const sGuidClassViewer As String = "E462A150-5602-11d3-A5EA-0040056BD863"
+    Public Const sGuidMsgBox As String = "531FEF91-74B9-11d3-A642-0040056BD863"
+    Public Const sGuidCompteur As String = "6B752121-C791-11d3-A7B4-0040056BD863"
 #ElseIf VersionVB = 5 Then
-Public Const sGuid As String = "A9532500-998B-11d5-B256-80025919427B"    'Guid du usrcomm
-Public Const sGuidBiblio As String = "A9532501-998B-11d5-B256-80025919427B"
-Public Const sGuidAddCode As String = "A9532502-998B-11d5-B256-80025919427B"
-Public Const sGuidClassViewer As String = "A9532503-998B-11d5-B256-80025919427B"
-Public Const sGuidMsgBox As String = "A9532504-998B-11d5-B256-80025919427B"
-Public Const sGuidCompteur As String = "A9532505-998B-11d5-B256-80025919427B"
+    Public Const sGuid As String = "A9532500-998B-11d5-B256-80025919427B"    'Guid du usrcomm
+    Public Const sGuidBiblio As String = "A9532501-998B-11d5-B256-80025919427B"
+    Public Const sGuidAddCode As String = "A9532502-998B-11d5-B256-80025919427B"
+    Public Const sGuidClassViewer As String = "A9532503-998B-11d5-B256-80025919427B"
+    Public Const sGuidMsgBox As String = "A9532504-998B-11d5-B256-80025919427B"
+    Public Const sGuidCompteur As String = "A9532505-998B-11d5-B256-80025919427B"
 #End If
 
 Public Const Mem_Privee As Long = vbBlack
@@ -110,7 +110,7 @@ Public DuréePrj() As InfoProjet
 
 Public strCheminApp As String
 Public c2iHTMLFile As String
-Public c2iINIFile As String 'Ajout par René Rhéaume, 28 juillet 2001
+Public c2iINIFile As String                                'Ajout par René Rhéaume, 28 juillet 2001
 Public c2iDataFileNameOrigine As String
 Public c2iCurrentDataFileName As String
 
@@ -133,25 +133,25 @@ Public Enum c2iLanguage
     c2i_Langue_Anglais = 2
 End Enum
 
-Public Declare Function GetDC Lib "user32" (ByVal Hwnd As Long) As Long
-Public Declare Function ReleaseDC Lib "user32" (ByVal Hwnd As Long, ByVal hdc As Long) As Long
+Public Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
+Public Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
 Public Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 
 Public Declare Function timeGetTime Lib "winmm.dll" () As Long
 
-Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal Hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
+Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 Public Const SW_NORMAL = 1
 
 Public Declare Function GetInputState Lib "user32" () As Long
 
 'Private Declare Function SetWindowPos Lib "user32" ( _
-'        ByVal hwnd As Long, _
-'        ByVal hWndInsertAfter As Long, _
-'        ByVal X As Long, _
-'        ByVal Y As Long, _
-'        ByVal cx As Long, _
-'        ByVal cy As Long, _
-'        ByVal wFlags As Long) As Long
+ '        ByVal hwnd As Long, _
+ '        ByVal hWndInsertAfter As Long, _
+ '        ByVal X As Long, _
+ '        ByVal Y As Long, _
+ '        ByVal cx As Long, _
+ '        ByVal cy As Long, _
+ '        ByVal wFlags As Long) As Long
 '
 'Private Const HWND_TOPMOST = -1
 'Private Const HWND_NOTOPMOST = -2
@@ -263,15 +263,15 @@ Suivant:
     On Error GoTo Fin
 
     ' Modification par René Rhéaume 2 août 2001
-'    sM = GetSetting(App.EXEName, conSecDurees, sFileName, vbNullString)
+    '    sM = GetSetting(App.EXEName, conSecDurees, sFileName, vbNullString)
     sM = LireChaineFichierINI(conSecDurees, sFileName, vbNullString, c2iINIFile)
-    If (sM <> vbNullString) Then            'on la trouvé dans le fichier INI
+    If (sM <> vbNullString) Then                           'on la trouvé dans le fichier INI
         If (iNumPrj = -1) Then
             GetDuree = CLng(sM)
         Else
             GetDuree = timeGetTime / 1000 - DuréePrj(iNumPrj).Durée + CLng(sM)
         End If
-    Else                     'il n'est pas dans le fichier INI
+    Else                                                   'il n'est pas dans le fichier INI
         GetDuree = -1
     End If
     Exit Function
@@ -309,7 +309,7 @@ Public Sub SauveDuree(objPrj As VBProject)
     If (lngDuree <> -1) Then
         ' Modification par René Rhéaume 2 août 2001
         Call WritePrivateProfileString(conSecDurees, CStr(objPrj.Filename), CStr(lngDuree), c2iINIFile)
-'        SaveSetting App.EXEName, conSecDurees, objPrj.Filename, lngDuree
+        '        SaveSetting App.EXEName, conSecDurees, objPrj.Filename, lngDuree
     End If
 
 Fin:
@@ -319,7 +319,7 @@ End Sub
 'Routine d'émulation de la fonction Split de VB6 ultra-rapide
 'Trouvé sur http://www.xbeat.net/vbspeed/
 Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = " ")
-' By Chris Lucas, cdl1051@earthlink.net, 20011208
+    ' By Chris Lucas, cdl1051@earthlink.net, 20011208
     Dim c&, SLen&, DelLen&, tmp&, Results&()
 
     SLen = LenB(Expression) \ 2
@@ -354,8 +354,8 @@ Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = " ")
         ResultSplit(0) = Left$(Expression, Results(0) - 1)
         For c = 0 To c - 2
             ResultSplit(c + 1) = Mid$(Expression, _
-                Results(c) + DelLen, _
-                Results(c + 1) - Results(c) - DelLen)
+                    Results(c) + DelLen, _
+                    Results(c + 1) - Results(c) - DelLen)
         Next c
         ResultSplit(c + 1) = Right$(Expression, SLen - Results(c) - DelLen + 1)
     End If
@@ -378,7 +378,7 @@ Public Function AfficheMembre(ByVal objMember As VBIDE.Member) As Boolean
     'en fonction du filtre général
     '=========================================
 
-    AfficheMembre = conFaux                                  'on n'affiche pas par default
+    AfficheMembre = conFaux                                'on n'affiche pas par default
     Select Case objMember.Type
         Case vbext_mt_Const
             AfficheMembre = bAfficheConstante

@@ -446,9 +446,9 @@ Private strarPrefixes() As String
 'Optimisé par René Rhéaume le 6 janvier 2002
 'Utilise un fichier INI et des fonctions API
 Private Sub UserDocument_Initialize()
-'    'Ancienne version
-'    Dim fso As FileSystemObject, txtFile As TextStream
-'    Dim c2iTypeFile As String
+    '    'Ancienne version
+    '    Dim fso As FileSystemObject, txtFile As TextStream
+    '    Dim c2iTypeFile As String
     'Commun aux deux versions
     Dim lngDeb As Long
     Dim sObj As String, sName As String, sType As String
@@ -457,12 +457,12 @@ Private Sub UserDocument_Initialize()
     Dim I As Long, iPos As Long, iPos2 As Long
     Dim lngFinTab As Long
     On Error GoTo Fin
-    
+
     'Nouvelle version
     lngDeb = GetPrivateProfileInt(conSecGen, "DefaultType", 6, c2iINIFile)
     chnContenuSectionTypes = LireSectionFichierINI("Types", c2iINIFile)
     SplitB chnContenuSectionTypes, tblSectionTypes(), vbNullChar
-    
+
     lngFinTab = UBound(tblSectionTypes()) - 1
     ReDim strarCatDonnes(0 To lngFinTab)
     ReDim strarPrefixes(0 To lngFinTab)
@@ -477,27 +477,27 @@ Private Sub UserDocument_Initialize()
         strarPrefixes(I) = sType
     Next I
     cmbLstType.ListIndex = lngDeb
-    
-'    'Ancienne version
-'    c2iTypeFile = strCheminApp + "\data\types.txt"
-'
-'    Set fso = New FileSystemObject
-'    Set txtFile = fso.OpenTextFile(c2iTypeFile)
-'    lngDeb = CLng(txtFile.ReadLine)
-'
-'    With cmbLstType
-'        Do Until txtFile.AtEndOfStream
-'            LectureLigne sObj, sName, sType, txtFile.ReadLine
-'            .AddItem sName
-'            cmbLstDeb.AddItem sType
-'            cmbObjV.AddItem sObj
-'        Loop
-'        txtFile.Close
-'
-'        .ListIndex = lngDeb
-'    End With
-'    Set txtFile = Nothing
-'    Set fso = Nothing
+
+    '    'Ancienne version
+    '    c2iTypeFile = strCheminApp + "\data\types.txt"
+    '
+    '    Set fso = New FileSystemObject
+    '    Set txtFile = fso.OpenTextFile(c2iTypeFile)
+    '    lngDeb = CLng(txtFile.ReadLine)
+    '
+    '    With cmbLstType
+    '        Do Until txtFile.AtEndOfStream
+    '            LectureLigne sObj, sName, sType, txtFile.ReadLine
+    '            .AddItem sName
+    '            cmbLstDeb.AddItem sType
+    '            cmbObjV.AddItem sObj
+    '        Loop
+    '        txtFile.Close
+    '
+    '        .ListIndex = lngDeb
+    '    End With
+    '    Set txtFile = Nothing
+    '    Set fso = Nothing
 
     MakeToolBar
     If (lngLanguage = c2i_Langue_Anglais) Then
@@ -516,18 +516,18 @@ Private Sub UserDocument_Initialize()
 Fin:
     If (lngLanguage = c2i_Langue_Anglais) Then
         MsgBox "Error when loading file" & c2iINIFile & vbCrLf & _
-            "Error number : " & Err.Number & vbCrLf & _
-            "Description : " & Err.Description & vbCrLf & _
-            "Source : " & Err.Source, vbExclamation
+                "Error number : " & Err.Number & vbCrLf & _
+                "Description : " & Err.Description & vbCrLf & _
+                "Source : " & Err.Source, vbExclamation
     Else
         MsgBox "Erreur au chargement de " & c2iINIFile & vbCrLf & _
-            "Numéro d'erreur : " & Err.Number & vbCrLf & _
-            "Description : " & Err.Description & vbCrLf & _
-            "Source : " & Err.Source, vbExclamation
+                "Numéro d'erreur : " & Err.Number & vbCrLf & _
+                "Description : " & Err.Description & vbCrLf & _
+                "Source : " & Err.Source, vbExclamation
     End If
-'    'Ancienne version
-'    Set txtFile = Nothing
-'    Set fso = Nothing
+    '    'Ancienne version
+    '    Set txtFile = Nothing
+    '    Set fso = Nothing
 End Sub
 
 Private Function ExtractName(ByVal sText As String) As String
@@ -562,7 +562,7 @@ Private Sub AjouteProp()
             On Error GoTo GestErr
             sType = strNom & " (" & cmbLstType.List(lngIdxSel) & ")"
             blnObjet = (strarCatDonnes(lngIdxSel) = "o")
-            
+
             'ajoute la nouvelle propriété au treeview, si elle existe ->GestErr
             If (blnObjet) Then
                 Set mN = tvCode.Nodes.Add(, , strNom, sType, conObjet)
@@ -570,7 +570,7 @@ Private Sub AjouteProp()
                 Set mN = tvCode.Nodes.Add(, , strNom, sType, conProp)
             End If
             mN.Tag = strarPrefixes(lngIdxSel)
-            
+
             'couleur suivant la portée
             Select Case tbrPressed
                 Case tb.Buttons("pub").Value
@@ -581,7 +581,7 @@ Private Sub AjouteProp()
                     lngCouleur = Mem_Friend
             End Select
             mN.ForeColor = lngCouleur
-            
+
             Select Case tbrPressed
                 Case tb.Buttons("lectureecriture").Value
                     blnLecture = conVrai
@@ -591,7 +591,7 @@ Private Sub AjouteProp()
                 Case tb.Buttons("ecriture").Value
                     blnEcriture = conVrai
             End Select
-            
+
             If (blnEcriture) Then
                 If (blnObjet) Then
                     Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conSet, conSet)
@@ -604,7 +604,7 @@ Private Sub AjouteProp()
                 Set mNFils = tvCode.Nodes.Add(mN, tvwChild, , conGet, conGet)
                 mNFils.ForeColor = lngCouleur
             End If
-            
+
             Set mNFils = Nothing
             Set mN = Nothing
             VoirCode
@@ -628,17 +628,17 @@ Private Sub Effacer()
 End Sub
 
 Private Sub DelProp()
-'    If (tvCode.SelectedItem Is Nothing) Then Exit Sub
-'    'vérif que ce n'est pas le dernier child
-'    If (Not tvCode.SelectedItem.Parent Is Nothing) Then
-'        If (tvCode.SelectedItem.Parent.Children = 1) Then
-'            tvCode.Nodes.Remove tvCode.SelectedItem.Parent.Index
-'            VoirCode
-'            Exit Sub
-'        End If
-'    End If
-'    tvCode.Nodes.Remove tvCode.SelectedItem.Index
-'    VoirCode
+    '    If (tvCode.SelectedItem Is Nothing) Then Exit Sub
+    '    'vérif que ce n'est pas le dernier child
+    '    If (Not tvCode.SelectedItem.Parent Is Nothing) Then
+    '        If (tvCode.SelectedItem.Parent.Children = 1) Then
+    '            tvCode.Nodes.Remove tvCode.SelectedItem.Parent.Index
+    '            VoirCode
+    '            Exit Sub
+    '        End If
+    '    End If
+    '    tvCode.Nodes.Remove tvCode.SelectedItem.Index
+    '    VoirCode
     Dim nodSelection As Node
     Set nodSelection = tvCode.SelectedItem
     If (Not nodSelection Is Nothing) Then
@@ -664,7 +664,7 @@ Private Sub VoirCode()
     Dim strNom As String
     Dim strType As String
     Dim strTexteFils As String
-    
+
     txtCodeDeclarationView = vbNullString
     txtCodeView = vbNullString
 
@@ -677,15 +677,15 @@ Private Sub VoirCode()
         strType = ExtractType(mN.Text)
         'dans la zone déclaration
         sDeclaration = sDeclaration & "Private " & strTagmN & strNom & _
-                        conAs & strType & vbCrLf
+                conAs & strType & vbCrLf
         'dans la zone code
         'détermination de la portée
         Select Case mN.ForeColor
-            Case Mem_Public                         'public
+            Case Mem_Public                                'public
                 sCode = "Public Property "
-            Case Mem_Privee                         'private
+            Case Mem_Privee                                'private
                 sCode = "Private Property "
-            Case Mem_Friend                         'friend
+            Case Mem_Friend                                'friend
                 sCode = "Friend Property "
         End Select
         Set mNFils = mN.Child
@@ -807,13 +807,13 @@ Private Sub UserDocument_Resize()
     Dim sngHauteurFraCode As Single
     Dim sngHauteurEchelle As Single
     Dim sngLargeurZoneCode As Single
-    
+
     sngHauteurEchelle = ScaleHeight
     sngHauteurLstProp = sngHauteurEchelle - frameLstProp.Top - conEspaceLibre
     sngLargeurFraCode = ScaleWidth - FrameCode.Left - conEspaceLibre
     sngHauteurFraCode = sngHauteurEchelle - FrameCode.Top - conEspaceLibre
     sngLargeurZoneCode = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
-    
+
     On Error Resume Next
     frameLstProp.Height = sngHauteurLstProp
     tvCode.Height = sngHauteurLstProp - tvCode.Top - conEspaceLibre

@@ -229,7 +229,7 @@ Private Sub Enregistrement(ByVal sFile As String)
     Const conExtBak As String = ".bak"
     Dim db As Database, rs As Recordset
     Dim mNode As Node, objE As cElement
-    
+
     On Error GoTo RestaurerSauvegarde
     'Modifié par René Rhéaume, 29 juillet 2001
     If (FichierExiste(sFile)) Then
@@ -271,7 +271,7 @@ Private Sub Enregistrement(ByVal sFile As String)
         End Select
     Next
     If FichierExiste(sFile & conExtBak) Then Kill sFile & conExtBak
-    
+
 SortieFunc:
     rs.Close
     db.Close
@@ -323,14 +323,14 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
             'Ne fonctionnerait pas sous .net car conVrai = 1 sur .net
             'alors que dans VB 5/6, conVrai = -1
             'Équivalent à :
-'            If Trim$(objE.DeclareProc) = vbNullString Then
-'                tbMain.Buttons(conDeclareProc).Value = tbrUnpressed
-'            Else
-'                tbMain.Buttons(conDeclareProc).Value = tbrPressed
-'            End If
-'            .
-'            .
-'            .
+            '            If Trim$(objE.DeclareProc) = vbNullString Then
+            '                tbMain.Buttons(conDeclareProc).Value = tbrUnpressed
+            '            Else
+            '                tbMain.Buttons(conDeclareProc).Value = tbrPressed
+            '            End If
+            '            .
+            '            .
+            '            .
             With tbMain
                 .Buttons(conDeclareProc).Value = (Trim$(objE.DeclareProc) = vbNullString) + 1
                 .Buttons(conHeadProc).Value = (Trim$(objE.HeadProc) = vbNullString) + 1
@@ -355,14 +355,14 @@ Private Sub UserDocument_Initialize()
     'Modifié par rené Rhéaume 29 juillet 2001
     c2iCurrentDataFileName = LireChaineFichierINI(conSecGen, conValData, vbNullString, c2iINIFile)
     'Fin de modification
-    
+
     MakeToolBar
     bFrmBiblio = conFaux
 
     If (c2iCurrentDataFileName <> vbNullString) Then
         ChargeBase c2iCurrentDataFileName
     End If
-    
+
     UserDocument_Resize
     Set TVEx = tv
 End Sub
@@ -456,7 +456,7 @@ Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sI
         End With
         Exit Sub
     End If
-    
+
     On Error GoTo 0
     If (objMember.Type = vbext_mt_Property) Then
         lngCodeLocation = lngStartLine
@@ -464,14 +464,14 @@ Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sI
     Else
         lngCodeLocation = objMember.CodeLocation
     End If
-'    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
+    '    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
 
     'on détermine si on est a la fin du code
     lngLine = lngCodeLocation + 1
     bTrouve = conFaux
     On Error Resume Next
     Err.Clear
-    
+
     Do Until ((bTrouve) Or (lngLine > objCodeModule.CountOfLines))
         sTexte = objCodeModule.Lines(lngLine, 1)
         If Err.Number <> 0 Then Exit Do
@@ -482,7 +482,7 @@ Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sI
                 lngLine = lngLine + 1
         End Select
     Loop
-    
+
     On Error GoTo 0
     'Insertion de la déclaration
     If (Trim$(sDeclare) <> vbNullString) Then
@@ -497,7 +497,7 @@ Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sI
     Else
         lngCodeLocation = objMember.CodeLocation
     End If
-'    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
+    '    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
 
     If (Trim$(sHead) <> vbNullString) Then
         If (bTrouve) Then
@@ -525,7 +525,7 @@ Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sI
     Else
         lngCodeLocation = objMember.CodeLocation
     End If
-'    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
+    '    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
 
     If (Trim$(sEnd) <> vbNullString) Then
         If (bTrouve) Then
@@ -612,29 +612,29 @@ Private Sub MakeToolBar()
     With tbMain
         Set .ImageList = imgTB
         Set .HotImageList = imgTB
-                
+
         Set objButton = .Buttons.Add(, conNewdata, , , conNewdata)
         Set objButton = .Buttons.Add(, conBiblio, , , conBiblio)
         Set objButton = .Buttons.Add(, conSave, , , conSave)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        
+
         Set objButton = .Buttons.Add(, conNewbiblio, , , conNewbiblio)
         Set objButton = .Buttons.Add(, conNewcategorie, , , conNewcategorie)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        
+
         Set objButton = .Buttons.Add(, conDelete, , , conDelete)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        
+
         Set objButton = .Buttons.Add(, conVoir, , , conVoir)
         Set objButton = .Buttons.Add(, conCopie, , , conCopie)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        
+
         Set objButton = .Buttons.Add(, conDeclareProc, , tbrCheck, conDeclareProc)
         Set objButton = .Buttons.Add(, conHeadProc, , tbrCheck, conHeadProc)
         Set objButton = .Buttons.Add(, conInLineProc, , tbrCheck, conInLineProc)
         Set objButton = .Buttons.Add(, conEndProc, , tbrCheck, conEndProc)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        
+
 
         'Set objButton = .Buttons.Add(, , , tbrSeparator)
         'Set objButton = .Buttons.Add(, "export", , , "export")
@@ -647,7 +647,7 @@ Private Sub MakeToolBar()
                 .Buttons(conNewdata).ToolTipText = "New database"
                 .Buttons(conBiblio).ToolTipText = "Load a database"
                 .Buttons(conSave).ToolTipText = "Save database"
-                
+
                 .Buttons(conNewbiblio).ToolTipText = "Create a new library"
                 .Buttons(conNewcategorie).ToolTipText = "Create a new folder"
 
@@ -655,24 +655,24 @@ Private Sub MakeToolBar()
 
                 .Buttons(conVoir).ToolTipText = "View/Add element"
                 .Buttons(conCopie).ToolTipText = "Insert code"
-                
+
                 .Buttons(conDeclareProc).ToolTipText = "Insert declaration code"
                 .Buttons(conHeadProc).ToolTipText = "Insert head code"
                 .Buttons(conInLineProc).ToolTipText = "Insert inline code"
                 .Buttons(conEndProc).ToolTipText = "Insert end code"
-                
+
                 '.Buttons("export").ToolTipText = "Export"
                 '.Buttons("import").ToolTipText = "Import"
             Case Else
                 .Buttons(conNewdata).ToolTipText = "Nouvelle base de données"
                 .Buttons(conBiblio).ToolTipText = "Charger une base de données"
                 .Buttons(conSave).ToolTipText = "Sauvegarder la base de données"
-                
+
                 .Buttons(conNewbiblio).ToolTipText = "Créer une bibliothèque"
                 .Buttons(conNewcategorie).ToolTipText = "Créer une catégorie"
 
                 .Buttons(conDelete).ToolTipText = "Supprimer"
-                
+
                 .Buttons(conVoir).ToolTipText = "Voir/ajouter un élément"
                 .Buttons(conCopie).ToolTipText = "Insérer le code"
 
@@ -734,7 +734,7 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                         Set frmBiblio.Element = Explorer.Elements(tv.SelectedItem.FullPath)
                         bFrmBiblio = conVrai
                         frmBiblio.Show
-                    Case conWeb                             'connexion Internet
+                    Case conWeb                            'connexion Internet
                         ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
                     Case conMail
                         MailInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
@@ -790,7 +790,7 @@ Private Function SaveLibrary() As Byte
     End With
     Set cCommonDialog = Nothing
     Exit Function
-    
+
 Fin:
     Set cCommonDialog = Nothing
     SaveLibrary = 2
@@ -827,7 +827,7 @@ Private Function OpenBiblio() As Byte
     End With
     Set cCommonDialog = Nothing
     Exit Function
-    
+
 Fin:
     Set cCommonDialog = Nothing
     OpenBiblio = 2
@@ -851,7 +851,7 @@ Private Sub ChargeBase(ByVal sFileName As String)
         Explorer.Elements.Add AnnuleNull(rs, conDeclareProc), AnnuleNull(rs, conHeadProc), AnnuleNull(rs, conInLineProc), AnnuleNull(rs, conEndProc), AnnuleNull(rs, conDescription), AnnuleNull(rs, conNom), AnnuleNull(rs, conNom)
         rs.MoveNext
     Loop
-    
+
     rs.Close
     Set rs = Nothing
     db.Close
@@ -981,10 +981,10 @@ Private Sub UserDocument_Terminate()
 End Sub
 
 Private Function RechercheString(ByVal sTexte As String, sM As String) As Boolean
-'    RechercheString = conFaux
-'    If InStr(1, sTexte, sM) > 0 Then                       'recherche
-        If Left$(sTexte, Len(sM)) = sM Then
-            RechercheString = conVrai
-        End If
-'    End If
+    '    RechercheString = conFaux
+    '    If InStr(1, sTexte, sM) > 0 Then                       'recherche
+    If Left$(sTexte, Len(sM)) = sM Then
+        RechercheString = conVrai
+    End If
+    '    End If
 End Function

@@ -213,7 +213,7 @@ Private Sub OK()
     Dim blnCmpPresent As Boolean
     strFichierModele = File1.Filename
     strCheminModele = File1.Path & conBS & strFichierModele
-    
+
     If (strFichierModele <> vbNullString) Then
         If (FichierExiste(strCheminModele)) Then
             blnCmpPresent = Not objVBCmpPrint Is Nothing
@@ -227,7 +227,7 @@ Private Sub OK()
                 Else
                     ExportHTMLProject strCheminModele, objVBPrjPrint
                 End If
-'            Unload Me
+                '            Unload Me
             End If
         Else
             MsgBox "Le fichier [" & strCheminModele & "] n'existe pas."
@@ -262,12 +262,12 @@ Private Sub Form_Load()
             lblTitre = "Selected element :"
     End Select
 
-'    PositionForm Me, conVrai
+    '    PositionForm Me, conVrai
     File1.Path = strCheminApp & "\html"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-'    PositionForm Me, conFaux
+    '    PositionForm Me, conFaux
     Set objVBPrjPrint = Nothing
     Set objVBCmpPrint = Nothing
 End Sub
@@ -285,7 +285,7 @@ Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
             If (chnFichierModele <> vbNullString) Then
                 If FichierExiste(chnFichierModele) Then
                     ExportHTML chnFichierModele
-'                    Unload Me
+                    '                    Unload Me
                 Else
                     MsgBox "Le fichier [" & chnFichierModele & "] n'existe pas."
                 End If
@@ -342,17 +342,17 @@ Private Sub AnalyseHTMLPrj(ByVal objVBPrj As VBIDE.VBProject, sM As String)
     Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
     Call RemplaceString(sM, "Project-NbrComponent", CStr(objVBPrj.VBComponents.Count))
     Exit Sub
-    
+
 AffichErr:
     MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "AnalyseHTMLPrj"
 End Sub
 
 Public Sub ExportHTML(ByVal sHTMLFileName As String)
-'    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
+    '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
     Dim lngRep As Long, objVBPrj As VBIDE.VBProject
     Dim sTete As String, sFin As String, sMiddle As String
     Dim strDate As String
-    
+
     Screen.MousePointer = vbHourglass
 
     On Error GoTo GestErr
@@ -360,28 +360,28 @@ Public Sub ExportHTML(ByVal sHTMLFileName As String)
         Kill c2iHTMLFile
     End If
 
-'Ancienne version
-'    'add projects
-'    Set fso = New FileSystemObject
-'    Set txtOut = fso.CreateTextFile(c2iHTMLFile)
-'    Set txtIn = fso.OpenTextFile(sHTMLFileName)
-'    sMiddle = txtIn.ReadAll
-'    txtIn.Close
-'    Set txtIn = Nothing
-'    If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
-'        sTete = RemplaceString(sTete, conDate, Format$(VBA.Date$, conFormatDate))
-'        txtOut.Write sTete
-'        For Each objVBPrj In VBInstance.VBProjects
-'            AddProject objVBPrj, txtOut, sMiddle
-'        Next
-'        sFin = RemplaceString(sFin, conDate, Format$(VBA.Date$, conFormatDate))
-'        txtOut.Write sFin
-'    End If
-'
-'    Set txtOut = Nothing
-'    Set fso = Nothing
+    'Ancienne version
+    '    'add projects
+    '    Set fso = New FileSystemObject
+    '    Set txtOut = fso.CreateTextFile(c2iHTMLFile)
+    '    Set txtIn = fso.OpenTextFile(sHTMLFileName)
+    '    sMiddle = txtIn.ReadAll
+    '    txtIn.Close
+    '    Set txtIn = Nothing
+    '    If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
+    '        sTete = RemplaceString(sTete, conDate, Format$(VBA.Date$, conFormatDate))
+    '        txtOut.Write sTete
+    '        For Each objVBPrj In VBInstance.VBProjects
+    '            AddProject objVBPrj, txtOut, sMiddle
+    '        Next
+    '        sFin = RemplaceString(sFin, conDate, Format$(VBA.Date$, conFormatDate))
+    '        txtOut.Write sFin
+    '    End If
+    '
+    '    Set txtOut = Nothing
+    '    Set fso = Nothing
 
-'Nouvelle version utilisant les instructions I/O de fichier de VB
+    'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, "Projects") Then
         strDate = Format$(VBA.Date$, conFormatDate)
@@ -401,17 +401,17 @@ Public Sub ExportHTML(ByVal sHTMLFileName As String)
 
     Exit Sub
 GestErr:
-'    txtOut.Close
-'    Set txtOut = Nothing
-'    Set fso = Nothing
+    '    txtOut.Close
+    '    Set txtOut = Nothing
+    '    Set fso = Nothing
     MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
 End Sub
 
 Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VBIDE.VBProject)
-'    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
+    '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
     Dim lngRep As Long, objVBCmp As VBIDE.VBComponent
     Dim sTete As String, sFin As String, sMiddle As String
-    
+
     Screen.MousePointer = vbHourglass
 
     On Error GoTo GestErr
@@ -419,36 +419,36 @@ Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VB
         Kill c2iHTMLFile
     End If
 
-'Ancienne version
-'    'add projects
-'    Set fso = New FileSystemObject
-'    Set txtOut = fso.CreateTextFile(c2iHTMLFile)
-'    Set txtIn = fso.OpenTextFile(sHTMLFileName)
-'    sMiddle = txtIn.ReadAll
-'    txtIn.Close
-'    Set txtIn = Nothing
-'
-'    If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
-'        AnalyseHTMLPrj objVBPrj, sTete
-'        txtOut.Write sTete
-'
-'        'barre de progression
-'        With frmPrint.pbPrint
-'            .Min = 0
-'            .Max = objVBPrj.VBComponents.Count
-'            .Value = 0
-'            For Each objVBCmp In objVBPrj.VBComponents
-'                AddComponent objVBCmp, sMiddle
-'                .Value = .Value + 1
-'            Next
-'        End With
-'        AnalyseHTMLPrj objVBPrj, sFin
-'        txtOut.Write sFin
-'    End If
-'    Set txtOut = Nothing
-'    Set fso = Nothing
-    
-'Nouvelle version utilisant les instructions I/O de fichier de VB
+    'Ancienne version
+    '    'add projects
+    '    Set fso = New FileSystemObject
+    '    Set txtOut = fso.CreateTextFile(c2iHTMLFile)
+    '    Set txtIn = fso.OpenTextFile(sHTMLFileName)
+    '    sMiddle = txtIn.ReadAll
+    '    txtIn.Close
+    '    Set txtIn = Nothing
+    '
+    '    If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
+    '        AnalyseHTMLPrj objVBPrj, sTete
+    '        txtOut.Write sTete
+    '
+    '        'barre de progression
+    '        With frmPrint.pbPrint
+    '            .Min = 0
+    '            .Max = objVBPrj.VBComponents.Count
+    '            .Value = 0
+    '            For Each objVBCmp In objVBPrj.VBComponents
+    '                AddComponent objVBCmp, sMiddle
+    '                .Value = .Value + 1
+    '            Next
+    '        End With
+    '        AnalyseHTMLPrj objVBPrj, sFin
+    '        txtOut.Write sFin
+    '    End If
+    '    Set txtOut = Nothing
+    '    Set fso = Nothing
+
+    'Nouvelle version utilisant les instructions I/O de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, conComponents) Then
         AnalyseHTMLPrj objVBPrj, sTete
@@ -476,18 +476,18 @@ Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VB
 
     Exit Sub
 GestErr:
-'    txtOut.Close
-'    Set txtOut = Nothing
-'    Set fso = Nothing
+    '    txtOut.Close
+    '    Set txtOut = Nothing
+    '    Set fso = Nothing
     Screen.MousePointer = vbDefault
     MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "ExportHTMLProject"
 End Sub
 
 Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As VBIDE.VBComponent)
-'    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
+    '    Dim fso As FileSystemObject, txtOut As TextStream, txtIn As TextStream
     Dim lngRep As Long, objVBMember As VBIDE.Member
     Dim sTete As String, sFin As String, sMiddle As String
-    
+
     Screen.MousePointer = vbHourglass
 
     On Error GoTo GestErr
@@ -495,39 +495,39 @@ Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As 
         Kill c2iHTMLFile
     End If
 
-' Ancienne version
-'    'add projects
-'    Set fso = New FileSystemObject
-'    Set txtOut = fso.CreateTextFile()
-'    Set txtIn = fso.OpenTextFile(sHTMLFileName)
-'    sMiddle = txtIn.ReadAll
-'    txtIn.Close
-'    Set txtIn = Nothing
-'
-'    If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
-'        AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
-'        AnalyseHTMLCmp objVBCmp, sTete
-'        txtOut.Write sTete
-'        'barre de progression
-'        With frmPrint.pbPrint
-'            .Min = 0
-'            .Max = objVBCmp.CodeModule.Members.Count
-'            .Value = 0
-'
-'            For Each objVBMember In objVBCmp.CodeModule.Members
-'                AddMember objVBMember, sMiddle
-'                .Value = .Value + 1
-'                DoEvents
-'            Next
-'        End With
-'        AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
-'        AnalyseHTMLCmp objVBCmp, sFin
-'        txtOut.Write sFin
-'    End If
-'    Set txtOut = Nothing
-'    Set fso = Nothing
+    ' Ancienne version
+    '    'add projects
+    '    Set fso = New FileSystemObject
+    '    Set txtOut = fso.CreateTextFile()
+    '    Set txtIn = fso.OpenTextFile(sHTMLFileName)
+    '    sMiddle = txtIn.ReadAll
+    '    txtIn.Close
+    '    Set txtIn = Nothing
+    '
+    '    If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
+    '        AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
+    '        AnalyseHTMLCmp objVBCmp, sTete
+    '        txtOut.Write sTete
+    '        'barre de progression
+    '        With frmPrint.pbPrint
+    '            .Min = 0
+    '            .Max = objVBCmp.CodeModule.Members.Count
+    '            .Value = 0
+    '
+    '            For Each objVBMember In objVBCmp.CodeModule.Members
+    '                AddMember objVBMember, sMiddle
+    '                .Value = .Value + 1
+    '                DoEvents
+    '            Next
+    '        End With
+    '        AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
+    '        AnalyseHTMLCmp objVBCmp, sFin
+    '        txtOut.Write sFin
+    '    End If
+    '    Set txtOut = Nothing
+    '    Set fso = Nothing
 
-'Nouvelle version utilisant les instructions E/S de fichier de VB
+    'Nouvelle version utilisant les instructions E/S de fichier de VB
     Call LireFichierTexte(sHTMLFileName, sMiddle)
     If ExtraitHTML(sTete, sFin, sMiddle, conMembers) Then
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
@@ -558,9 +558,9 @@ Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As 
 
     Exit Sub
 GestErr:
-'    txtOut.Close
-'    Set txtOut = Nothing
-'    Set fso = Nothing
+    '    txtOut.Close
+    '    Set txtOut = Nothing
+    '    Set fso = Nothing
     Screen.MousePointer = vbDefault
     MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
 End Sub
@@ -671,5 +671,5 @@ Private Sub RemplaceString(ByRef sString As String, ByVal sSearch As String, ByV
             sString = Left$(sString, iPos - 1) & sValeur & Right$(sString, Len(sString) - iPos - Len(sSearch) + 1)
         End If
     Loop
-'    RemplaceString = sString
+    '    RemplaceString = sString
 End Sub

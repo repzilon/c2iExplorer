@@ -206,7 +206,7 @@ Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
 Private Sub Dessine()
     PicTitre.Height = ImgFermée(0).Height
 
-    If (bOuvert) Then                                        'il est fermé, on l'ouvre
+    If (bOuvert) Then                                      'il est fermé, on l'ouvre
         Height = sngHauteur
         PicTitre.Picture = ImgOuvert(0).Picture
     Else                                                   'il est ouvert, on le ferme
@@ -303,7 +303,7 @@ Private Sub DessineTitre()
     With PicTitre
         .Cls
         DessineFond (conVrai)
-    
+
         sngLargImgFerm = ImgFermée(0).Width
         Select Case iAlignement
             Case vbCenter
@@ -315,7 +315,7 @@ Private Sub DessineTitre()
                 End If
             Case vbLeftJustify
                 .CurrentX = sngLargImgFerm
-            Case vbRightJustify                                'vérif largueur texte
+            Case vbRightJustify                            'vérif largueur texte
                 sngPosX = .ScaleWidth - .TextWidth(sCaption)
                 If (sngPosX > sngLargImgFerm) Then
                     .CurrentX = sngPosX
@@ -355,7 +355,7 @@ Private Sub PicTitre_MouseMove(Button As Integer, Shift As Integer, X As Single,
         Case Else
             Ouvert = conVrai
     End Select
-    
+
     UserControl_MouseMove Button, Shift, X, Y
     If (X > ImgFermée(0).Width) Then
         RaiseEvent MouseTitleMove(Button, Shift, X, Y)
@@ -363,15 +363,15 @@ Private Sub PicTitre_MouseMove(Button As Integer, Shift As Integer, X As Single,
 End Sub
 
 Private Sub PicTitre_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-'    If X > ImgFermée(0).Width Then
-'        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
-'        Exit Sub
-'    Else
-'        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
-'        If Not bFermetureAutomatique Then
-'            Ouvert = Not bOuvert
-'        End If
-'    End If
+    '    If X > ImgFermée(0).Width Then
+    '        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
+    '        Exit Sub
+    '    Else
+    '        RaiseEvent MouseTitleUp(Button, Shift, X, Y)
+    '        If Not bFermetureAutomatique Then
+    '            Ouvert = Not bOuvert
+    '        End If
+    '    End If
     RaiseEvent MouseTitleUp(Button, Shift, X, Y)
     If (X <= ImgFermée(0).Width) Then
         If (Not bFermetureAutomatique) Then
@@ -397,9 +397,9 @@ End Sub
 
 Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     'conVrai devient conFaux et conFaux reste conFaux
-'    If bUserControlCaptured Then
-'        bUserControlCaptured = conFaux
-'    End If
+    '    If bUserControlCaptured Then
+    '        bUserControlCaptured = conFaux
+    '    End If
     'Plus rapide ainsi
     bUserControlCaptured = conFaux
     RaiseEvent MouseContainerDown(Button, Shift, X, Y)
@@ -417,13 +417,13 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
         End If
         'Équivalent à If X < 0 Or Y < 0 Or X > Width Or Y > Height Then
         Select Case conVrai
-            Case X < 0, Y < 0, X > Width, Y > Height 'si on sort du contrôle
-            bUserControlCaptured = conFaux
-            lngRep = ReleaseCapture 'on relache le curseur
-'            If bOuvert Then
-'                Ouvert = Not bOuvert
-'            End If
-            bOuvert = conFaux
+            Case X < 0, Y < 0, X > Width, Y > Height       'si on sort du contrôle
+                bUserControlCaptured = conFaux
+                lngRep = ReleaseCapture                    'on relache le curseur
+                '            If bOuvert Then
+                '                Ouvert = Not bOuvert
+                '            End If
+                bOuvert = conFaux
         End Select
     End If
 End Sub
@@ -603,8 +603,8 @@ End Property
 'VB5 n'aime pas ContainerHwnd (il le prend pour une variable non définie)
 #If VersionVB = 6 Then
 Public Property Get ParentHwnd() As Long
-    ParentHwnd = ContainerHwnd
-End Property
+        ParentHwnd = ContainerHwnd
+    End Property
 #End If
 
 Public Property Set PictureFond(ByVal picPictureFondA As Picture)

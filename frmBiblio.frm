@@ -336,7 +336,7 @@ Private mObjE As cElement
 
 ' Modifié par René Rhéaume le 5 janvier 2002
 Private Sub Form_Load()
-'    PositionForm Me
+    '    PositionForm Me
     Select Case lngLanguage
         Case c2i_Langue_Anglais
             lblNom = "Name"
@@ -360,7 +360,7 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-'    PositionForm Me, conFaux
+    '    PositionForm Me, conFaux
     objUDBiblio.bFrmBiblio = conFaux
     Set mObjE = Nothing
 End Sub
@@ -399,7 +399,7 @@ Private Sub AddCode()
         Case mNodeParent Is Nothing, Trim$(txtName) = vbNullString
             Exit Sub
     End Select
-    
+
     If (mNodeParent.Image = conElement) Then
         Set mNodeParent = mNodeParent.Parent
     End If
@@ -409,8 +409,8 @@ Private Sub AddCode()
     If (objE Is Nothing) Then
         'on ajoute un nouvel élément
         Set objE = Explorer.Elements.Add(Trim$(txtDeclaration), _
-                    Trim$(txtHead), Trim$(txtInline), Trim$(txtEnd), _
-                    Trim$(txtDescription), sKey, sKey)
+                Trim$(txtHead), Trim$(txtInline), Trim$(txtEnd), _
+                Trim$(txtDescription), sKey, sKey)
         objUDBiblio.AddElement objE
     Else
         objE.DeclareProc = Trim$(txtDeclaration)

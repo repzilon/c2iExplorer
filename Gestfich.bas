@@ -45,22 +45,22 @@ Public Function FichierExiste(ByVal sNom As String) As Boolean
     ' Évite l'exécution de la gestion d'erreurs si aucune erreur ne se produit.
     Exit Function
 
-CheckError:     ' Se positionne ici, si une erreur se produit.
+CheckError:                                                ' Se positionne ici, si une erreur se produit.
     Select Case Err.Number
-    Case mnErrDiskNotReady
-        ' Affiche la boîte de message avec une icône exclamation et les boutons OK et Annuler.
-        If (MsgBox(conErrInserDisquette, vbExclamation & vbOKCancel) = vbOK) Then
-            Resume
-        Else
-            Resume Next
-        End If
-    Case mnErrDeviceUnavailable
-        MsgBox conErrReperoireInexistant & sNom, vbExclamation
-        FichierExiste = conFaux
-    Case Else
-        ' Affiche le message d'erreur avec une icône Stop et un bouton OK.
-        MsgBox conErrInattendue & CStr(Err.Number) & ", " & Err.Description, vbExclamation
-        FichierExiste = conFaux
+        Case mnErrDiskNotReady
+            ' Affiche la boîte de message avec une icône exclamation et les boutons OK et Annuler.
+            If (MsgBox(conErrInserDisquette, vbExclamation & vbOKCancel) = vbOK) Then
+                Resume
+            Else
+                Resume Next
+            End If
+        Case mnErrDeviceUnavailable
+            MsgBox conErrReperoireInexistant & sNom, vbExclamation
+            FichierExiste = conFaux
+        Case Else
+            ' Affiche le message d'erreur avec une icône Stop et un bouton OK.
+            MsgBox conErrInattendue & CStr(Err.Number) & ", " & Err.Description, vbExclamation
+            FichierExiste = conFaux
     End Select
     Resume
 End Function
@@ -174,13 +174,13 @@ Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFichier As
     On Error Resume Next
     LireFichierTexte = 0
     Screen.MousePointer = 11
-    
+
     ' Ouvre le fichier indiqué.
     Open chnNomFichier For Input As #1
     ContenuFichier = Input(LOF(1), 1)
     Close #1
     Screen.MousePointer = 0
-    
+
     If (Err) Then
         MsgBox "Impossible d'ouvrir le fichier: " & chnNomFichier, vbExclamation
         LireFichierTexte = -1
@@ -195,22 +195,22 @@ Function EcrireFichier(ByVal chnContenu As String, ByVal chnNomFichier As String
     On Error GoTo GestErr
     ' Ouvre le fichier.
     Open chnNomFichier For Append As #1
-    
+
     ' Écrit le contenu du paramètre dans le fichier enregistré.
     ' Le caractère point-virgule (;) supprime le retour de chariot à la fin.
     Print #1, chnContenu;
     Close #1
     EcrireFichier = 0
-    
+
 SortieProc:
     Exit Function
 GestErr:
     Select Case Err.Number
-    Case 52
-        MsgBox "Le fichier vers lequel vous essayez de sauvegarder est verrouillé par une autre application. Fermez ce fichier dans cette application et recommencez.", vbExclamation
-        Resume
-    Case Else
-        MsgBox conErrNo & Err.Number & vbCrLf & "Description : " & Err.Description, 48, App.Title
-        EcrireFichier = -1
+        Case 52
+            MsgBox "Le fichier vers lequel vous essayez de sauvegarder est verrouillé par une autre application. Fermez ce fichier dans cette application et recommencez.", vbExclamation
+            Resume
+        Case Else
+            MsgBox conErrNo & Err.Number & vbCrLf & "Description : " & Err.Description, 48, App.Title
+            EcrireFichier = -1
     End Select
 End Function

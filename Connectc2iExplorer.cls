@@ -69,10 +69,10 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
     'on crée l'objet window et usrcomm
     '=================================================
     On Error GoTo GestErr
-    
+
     ' Enregistre l'instance vb
     Set VBInstance = VBInst
-    
+
     If (Not objWindow Is Nothing) Then
         ' En cours d'exécution, affiche seulement
         Show
@@ -82,7 +82,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
         End If
         Exit Sub
     End If
-    
+
     ' Initialisation des variables globales
     strCheminApp = App.Path
     c2iHTMLFile = strCheminApp & "\html\prev.htm"
@@ -91,7 +91,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
     c2iINIFile = strCheminApp & conCheminRelatifINI
     'pour stocker les durées
     ReDim DuréePrj(0)
-    
+
     'création de la fenêtre
     'objWindow est l'objet Window de vbe
     'objUD est le 'contenu' de la fenêtre
@@ -104,13 +104,13 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
         Set objWindowCompteur = .CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", conNomApp, sGuidCompteur, objUDCompteur)
     End With
     Set Connection = Me
-    
+
     AddToAddInCommandBar
 
     Exit Sub
 
 GestErr:
-    MsgBox "IDTExtensibility_OnConnection : " & Err.Description & " : " & CStr(Err.Number) ' & vbCrLf & CStr(lngLigneOK)
+    MsgBox "IDTExtensibility_OnConnection : " & Err.Description & " : " & CStr(Err.Number)    ' & vbCrLf & CStr(lngLigneOK)
 End Sub
 
 '------------------------------------------------------
@@ -122,7 +122,7 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
     '=================================================
     On Error GoTo GestErr
 
-    If (objWindow.Visible) Then  'sauvegarde de la visibilité
+    If (objWindow.Visible) Then                            'sauvegarde de la visibilité
         WritePrivateProfileString conSecGen, conClefVisible, "1", c2iINIFile
     Else
         WritePrivateProfileString conSecGen, conClefVisible, "0", c2iINIFile
@@ -147,7 +147,7 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
     Set objWindowCompteur = Nothing
     Set VBPrjSelected = Nothing
     Set VBInstance = Nothing
-      
+
     Exit Sub
 GestErr:
     MsgBox "IDTExtensibility_OnDisconnection : " + Err.Description, vbInformation
@@ -159,11 +159,11 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
     'On ajoute un bouton dans le menu Compléments
     '=================================================
     On Error GoTo GestErr
-    
+
     #If VersionVB = 5 Then
-    Set objBouton = VBInstance.CommandBars(1).Controls(9).Controls.Add
+        Set objBouton = VBInstance.CommandBars(1).Controls(9).Controls.Add
     #ElseIf VersionVB = 6 Then
-    Set objBouton = VBInstance.CommandBars(1).Controls(11).Controls.Add
+        Set objBouton = VBInstance.CommandBars(1).Controls(11).Controls.Add
     #End If
     objBouton.Caption = "c2i Explorer"
     objBouton.Visible = conVrai
@@ -171,7 +171,7 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
     Clipboard.SetData LoadResPicture(101, vbResBitmap)
     On Error Resume Next
     objBouton.PasteFace
-    
+
     'Set objBoutonPropriété = VBInstance.CommandBars(1).Controls(11).Controls.Add
     'objBoutonPropriété.Caption = "c2i Propriétés"
     'objBoutonPropriété.Visible = conVrai
@@ -238,7 +238,7 @@ Private Sub CmpEvent_ItemSelected(ByVal VBComponent As VBIDE.VBComponent)
 End Sub
 
 Private Sub IDTExtensibility_OnStartupComplete(custom() As Variant)
-'    AddToAddInCommandBar
+    '    AddToAddInCommandBar
 End Sub
 
 Private Sub prjEvent_ItemActivated(ByVal VBProject As VBIDE.VBProject)
@@ -269,10 +269,10 @@ Private Sub prjEvent_ItemRemoved(ByVal VBProject As VBIDE.VBProject)
     Dim lngFinTabDurees As Long
     Dim I As Long
     lngFinTabDurees = UBound(DuréePrj)
-    
+
     objUD.RetireProjet VBProject
     SauveDuree VBProject
-    
+
     'suppression dans le tableau des projects pour la session
     For I = 0 To lngFinTabDurees
         If (VBProject.Name = DuréePrj(I).Name) Then

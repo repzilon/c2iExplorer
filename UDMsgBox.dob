@@ -976,19 +976,19 @@ End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
 Private Function RetourneIcones() As String
-'    Dim iNum As Long
-'
-'    For iNum = 0 To 4 'lblIconesInfos.UBound
-'        If (lblIconesInfos(iNum).FontBold) Then
-'            Exit For
-'        End If
-'    Next iNum
+    '    Dim iNum As Long
+    '
+    '    For iNum = 0 To 4 'lblIconesInfos.UBound
+    '        If (lblIconesInfos(iNum).FontBold) Then
+    '            Exit For
+    '        End If
+    '    Next iNum
     Select Case lngIdxIcones
-        Case 0                                     'aucune
+        Case 0                                             'aucune
             RetourneIcones = vbNullString
-        Case 1                                     'critique
+        Case 1                                             'critique
             RetourneIcones = "vbCritical"
-        Case 2                                     'question
+        Case 2                                             'question
             RetourneIcones = "vbQuestion"
         Case 3
             RetourneIcones = "vbExclamation"
@@ -999,39 +999,39 @@ End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
 Private Function lngRetourneIcones() As Long
-'    Dim iNum As Long
-'
-'    For iNum = 0 To 4 'lblIconesInfos.UBound
-'        If (lblIconesInfos(iNum).FontBold) Then
-'            Exit For
-'        End If
-'    Next iNum
+    '    Dim iNum As Long
+    '
+    '    For iNum = 0 To 4 'lblIconesInfos.UBound
+    '        If (lblIconesInfos(iNum).FontBold) Then
+    '            Exit For
+    '        End If
+    '    Next iNum
     'Nouvelle version
     lngRetourneIcones = lngIdxIcones * 16
     ' Ancienne version
-'    Select Case iNum
-'        Case 0                                     'aucune
-'            lngRetourneIcones = 0
-'        Case 1                                     'critique
-'            lngRetourneIcones = vbCritical
-'        Case 2                                     'question
-'            lngRetourneIcones = vbQuestion
-'        Case 3
-'            lngRetourneIcones = vbExclamation
-'        Case 4
-'            lngRetourneIcones = vbInformation
-'    End Select
+    '    Select Case iNum
+    '        Case 0                                     'aucune
+    '            lngRetourneIcones = 0
+    '        Case 1                                     'critique
+    '            lngRetourneIcones = vbCritical
+    '        Case 2                                     'question
+    '            lngRetourneIcones = vbQuestion
+    '        Case 3
+    '            lngRetourneIcones = vbExclamation
+    '        Case 4
+    '            lngRetourneIcones = vbInformation
+    '    End Select
 End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
 Private Function RetourneBoutons() As String
-'    Dim iNum As Long
-'
-'    For iNum = 0 To 5 'lblButtons.UBound
-'        If lblButtons(iNum).FontBold Then
-'            Exit For
-'        End If
-'    Next iNum
+    '    Dim iNum As Long
+    '
+    '    For iNum = 0 To 5 'lblButtons.UBound
+    '        If lblButtons(iNum).FontBold Then
+    '            Exit For
+    '        End If
+    '    Next iNum
     Select Case lngIdxButtons
         Case 0
             RetourneBoutons = vbNullString
@@ -1050,41 +1050,41 @@ End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001 et le 10 janvier 2002
 Private Function lngRetourneBoutons() As Long
-'    Dim iNum As Long
-'
-'    For iNum = 0 To 5 'lblButtons.UBound
-'        If lblButtons(iNum).FontBold Then
-'            Exit For
-'        End If
-'    Next iNum
+    '    Dim iNum As Long
+    '
+    '    For iNum = 0 To 5 'lblButtons.UBound
+    '        If lblButtons(iNum).FontBold Then
+    '            Exit For
+    '        End If
+    '    Next iNum
     'Nouvelle version
     lngRetourneBoutons = lngIdxButtons
     'Ancienne version
-'    Select Case iNum
-'        Case 0
-'            lngRetourneBoutons = 0
-'        Case 1
-'            lngRetourneBoutons = vbOKCancel
-'        Case 2
-'            lngRetourneBoutons = vbAbortRetryIgnore
-'        Case 3
-'            lngRetourneBoutons = vbYesNoCancel
-'        Case 4
-'            lngRetourneBoutons = vbYesNo
-'        Case 5
-'            lngRetourneBoutons = vbRetryCancel
-'    End Select
+    '    Select Case iNum
+    '        Case 0
+    '            lngRetourneBoutons = 0
+    '        Case 1
+    '            lngRetourneBoutons = vbOKCancel
+    '        Case 2
+    '            lngRetourneBoutons = vbAbortRetryIgnore
+    '        Case 3
+    '            lngRetourneBoutons = vbYesNoCancel
+    '        Case 4
+    '            lngRetourneBoutons = vbYesNo
+    '        Case 5
+    '            lngRetourneBoutons = vbRetryCancel
+    '    End Select
 End Function
 
 'Optimisé par René Rhéaume 2 septembre 2001
 Private Function RetourneDefaultBoutons() As String
-'    Dim iNum As Long
-'
-'    For iNum = 0 To 3 'lblDefaultButton.UBound
-'        If lblDefaultButton(iNum).FontBold Then
-'            Exit For
-'        End If
-'    Next iNum
+    '    Dim iNum As Long
+    '
+    '    For iNum = 0 To 3 'lblDefaultButton.UBound
+    '        If lblDefaultButton(iNum).FontBold Then
+    '            Exit For
+    '        End If
+    '    Next iNum
     Select Case lngIdxDefaultButton
         Case 0
             RetourneDefaultBoutons = vbNullString
@@ -1098,26 +1098,26 @@ Private Function RetourneDefaultBoutons() As String
 End Function
 
 Private Function lngRetourneDefaultBoutons() As Long
-'    Dim iNum As Long
-'
-'    For iNum = 0 To 3 'lblDefaultButton.UBound
-'        If lblDefaultButton(iNum).FontBold Then
-'            Exit For
-'        End If
-'    Next iNum
+    '    Dim iNum As Long
+    '
+    '    For iNum = 0 To 3 'lblDefaultButton.UBound
+    '        If lblDefaultButton(iNum).FontBold Then
+    '            Exit For
+    '        End If
+    '    Next iNum
     'Nouvelle version
     lngRetourneDefaultBoutons = lngIdxDefaultButton * 256
     'Ancienne version
-'    Select Case iNum
-'        Case 0
-'            lngRetourneDefaultBoutons = 0
-'        Case 1
-'            lngRetourneDefaultBoutons = vbDefaultButton2
-'        Case 2
-'            lngRetourneDefaultBoutons = vbDefaultButton3
-'        Case 3
-'            lngRetourneDefaultBoutons = vbDefaultButton4
-'    End Select
+    '    Select Case iNum
+    '        Case 0
+    '            lngRetourneDefaultBoutons = 0
+    '        Case 1
+    '            lngRetourneDefaultBoutons = vbDefaultButton2
+    '        Case 2
+    '            lngRetourneDefaultBoutons = vbDefaultButton3
+    '        Case 3
+    '            lngRetourneDefaultBoutons = vbDefaultButton4
+    '    End Select
 End Function
 
 Private Sub chk1Plan_Click()
@@ -1281,12 +1281,12 @@ Private Sub MiseAJourCode()
     Dim strCode As String
     Dim sDefaultButton As String
     Dim sModal As String
-    Dim sButtonsDef As String '//  le string du bouton
+    Dim sButtonsDef As String                              '//  le string du bouton
     Dim blnButtonsDef As Boolean
     Dim strHelpFile As String
     Dim strVirgule As String
-    
-'    txtCode = vbNullString
+
+    '    txtCode = vbNullString
     'le titre et le message
     sTitre = txtTitle.Text
     If (sTitre <> vbNullString) Then
@@ -1294,10 +1294,10 @@ Private Sub MiseAJourCode()
     End If
 
     sMessage = ExtraitSautDeLigne(txtMessage.Text)
-    
-    sButtonsIcones = RetourneIcones         'l'icone
-    sButtons = RetourneBoutons              'les boutons
-    sDefaultButton = RetourneDefaultBoutons 'le bouton default
+
+    sButtonsIcones = RetourneIcones                        'l'icone
+    sButtons = RetourneBoutons                             'les boutons
+    sDefaultButton = RetourneDefaultBoutons                'le bouton default
 
     'la modalité
     If (lblModal(1).FontBold) Then
@@ -1361,12 +1361,12 @@ Private Sub MiseAJourCode()
         End If
     End If
     '// fin du string
-    If (sButtons <> vbNullString) Then  'il y a un code retour
+    If (sButtons <> vbNullString) Then                     'il y a un code retour
         strCode = "Dim sc2iMsgBox As VbMsgBoxResult" & (vbCrLf & vbCrLf) & "sc2iMsgBox = MsgBox(" & sMessage
-    Else                                'sans retour de code
+    Else                                                   'sans retour de code
         strCode = "MsgBox " & sMessage
     End If
-    
+
     If (blnButtonsDef) Then
         strCode = strCode & con1V & sButtonsDef
     End If
@@ -1390,25 +1390,25 @@ Private Sub MiseAJourCode()
         End If
         strCode = strCode & (strVirgule & conGlmt) & strHelpFile & (conGlmt & con1V) & txtContext
     End If
-    
+
     If (sButtons <> vbNullString) Then
         strCode = strCode & (")" & vbCrLf) & "Select Case sc2iMsgbox" & vbCrLf
 
         Select Case sButtons
             Case conVbOKCancel
                 strCode = strCode & vbTab & conCasVbOK & vbCrLf & _
-                            vbTab & conCasVbCancel & vbCrLf & conFinCas
+                        vbTab & conCasVbCancel & vbCrLf & conFinCas
             Case conVbAbortRetryIgnore
                 strCode = strCode & vbTab & conCasVbAbort & vbCrLf & _
-                            vbTab & conCasVbRetry & (vbCrLf & vbTab) & _
-                            conCasVbIgnore & vbCrLf & conFinCas
+                        vbTab & conCasVbRetry & (vbCrLf & vbTab) & _
+                        conCasVbIgnore & vbCrLf & conFinCas
             Case conVbYesNoCancel
                 strCode = strCode & vbTab & conCasVbYes & vbCrLf _
-                            & vbTab & conCasVbNo & (vbCrLf & vbTab) _
-                            & conCasVbCancel & vbCrLf & conFinCas
+                        & vbTab & conCasVbNo & (vbCrLf & vbTab) _
+                        & conCasVbCancel & vbCrLf & conFinCas
             Case conVbYesNo
                 strCode = strCode & vbTab & conCasVbYes & vbCrLf & _
-                            vbTab & conCasVbNo & vbCrLf & conFinCas
+                        vbTab & conCasVbNo & vbCrLf & conFinCas
             Case conVbRetryCancel
                 strCode = strCode & vbTab & conCasVbRetry & vbCrLf _
                         & vbTab & conCasVbCancel & vbCrLf & conFinCas

@@ -44,11 +44,11 @@ End Property
 
 Private Sub Class_Initialize()
     Set mElements = New cElements
-'    InitClass 0, 1
+    '    InitClass 0, 1
 End Sub
 
 Private Sub Class_Terminate()
     Set mElements = Nothing
-'    InitClass 0, -1
+    '    InitClass 0, -1
 End Sub
 
