@@ -1,28 +1,41 @@
-VERSION 5.00
-Begin {AC0714F6-3D04-11D1-AE7D-00A0C90F26F4} Connectc2iExplorer 
-   ClientHeight    =   10050
-   ClientLeft      =   1740
-   ClientTop       =   1545
-   ClientWidth     =   9795
-   _ExtentX        =   17277
-   _ExtentY        =   17727
-   _Version        =   393216
-   Description     =   "Explorateur d'évènements pour vb"
-   DisplayName     =   "c2iExplorer"
-   AppName         =   "Visual Basic"
-   AppVer          =   "Visual Basic 6.0"
-   LoadName        =   "Startup"
-   LoadBehavior    =   1
-   RegLocation     =   "HKEY_CURRENT_USER\Software\Microsoft\Visual Basic\6.0"
-   CmdLineSupport  =   -1  'True
-End
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
 Attribute VB_Name = "Connectc2iExplorer"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+Attribute VB_Description = "c2i Explorer VB5"
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
+'
+' ***** END LICENSE BLOCK *****
+
 Option Explicit
 
+Implements IDTExtensibility
 
 'Public objWindowProp As Window 'c'est le container de notre document
 'l'objet menu
@@ -42,8 +55,13 @@ Attribute prjEvent.VB_VarHelpID = -1
 'gestionnaire des ajouts de références
 Public WithEvents refEvent As VBIDE.ReferencesEvents
 Attribute refEvent.VB_VarHelpID = -1
+'Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
 
-Private Sub AddinInstance_OnConnection(ByVal Application As Object, ByVal ConnectMode As AddInDesignerObjects.ext_ConnectMode, ByVal AddInInst As Object, custom() As Variant)
+Private Sub IDTExtensibility_OnAddInsUpdate(custom() As Variant)
+    ' commentaire pour que la procédure soit compilée
+End Sub
+
+Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectMode As vbext_ConnectMode, ByVal AddInInst As VBIDE.AddIn, custom() As Variant)
     '=================================================
     'connection du complément
     'on crée l'objet window et usrcomm
@@ -51,12 +69,12 @@ Private Sub AddinInstance_OnConnection(ByVal Application As Object, ByVal Connec
 
     On Error GoTo GestErr
     ' Enregistre l'instance vb
-    Set VBInstance = Application
+    Set VBInstance = VBInst
 
     If Not objWindow Is Nothing Then
         ' En cours d'exécution, affiche seulement
         Show
-        If ConnectMode = ext_cm_AfterStartup Then
+        If ConnectMode = vbext_cm_AfterStartup Then
             ' Démarre à partir du Gestionaire de Compléments
             AddToAddInCommandBar
         End If
@@ -81,23 +99,23 @@ Private Sub AddinInstance_OnConnection(ByVal Application As Object, ByVal Connec
     Exit Sub
 
 GestErr:
-    MsgBox "AddinInstance_OnConnection : " + Err.Description + " : " + CStr(Err.Number)
+    MsgBox "IDTExtensibility_OnConnection : " + Err.Description + " : " + CStr(Err.Number)
 
 End Sub
 
 '------------------------------------------------------
 ' Cette méthode supprime le complément de VB
 '------------------------------------------------------
-Private Sub AddinInstance_OnDisconnection(ByVal RemoveMode As AddInDesignerObjects.ext_DisconnectMode, custom() As Variant)
+Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_DisconnectMode, custom() As Variant)
     '=================================================
-    'on se déconnecte, on supprime les objets initeressants
+    'on se déconnecte, on supprime les objets inintéressants
     '=================================================
     On Error GoTo GestErr
 
-    If objWindow.Visible Then                              'sauvegarde de la visibilité
-        SaveSetting "MesCompléments", App.Title, "DisplayOnConnect", "1"
+    If objWindow.Visible Then  'sauvegarde de la visibilité
+        WritePrivateProfileString "General", "DisplayOnConnect", "1", c2iINIFile
     Else
-        SaveSetting "MesCompléments", App.Title, "DisplayOnConnect", "0"
+        WritePrivateProfileString "General", "DisplayOnConnect", "0", c2iINIFile
     End If
 
     objBouton.Delete
@@ -119,49 +137,58 @@ Private Sub AddinInstance_OnDisconnection(ByVal RemoveMode As AddInDesignerObjec
     Set objWindowCompteur = Nothing
     Set VBPrjSelected = Nothing
     Set VBInstance = Nothing
-
+      
     Exit Sub
 GestErr:
-    MsgBox "AddinInstance_OnDisconnection : " + Err.Description, vbInformation
+    MsgBox "IDTExtensibility_OnDisconnection : " + Err.Description, vbInformation
 End Sub
 
 Private Function AddToAddInCommandBar() As Office.CommandBarControl
+    Dim lngAfficherExplorer As Long
     '=================================================
-    'on ajoute un bouton dans la barre d'outil edition
+    'On ajoute un bouton dans le menu Compléments
     '=================================================
     On Error GoTo GestErr
-    VBInstance.CommandBars(2).Visible = True
-
+    
+    #If VersionVB = 5 Then
+    Set objBouton = VBInstance.CommandBars(1).Controls(9).Controls.Add
+    #ElseIf VersionVB = 6 Then
     Set objBouton = VBInstance.CommandBars(1).Controls(11).Controls.Add
+    #End If
     objBouton.Caption = "c2i Explorer"
-    objBouton.Visible = True
+    objBouton.Visible = conVrai
     'pour l'icone, on est obligé de passer par le presse papier
     Clipboard.SetData LoadResPicture(101, vbResBitmap)
+    On Error Resume Next
     objBouton.PasteFace
-
+    
     'Set objBoutonPropriété = VBInstance.CommandBars(1).Controls(11).Controls.Add
     'objBoutonPropriété.Caption = "c2i Propriétés"
-    'objBoutonPropriété.Visible = True
+    'objBoutonPropriété.Visible = conVrai
     'pour l'icone, on est obligé de passer par le presse papier
     'Clipboard.SetData LoadResPicture(102, vbResBitmap)
     'objBoutonPropriété.PasteFace
 
     'capture du click
+    On Error GoTo GestErr
     Set Me.BoutonBar = VBInstance.Events.CommandBarEvents(objBouton)
     'Set Me.BoutonBarProp = VBInstance.Events.CommandBarEvents(objBoutonPropriété)
     Set Me.CmpEvent = VBInstance.Events.VBComponentsEvents(Nothing)
     Set Me.prjEvent = VBInstance.Events.VBProjectsEvents
 
-    If GetSetting("MesCompléments", App.Title, "DisplayOnConnect", "0") = "1" Then
-        Show
-        objUD.Init
-    End If
+    lngAfficherExplorer = GetPrivateProfileInt("General", "DisplayOnConnect", 0, App.Path & "\data\c2iExplorer.ini")
+    Select Case lngAfficherExplorer
+        Case 1
+            Show
+            objUD.Init
+        Case Else
+            WritePrivateProfileString "General", "DisplayOnConnect", "0", App.Path & "\data\c2iExplorer.ini"
+    End Select
 
     Exit Function
 
 GestErr:
-    MsgBox "AddInCommandBar : " + Err.Description, vbInformation
-
+    MsgBox "AddToAddInCommandBar : " + Err.Description, vbInformation
 End Function
 
 Private Sub Show()
@@ -170,7 +197,7 @@ Private Sub Show()
     '=================================================
     On Error GoTo GestErr
 
-    objWindow.Visible = True
+    objWindow.Visible = conVrai
     Exit Sub
 
 GestErr:
@@ -198,23 +225,27 @@ Private Sub CmpEvent_ItemSelected(ByVal VBComponent As VBIDE.VBComponent)
     Debug.Print VBComponent.Name
 End Sub
 
+Private Sub IDTExtensibility_OnStartupComplete(custom() As Variant)
+'    AddToAddInCommandBar
+End Sub
+
 Private Sub prjEvent_ItemActivated(ByVal VBProject As VBIDE.VBProject)
     Set refEvent = VBInstance.Events.ReferencesEvents(VBProject)
     Set VBPrjSelected = VBProject
 End Sub
 
 Private Sub prjEvent_ItemAdded(ByVal VBProject As VBIDE.VBProject)
-    objUD.Init True
+    objUD.Init conVrai
     If VBInstance.VBProjects.Count = 1 Then
         Set VBPrjSelected = VBProject
     End If
     If UBound(DuréePrj) = 0 Then
         DuréePrj(0).Durée = 0
         DuréePrj(0).Name = ""
-        DuréePrj(0).FileName = ""
+        DuréePrj(0).Filename = ""
     End If
     ReDim Preserve DuréePrj(UBound(DuréePrj) + 1)
-    DuréePrj(UBound(DuréePrj)).FileName = VBProject.FileName
+    DuréePrj(UBound(DuréePrj)).Filename = VBProject.Filename
     DuréePrj(UBound(DuréePrj)).Name = VBProject.Name
     DuréePrj(UBound(DuréePrj)).Durée = timeGetTime / 1000
 End Sub
@@ -223,17 +254,23 @@ Private Sub prjEvent_ItemRemoved(ByVal VBProject As VBIDE.VBProject)
     objUD.RetireProjet VBProject
     SauveDuree VBProject
     'suppression dans le tableau des projects pour la session
-    Dim i As Long
-    For i = 0 To UBound(DuréePrj)
-        If VBProject.Name = DuréePrj(i).Name Then
-            DuréePrj(i).FileName = ""
-            DuréePrj(i).Name = ""
-            DuréePrj(i).Durée = 0
+    Dim I As Long
+    For I = 0 To UBound(DuréePrj)
+        If VBProject.Name = DuréePrj(I).Name Then
+            DuréePrj(I).Filename = ""
+            DuréePrj(I).Name = ""
+            DuréePrj(I).Durée = 0
             Exit For
         End If
-    Next i
+    Next I
 End Sub
 
 Private Sub refEvent_ItemAdded(ByVal Reference As VBIDE.Reference)
     objUD.AjouteReference VBInstance.ActiveVBProject, Reference
 End Sub
+
+'Sub AddToINI()
+'  ' Ce code ajoute une entrée au fichier VbAddin.ini.
+'  ' Ceci doit être exécuté depuis la fenêtre Exécution.
+'  Debug.Print WritePrivateProfileString("Add-Ins32", "c2iexplorer.Connectc2iExplorer", "0", "vbaddin.ini")
+'End Sub

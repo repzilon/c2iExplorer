@@ -7,6 +7,7 @@ Begin VB.UserDocument UDClassViewer
    ClientTop       =   345
    ClientWidth     =   7335
    HScrollSmallChange=   15
+   PaletteMode     =   2  'Custom
    ScaleHeight     =   417
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   489
@@ -17,6 +18,15 @@ Begin VB.UserDocument UDClassViewer
       AutoRedraw      =   -1  'True
       BackColor       =   &H00FFFFFF&
       BorderStyle     =   0  'None
+      BeginProperty Font 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       ForeColor       =   &H80000008&
       Height          =   855
       Left            =   480
@@ -40,13 +50,14 @@ Begin VB.UserDocument UDClassViewer
       ButtonWidth     =   847
       ButtonHeight    =   609
       AllowCustomize  =   0   'False
+      Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
       _Version        =   393216
    End
    Begin MSComctlLib.ImageList imgListView 
-      Left            =   6240
-      Top             =   2040
+      Left            =   6720
+      Top             =   1500
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   128
@@ -100,6 +111,15 @@ Begin VB.UserDocument UDClassViewer
       ForeColor       =   -2147483640
       BackColor       =   -2147483643
       Appearance      =   0
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       NumItems        =   1
       BeginProperty ColumnHeader(1) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          Object.Width           =   2540
@@ -133,11 +153,11 @@ Begin VB.UserDocument UDClassViewer
    End
    Begin VB.Label lblInt 
       Appearance      =   0  'Flat
-      BackColor       =   &H00808080&
+      BackColor       =   &H8000000C&
       BorderStyle     =   1  'Fixed Single
       Caption         =   "Private mFunction as Long"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
+         Name            =   "Tahoma"
          Size            =   8.25
          Charset         =   0
          Weight          =   700
@@ -157,7 +177,7 @@ Begin VB.UserDocument UDClassViewer
       BackStyle       =   0  'Transparent
       Caption         =   "cPersonnels"
       BeginProperty Font 
-         Name            =   "MS Sans Serif"
+         Name            =   "Tahoma"
          Size            =   9.75
          Charset         =   0
          Weight          =   700
@@ -177,32 +197,51 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+'
+' ***** END LICENSE BLOCK *****
+
 Option Explicit
 
 Private mobjCmp As VBIDE.VBComponent
 
 Private Sub UserDocument_Initialize()
     Set lvProp.SmallIcons = imgListView
-
     lvProp.View = lvwReport
-
+    
     Set tbMain.ImageList = ImgTBGene
     Set tbMain.HotImageList = ImgTBGene
-
     MakeToolBar
-
+    
+    UserDocument_Resize
 End Sub
 
-Private Function MakeToolBar()
+Private Sub MakeToolBar()
     Dim objButton As Button
-
     Set objButton = tbMain.Buttons.Add(, , , tbrSeparator)
-
     Set objButton = tbMain.Buttons.Add(, "actu", , , "actu")
     Set objButton = tbMain.Buttons.Add(, "descro", , tbrPressed, "descro")
-
     Set objButton = tbMain.Buttons.Add(, , , tbrSeparator)
-
     Set objButton = tbMain.Buttons.Add(, "print", , , "print")
 
     With tbMain.Buttons
@@ -212,14 +251,14 @@ Private Function MakeToolBar()
                 .Item("descro").ToolTipText = "Description"
                 .Item("print").ToolTipText = "Imprimer"
             Case Else
-                .Item("actu").ToolTipText = "Actualize"
+                .Item("actu").ToolTipText = "Refresh"
                 .Item("descro").ToolTipText = "Description"
                 .Item("print").ToolTipText = "Print"
         End Select
     End With
 
     Set objButton = Nothing
-End Function
+End Sub
 
 Private Sub UserDocument_Resize()
     On Error Resume Next
@@ -237,7 +276,7 @@ Private Sub UserDocument_Resize()
     End With
 End Sub
 
-Public Function Init(ByVal objCmp As VBIDE.VBComponent)
+Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
     Dim objMember As VBIDE.Member, lngColor As Long, lItem As ListItem
     Dim iGet As Long, iLet As Long, iSet As Long
     Dim sTexte As String
@@ -252,8 +291,8 @@ Public Function Init(ByVal objCmp As VBIDE.VBComponent)
     For Each objMember In mobjCmp.CodeModule.Members
         sTexte = objMember.Name
         If tbMain.Buttons("descro").Value = tbrUnpressed Then
-            If Trim(objMember.Description) <> "" Then
-                sTexte = sTexte + " (" + Trim(objMember.Description) + ")"
+            If Trim$(objMember.Description) <> "" Then
+                sTexte = sTexte + " (" + Trim$(objMember.Description) + ")"
             End If
         End If
 
@@ -309,7 +348,7 @@ Public Function Init(ByVal objCmp As VBIDE.VBComponent)
 
     Set lvProp.SelectedItem = Nothing
 
-End Function
+End Sub
 
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
@@ -322,13 +361,24 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     End Select
 End Sub
 
-Private Function Imprime()
+Private Sub Imprime()
     Dim lngDC As Long
 
+    On Error GoTo GestErr
     lngDC = GetDC(UserDocument.hwnd)
     BitBlt PicSource.hdc, 0, 0, UserDocument.ScaleWidth, UserDocument.ScaleHeight - tbMain.Height, lngDC, 0, tbMain.Height, vbSrcCopy
     ReleaseDC UserDocument.hwnd, lngDC
     PicSource.Refresh
     Printer.PaintPicture PicSource.Image, 0, 0
     Printer.EndDoc
-End Function
+    
+SortieProc:
+    Exit Sub
+GestErr:
+    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    Resume SortieProc
+End Sub
+
+Private Sub UserDocument_Terminate()
+    Set mobjCmp = Nothing
+End Sub

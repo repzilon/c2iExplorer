@@ -5,12 +5,13 @@ Begin VB.UserDocument UDCompteur
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   4800
-   HScrollSmallChange=   15
-   ScaleHeight     =   240
-   ScaleMode       =   3  'Pixel
-   ScaleWidth      =   320
+   HScrollSmallChange=   225
+   LockControls    =   -1  'True
+   PaletteMode     =   2  'Custom
+   ScaleHeight     =   3600
+   ScaleWidth      =   4800
    ScrollBars      =   0  'None
-   VScrollSmallChange=   15
+   VScrollSmallChange=   225
    Begin VB.Timer Timer1 
       Interval        =   60000
       Left            =   3360
@@ -28,29 +29,39 @@ Begin VB.UserDocument UDCompteur
       LabelEdit       =   1
       LabelWrap       =   -1  'True
       HideSelection   =   0   'False
+      FullRowSelect   =   -1  'True
       GridLines       =   -1  'True
       _Version        =   393217
       ForeColor       =   -2147483640
       BackColor       =   -2147483643
       BorderStyle     =   1
       Appearance      =   1
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       NumItems        =   3
       BeginProperty ColumnHeader(1) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          Key             =   "projet"
-         Text            =   "Projets"
+         Text            =   "Projet"
          Object.Width           =   2540
       EndProperty
       BeginProperty ColumnHeader(2) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          SubItemIndex    =   1
          Key             =   "duree"
-         Text            =   "Durées"
-         Object.Width           =   2540
+         Text            =   "Durée"
+         Object.Width           =   2117
       EndProperty
       BeginProperty ColumnHeader(3) {BDD1F052-858B-11D1-B16A-00C0F0283628} 
          SubItemIndex    =   2
          Key             =   "fichier"
-         Text            =   "Fichiers"
-         Object.Width           =   38100
+         Text            =   "Chemin et nom du fichier projet"
+         Object.Width           =   5292
       EndProperty
    End
    Begin MSComctlLib.Toolbar tb 
@@ -64,6 +75,8 @@ Begin VB.UserDocument UDCompteur
       _ExtentY        =   661
       ButtonWidth     =   847
       ButtonHeight    =   609
+      AllowCustomize  =   0   'False
+      Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
       ImageList       =   "imgTB"
@@ -97,8 +110,8 @@ Begin VB.UserDocument UDCompteur
       EndProperty
    End
    Begin MSComctlLib.ImageList imgTB 
-      Left            =   3000
-      Top             =   360
+      Left            =   3360
+      Top             =   1260
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   -2147483643
@@ -136,19 +149,44 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
+'
+' ***** END LICENSE BLOCK *****
+
 Option Explicit
 Private lngDureeSauve As Long
 Private bSauve As Boolean
 
 Private Function ExtraitFileTitle(ByVal sFileName As String) As String
-    Dim sM As String, iPos As Long, iDummy As Long
+    Dim sM As String, iPos As Long
     On Error GoTo GestErr
     sM = sFileName
     iPos = 1
     Do Until iPos = 0
         iPos = InStr(1, sM, "\")
         If iPos = 0 Then Exit Do
-        sM = Right(sM, Len(sM) - iPos)
+        sM = Right$(sM, Len(sM) - iPos)
     Loop
     ExtraitFileTitle = sM
     Exit Function
@@ -159,9 +197,8 @@ End Function
 
 Private Sub lv_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
     lv.SortKey = ColumnHeader.Index - 1
-    lv.Sorted = True
+    lv.Sorted = conVrai
 End Sub
-
 
 Private Sub tb_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
@@ -198,20 +235,22 @@ Private Function ModifDuree()
     frmDuree.Show vbModal
     ActuCompteur
 End Function
+
 Private Function AjouteProjet()
     Dim objVBPrj As VBProject
     Dim sc2iMsgBox As VbMsgBoxResult
 
     For Each objVBPrj In VBInstance.VBProjects
-        If objVBPrj.FileName = "" Then
-            MsgBox "Impossible d'ajouter ce projet :" + vbCrLf + objVBPrj.Name + vbCrLf + "Sauvegardez-le avant", vbInformation
+        If objVBPrj.Filename = "" Then
+            MsgBox "Impossible d'ajouter ce projet :" & vbCrLf & objVBPrj.Name & vbCrLf & "Sauvegardez-le avant", vbInformation
         Else
-            sc2iMsgBox = MsgBox("Voulez-vous ajouter ce projet :" + vbCrLf + objVBPrj.Name + vbCrLf + "à vos compteurs ?", vbQuestion + vbYesNo, "c2iExplorer")
-            Select Case sc2iMsgBox
-                Case vbYes
-                    SaveSetting App.EXEName, "Durees", objVBPrj.FileName, 0
-                    ActuCompteur
-            End Select
+            sc2iMsgBox = MsgBox("Voulez-vous ajouter ce projet :" & vbCrLf & objVBPrj.Name & vbCrLf & "à vos compteurs ?", vbQuestion + vbYesNo, "c2iExplorer")
+            If sc2iMsgBox = vbYes Then
+                'Modification par René Rhéaume 2 août 2001
+                Call WritePrivateProfileString("Durees", objVBPrj.Filename, "0", c2iINIFile)
+'                SaveSetting App.EXEName, "Durees", objVBPrj.Filename, 0
+                ActuCompteur
+            End If
         End If
     Next
 End Function
@@ -219,7 +258,9 @@ End Function
 Private Function SupprimeCompteur()
     On Error Resume Next
     If Not lv.SelectedItem Is Nothing Then
-        DeleteSetting App.EXEName, "Durees", lv.SelectedItem.Key
+        'Modification par René Rhéaume 2 août 2001
+        Call WritePrivateProfileString("Durees", lv.SelectedItem.Key, vbNullString, c2iINIFile)
+'        DeleteSetting App.EXEName, "Durees", lv.SelectedItem.Key
         ActuCompteur
     End If
 End Function
@@ -231,14 +272,13 @@ Private Sub Timer1_Timer()
     If Not bSauve Then Exit Sub
 
     On Error GoTo Fin                                      'accès interdit à la collection de Projects
-    If iNum = lngDureeSauve Then
+    If iNum Mod lngDureeSauve = 0 Then
         'sauve données
         For Each objVBPrj In VBInstance.VBProjects
             SauveDuree objVBPrj
         Next
         ActuCompteur
         Set objVBPrj = Nothing
-        iNum = -1
     End If
     iNum = iNum + 1
 
@@ -248,6 +288,7 @@ End Sub
 Private Sub UserDocument_Initialize()
     ActuCompteur
     ChargeInfos
+    UserDocument_Resize
 End Sub
 
 Private Sub UserDocument_Resize()
@@ -259,33 +300,81 @@ Private Sub UserDocument_Resize()
     End With
 End Sub
 
-Public Function ActuCompteur()
-    Dim tbSettings As Variant, i As Long, lItem As ListItem
-    Dim sFileName As String, objVBPrj As VBProject
-    Dim sFileTitle As String
+' Procédure modifiée par René Rhéaume 25 août 2001
+' Utilise le fichier INI au lieu de la base de registres
+Public Sub ActuCompteur()
+' Ancienne version
+'    Dim tbSettings As Variant, I As Long
+'    Dim sFileName As String, sFileTitle As String
+'    Dim objVBPrj As VBProject, lItem As ListItem
+'
+'    On Error GoTo Fin
+'    tbSettings = GetAllSettings(App.EXEName, "Durees")
+'
+'    lv.ListItems.Clear
+'    For I = 0 To UBound(tbSettings)
+'        sFileName = tbSettings(I, 0)
+'        sFileTitle = ExtraitFileTitle(sFileName)
+'        Set lItem = lv.ListItems.Add(, sFileName, sFileTitle)
+'        lItem.SubItems(1) = ConvertHeuresMinutesSecondes(GetDuree(sFileName))
+'        lItem.SubItems(2) = sFileName
+'        Set objVBPrj = Nothing
+'        For Each objVBPrj In VBInstance.VBProjects
+'            If objVBPrj.Filename = sFileName Then
+'                lItem.ForeColor = vbRed
+'                Exit For
+'            End If
+'        Next
+'    Next I
+'Fin:
+'    Set lItem = Nothing
+'    Set objVBPrj = Nothing
 
+' Nouvelle version
+    Dim objVBPrj As VBProject, lItem As ListItem
+    Dim chnContenuSectionDurees As String, tblSectionDurees() As String
+    Dim I As Long, iPos As Long
+    Dim chnCheminFichier As String, chnTitreProjet As String
+    #If VersionVB = 6 Then
+    Dim octImportationReussie As Byte
+    #End If
+    
     On Error GoTo Fin
-    tbSettings = GetAllSettings(App.EXEName, "Durees")
-
+    
+    #If VersionVB = 6 Then
+    ' Importe les durées
+    octImportationReussie = ImporterDurees
+    ' Vérifie si la conversion Base de registres -> c2iExplorer.ini
+    ' a été réussie. Si oui, supprime la clé de registre devenue obsolète.
+    If octImportationReussie = 0 Then
+        DeleteSetting App.EXEName
+    End If
+    #End If
+    
+    chnContenuSectionDurees = LireSectionFichierINI("Durees", c2iINIFile)
+    SplitB chnContenuSectionDurees, tblSectionDurees(), vbNullChar
+    
     lv.ListItems.Clear
-    For i = 0 To UBound(tbSettings)
-        sFileName = tbSettings(i, 0)
-        sFileTitle = ExtraitFileTitle(sFileName)
-        Set lItem = lv.ListItems.Add(, sFileName, sFileTitle)
-        lItem.SubItems(1) = ConvertHeuresMinutesSecondes(GetDuree(sFileName))
-        lItem.SubItems(2) = sFileName
+    For I = 0 To UBound(tblSectionDurees()) - 1
+        iPos = InStr(1, tblSectionDurees(I), "=")
+        chnCheminFichier = Trim$(Left$(tblSectionDurees(I), iPos - 1))
+        chnTitreProjet = ExtraitFileTitle(chnCheminFichier)
+        Set lItem = lv.ListItems.Add(, chnCheminFichier, chnTitreProjet)
+        lItem.SubItems(1) = ConvertHeuresMinutesSecondes(GetDuree(chnCheminFichier))
+        lItem.SubItems(2) = chnCheminFichier
         Set objVBPrj = Nothing
         For Each objVBPrj In VBInstance.VBProjects
-            If objVBPrj.FileName = sFileName Then
-                lItem.ForeColor = vbRed
+            If objVBPrj.Filename = chnCheminFichier Then
+                lItem.Bold = conVrai
                 Exit For
             End If
         Next
-    Next i
+    Next I
+
 Fin:
     Set lItem = Nothing
     Set objVBPrj = Nothing
-End Function
+End Sub
 
 Private Function ConvertHeuresMinutesSecondes(ByVal lngTime As Long) As String
     Dim sH As String, sMn As String, sS As String
@@ -303,39 +392,71 @@ Private Sub UserDocument_Show()
     ActuCompteur
 End Sub
 
-Private Function ChargeInfos()
-    Dim fso As FileSystemObject
-    Dim txtS As TextStream, sFile As String
-
-    sFile = App.Path + "\data\duree.txt"
-
-    On Error Resume Next
-    Err.Clear
-    Set fso = New FileSystemObject
-    If fso.FileExists(sFile) Then
-        Set txtS = fso.OpenTextFile(sFile)
-        bSauve = CBool(txtS.ReadLine)
-        If Err.Number <> 0 Then
-            bSauve = True
-            Err.Clear
-        End If
-        lngDureeSauve = CLng(txtS.ReadLine)
-        If Err.Number <> 0 Then
-            lngDureeSauve = 2                              'sauvegarde par defaut toutes les 2 minutes
-            Err.Clear
-        End If
-    Else                                                   'le fichier n'existe pas , on le crée
-        bSauve = True
+'Fonction modifiée par René Rhéaume 30 juillet 2001
+'Utilise un fichier INI et les fonctions API au lieu
+'d'un fichier texte et du FileSystemObject
+Private Sub ChargeInfos()
+    Dim lngSauvegarder As Long, lngIntervalle As Long
+    
+    lngSauvegarder = GetPrivateProfileInt("General", "SaveDurations", 1, c2iINIFile)
+    Select Case lngSauvegarder
+        Case 1
+            bSauve = conVrai
+        Case 0
+            bSauve = conFaux
+        Case Else
+            bSauve = conVrai
+            WritePrivateProfileString "General", "SaveDurations", "1", c2iINIFile
+    End Select
+    
+    lngIntervalle = GetPrivateProfileInt("General", "DurationSaveInterval", 2, c2iINIFile)
+    If Err <> 0 Then
         lngDureeSauve = 2
-        Set txtS = fso.CreateTextFile(sFile)
-        txtS.WriteLine CStr(bSauve)
-        txtS.WriteLine CStr(lngDureeSauve)
+        WritePrivateProfileString "General", "DurationSaveInterval", "2", c2iINIFile
+    Else
+        lngDureeSauve = lngIntervalle
     End If
-    txtS.Close
-    Set txtS = Nothing
-    Set fso = Nothing
-    If Not bSauve Then
-        Timer1.Enabled = False
-    End If
-End Function
 
+    If Not bSauve Then
+        Timer1.Enabled = conFaux
+    End If
+End Sub
+
+' Ajouté par René Rhéaume 25 août 2001
+' Importe les durées de la base de registres vers le fichier INI
+' Utile pour les versions VB6 seulement
+' Retourne 0 s'il n'y a pas d'erreur
+#If VersionVB = 6 Then
+Public Function ImporterDurees() As Byte
+    Dim tbSettings As Variant, I As Long
+    Dim sFileName As String
+    Dim chnDuree As String ' Un peu bizarre, mais pas de conversions inutiles
+    Dim lngLigneCode As Long
+
+    On Error GoTo GestErr
+    lngLigneCode = 0
+    tbSettings = GetAllSettings(App.EXEName, "Durees")
+    lngLigneCode = 1
+
+    If IsEmpty(tbSettings) = conFaux Then
+        lngLigneCode = 2
+        For I = 0 To UBound(tbSettings)
+            lngLigneCode = 3
+            sFileName = tbSettings(I, 0)
+            lngLigneCode = 4
+            chnDuree = tbSettings(I, 1)
+            lngLigneCode = 5
+            Call WritePrivateProfileString("Durees", sFileName, chnDuree, c2iINIFile)
+            lngLigneCode = 6
+        Next I
+    End If
+    ImporterDurees = 0
+    
+Fin:
+    Exit Function
+GestErr:
+    MsgBox "Une erreur est survenue lors de l'importation des durées de la base de registres vers le fichier INI" & vbCrLf & "Erreur numéro : " & Err.Number & vbCrLf & "Description : " & Err.Description & vbCrLf & "Lignes réussies : " & lngLigneCode, 48, App.Title
+    ImporterDurees = 1
+    Resume Fin
+End Function
+#End If

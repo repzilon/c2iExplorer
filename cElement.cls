@@ -1,10 +1,6 @@
 VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
-  Persistable = 0  'NotPersistable
-  DataBindingBehavior = 0  'vbNone
-  DataSourceBehavior  = 0  'vbNone
-  MTSTransactionMode  = 0  'NotAnMTSObject
 END
 Attribute VB_Name = "cElement"
 Attribute VB_GlobalNameSpace = False
@@ -13,6 +9,29 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 Attribute VB_Ext_KEY = "SavedWithClassBuilder6" ,"Yes"
 Attribute VB_Ext_KEY = "Top_Level" ,"Yes"
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+'
+' ***** END LICENSE BLOCK *****
 Option Explicit
 
 '//************Généré par c2iExplorer*******************
@@ -21,13 +40,11 @@ Private sDescription As String
 Private sEndProc As String
 Private sInLineProc As String
 Private sHeadProc As String
-'//************Généré par c2iExplorer*******************
 Private sDeclareProc As String
-
 
 Public Property Let Nom(ByVal sNomA As String)
     If Len(sNomA) > 255 Then
-        sNom = Left(sNomA, 255)
+        sNom = Left$(sNomA, 255)
     Else
         sNom = sNomA
     End If
@@ -46,13 +63,13 @@ Public Property Get Titre() As String
         iDeb = iPos
         iPos = InStr(iPos + 1, sNom, "/")
     Loop
-    Titre = Right(sNom, Len(sNom) - iDeb)
+    Titre = Right$(sNom, Len(sNom) - iDeb)
 
 End Property
 
 Public Property Let Description(ByVal sDescriptionA As String)
     If Len(sDescriptionA) > 255 Then
-        sDescription = Left(sDescriptionA, 255)
+        sDescription = Left$(sDescriptionA, 255)
     Else
         sDescription = sDescriptionA
     End If
@@ -86,13 +103,14 @@ Public Property Get HeadProc() As String
     HeadProc = sHeadProc
 End Property
 
-Private Sub Class_Initialize()
-    InitClass 4, 1
-End Sub
+'Private Sub Class_Initialize()
+'    InitClass 4, 1
+'End Sub
+'
+'Private Sub Class_Terminate()
+'    InitClass 4, -1
+'End Sub
 
-Private Sub Class_Terminate()
-    InitClass 4, -1
-End Sub
 Public Property Let DeclareProc(ByVal sDeclareProcA As String)
     sDeclareProc = sDeclareProcA
 End Property
@@ -130,11 +148,11 @@ Public Property Get NomRepertoire(ByVal iIdent As Long) As String
     iPos = 1
     iPosNext = InStr(iPos, sNom, "/")
     iNum = 0
-    NomRepertoire = Mid(sNom, iPos, iPosNext - iPos)
+    NomRepertoire = Mid$(sNom, iPos, iPosNext - iPos)
     Do Until iNum = iIdent
         iPos = iPosNext + 1
         iPosNext = InStr(iPos, sNom, "/")
-        NomRepertoire = Mid(sNom, iPos, iPosNext - iPos)
+        NomRepertoire = Mid$(sNom, iPos, iPosNext - iPos)
         iNum = iNum + 1
     Loop
 
@@ -161,5 +179,5 @@ Public Property Get CheminComplet(ByVal iIdent As Long) As String
         iNum = iNum + 1
     Loop
 
-    CheminComplet = Left(sNom, iPosNext - 1)
+    CheminComplet = Left$(sNom, iPosNext - 1)
 End Property

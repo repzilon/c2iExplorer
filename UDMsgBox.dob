@@ -1,12 +1,21 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.UserDocument UDMsgBox 
    ClientHeight    =   5130
    ClientLeft      =   210
    ClientTop       =   450
    ClientWidth     =   7470
+   BeginProperty Font 
+      Name            =   "Tahoma"
+      Size            =   8.25
+      Charset         =   0
+      Weight          =   400
+      Underline       =   0   'False
+      Italic          =   0   'False
+      Strikethrough   =   0   'False
+   EndProperty
    HScrollSmallChange=   225
+   LockControls    =   -1  'True
    ScaleHeight     =   5130
    ScaleWidth      =   7470
    ScrollBars      =   0  'None
@@ -37,13 +46,15 @@ Begin VB.UserDocument UDMsgBox
       Align           =   1  'Align Top
       Height          =   375
       Left            =   0
-      TabIndex        =   45
+      TabIndex        =   39
       Top             =   0
       Width           =   7470
       _ExtentX        =   13176
       _ExtentY        =   661
       ButtonWidth     =   847
       ButtonHeight    =   609
+      AllowCustomize  =   0   'False
+      Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
       ImageList       =   "ImageList1"
@@ -64,7 +75,16 @@ Begin VB.UserDocument UDMsgBox
    End
    Begin VB.PictureBox picMax 
       Align           =   3  'Align Left
-      BackColor       =   &H00808080&
+      BackColor       =   &H8000000C&
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
       Height          =   4755
       Left            =   0
       ScaleHeight     =   4695
@@ -89,18 +109,18 @@ Begin VB.UserDocument UDMsgBox
          ImgOuvert1      =   "UDMsgBox.dox":0BCE
          ImgFermée0      =   "UDMsgBox.dox":0CE0
          ImgFermée1      =   "UDMsgBox.dox":0DF2
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   16777215
-         CouleurFondTitre=   8421504
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483639
+         CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
          PicFond         =   "UDMsgBox.dox":0F04
          PicTitleFond    =   "UDMsgBox.dox":0F20
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -108,7 +128,6 @@ Begin VB.UserDocument UDMsgBox
          Begin VB.PictureBox picIcones 
             Appearance      =   0  'Flat
             AutoSize        =   -1  'True
-            BackColor       =   &H80000005&
             BorderStyle     =   0  'None
             ForeColor       =   &H80000008&
             Height          =   240
@@ -117,131 +136,119 @@ Begin VB.UserDocument UDMsgBox
             Picture         =   "UDMsgBox.dox":0F3C
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   8
+            TabIndex        =   44
             Top             =   1800
             Width           =   240
          End
          Begin VB.PictureBox picIcones 
             Appearance      =   0  'Flat
             AutoSize        =   -1  'True
-            BackColor       =   &H80000005&
             BorderStyle     =   0  'None
             ForeColor       =   &H80000008&
             Height          =   240
             Index           =   3
             Left            =   360
-            Picture         =   "UDMsgBox.dox":103E
+            Picture         =   "UDMsgBox.dox":0FEC
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   7
+            TabIndex        =   43
             Top             =   1440
             Width           =   240
          End
          Begin VB.PictureBox picIcones 
             Appearance      =   0  'Flat
             AutoSize        =   -1  'True
-            BackColor       =   &H80000005&
             BorderStyle     =   0  'None
             ForeColor       =   &H80000008&
             Height          =   240
             Index           =   2
             Left            =   360
-            Picture         =   "UDMsgBox.dox":1140
+            Picture         =   "UDMsgBox.dox":10A4
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   6
+            TabIndex        =   42
             Top             =   1080
             Width           =   240
          End
          Begin VB.PictureBox picIcones 
             Appearance      =   0  'Flat
             AutoSize        =   -1  'True
-            BackColor       =   &H80000005&
             BorderStyle     =   0  'None
             ForeColor       =   &H80000008&
             Height          =   240
             Index           =   1
             Left            =   360
-            Picture         =   "UDMsgBox.dox":1242
+            Picture         =   "UDMsgBox.dox":115A
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   5
+            TabIndex        =   41
             Top             =   720
             Width           =   240
          End
          Begin VB.PictureBox picIcones 
             Appearance      =   0  'Flat
             AutoSize        =   -1  'True
-            BackColor       =   &H80000005&
             ForeColor       =   &H80000008&
             Height          =   270
             Index           =   0
             Left            =   360
-            Picture         =   "UDMsgBox.dox":1344
+            Picture         =   "UDMsgBox.dox":1213
             ScaleHeight     =   240
             ScaleWidth      =   240
-            TabIndex        =   4
+            TabIndex        =   40
             Top             =   360
-            Width           =   270
-         End
-         Begin VB.PictureBox picIconesOmbre 
-            Appearance      =   0  'Flat
-            BackColor       =   &H00808080&
-            BorderStyle     =   0  'None
-            ForeColor       =   &H80000008&
-            Height          =   270
-            Left            =   1560
-            ScaleHeight     =   270
-            ScaleWidth      =   270
-            TabIndex        =   9
-            Top             =   600
             Width           =   270
          End
          Begin VB.Label lblIconesInfos 
             AutoSize        =   -1  'True
+            BackStyle       =   0  'Transparent
             Caption         =   "Information"
             Height          =   195
             Index           =   4
             Left            =   720
-            TabIndex        =   14
+            TabIndex        =   8
             Top             =   1800
-            Width           =   780
+            Width           =   840
          End
          Begin VB.Label lblIconesInfos 
             AutoSize        =   -1  'True
+            BackStyle       =   0  'Transparent
             Caption         =   "Exclamation"
             Height          =   195
             Index           =   3
             Left            =   720
-            TabIndex        =   13
+            TabIndex        =   7
             Top             =   1440
             Width           =   855
          End
          Begin VB.Label lblIconesInfos 
             AutoSize        =   -1  'True
+            BackStyle       =   0  'Transparent
             Caption         =   "Question"
             Height          =   195
             Index           =   2
             Left            =   720
-            TabIndex        =   12
+            TabIndex        =   6
             Top             =   1080
-            Width           =   630
+            Width           =   645
          End
          Begin VB.Label lblIconesInfos 
             AutoSize        =   -1  'True
+            BackStyle       =   0  'Transparent
             Caption         =   "Critique"
             Height          =   195
             Index           =   1
             Left            =   720
-            TabIndex        =   11
+            TabIndex        =   5
             Top             =   720
-            Width           =   525
+            Width           =   555
          End
          Begin VB.Label lblIconesInfos 
             AutoSize        =   -1  'True
-            Caption         =   "Aucunes"
+            BackStyle       =   0  'Transparent
+            Caption         =   "Aucune"
             BeginProperty Font 
-               Name            =   "MS Sans Serif"
+               Name            =   "Tahoma"
                Size            =   8.25
                Charset         =   0
                Weight          =   700
@@ -252,16 +259,25 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   0
             Left            =   720
-            TabIndex        =   10
+            TabIndex        =   4
             Top             =   360
-            Width           =   750
+            Width           =   630
+         End
+         Begin VB.Shape shpIconesOmbre 
+            BackColor       =   &H80000010&
+            BackStyle       =   1  'Opaque
+            BorderStyle     =   0  'Transparent
+            Height          =   270
+            Left            =   420
+            Top             =   420
+            Width           =   270
          End
       End
       Begin c2iExplorer.c2iContainerInt c2iContainerIntMsg 
          Height          =   240
          Index           =   1
          Left            =   0
-         TabIndex        =   15
+         TabIndex        =   9
          Top             =   240
          Width           =   2895
          _ExtentX        =   5106
@@ -270,22 +286,22 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Boutons"
          Ouvert          =   0   'False
          Hauteur         =   2415
-         ImgOuvert0      =   "UDMsgBox.dox":1686
-         ImgOuvert1      =   "UDMsgBox.dox":1798
-         ImgFermée0      =   "UDMsgBox.dox":18AA
-         ImgFermée1      =   "UDMsgBox.dox":19BC
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   0
-         CouleurFondTitre=   12648447
+         ImgOuvert0      =   "UDMsgBox.dox":12AC
+         ImgOuvert1      =   "UDMsgBox.dox":13BE
+         ImgFermée0      =   "UDMsgBox.dox":14D0
+         ImgFermée1      =   "UDMsgBox.dox":15E2
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483625
+         CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1ACE
-         PicTitleFond    =   "UDMsgBox.dox":1AEA
+         PicFond         =   "UDMsgBox.dox":16F4
+         PicTitleFond    =   "UDMsgBox.dox":1710
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -300,9 +316,9 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   5
             Left            =   360
-            TabIndex        =   21
+            TabIndex        =   15
             Top             =   2160
-            Width           =   915
+            Width           =   930
          End
          Begin VB.Label lblButtons 
             Appearance      =   0  'Flat
@@ -314,9 +330,9 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   4
             Left            =   360
-            TabIndex        =   20
+            TabIndex        =   14
             Top             =   1800
-            Width           =   525
+            Width           =   495
          End
          Begin VB.Label lblButtons 
             Appearance      =   0  'Flat
@@ -328,9 +344,9 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   3
             Left            =   360
-            TabIndex        =   19
+            TabIndex        =   13
             Top             =   1440
-            Width           =   1065
+            Width           =   1020
          End
          Begin VB.Label lblButtons 
             Appearance      =   0  'Flat
@@ -342,9 +358,9 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   2
             Left            =   360
-            TabIndex        =   18
+            TabIndex        =   12
             Top             =   1080
-            Width           =   1290
+            Width           =   1380
          End
          Begin VB.Label lblButtons 
             Appearance      =   0  'Flat
@@ -356,9 +372,9 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   1
             Left            =   360
-            TabIndex        =   17
+            TabIndex        =   11
             Top             =   720
-            Width           =   765
+            Width           =   735
          End
          Begin VB.Label lblButtons 
             Appearance      =   0  'Flat
@@ -367,7 +383,7 @@ Begin VB.UserDocument UDMsgBox
             BackStyle       =   0  'Transparent
             Caption         =   "OK"
             BeginProperty Font 
-               Name            =   "MS Sans Serif"
+               Name            =   "Tahoma"
                Size            =   8.25
                Charset         =   0
                Weight          =   700
@@ -379,16 +395,16 @@ Begin VB.UserDocument UDMsgBox
             Height          =   195
             Index           =   0
             Left            =   360
-            TabIndex        =   16
+            TabIndex        =   10
             Top             =   360
-            Width           =   270
+            Width           =   225
          End
       End
       Begin c2iExplorer.c2iContainerInt c2iContainerIntMsg 
          Height          =   240
          Index           =   2
          Left            =   0
-         TabIndex        =   22
+         TabIndex        =   16
          Top             =   480
          Width           =   2895
          _ExtentX        =   5106
@@ -397,22 +413,22 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Bouton par défaut"
          Ouvert          =   0   'False
          Hauteur         =   1815
-         ImgOuvert0      =   "UDMsgBox.dox":1B06
-         ImgOuvert1      =   "UDMsgBox.dox":1C18
-         ImgFermée0      =   "UDMsgBox.dox":1D2A
-         ImgFermée1      =   "UDMsgBox.dox":1E3C
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   16777215
-         CouleurFondTitre=   8421504
+         ImgOuvert0      =   "UDMsgBox.dox":172C
+         ImgOuvert1      =   "UDMsgBox.dox":183E
+         ImgFermée0      =   "UDMsgBox.dox":1950
+         ImgFermée1      =   "UDMsgBox.dox":1A62
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483639
+         CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1F4E
-         PicTitleFond    =   "UDMsgBox.dox":1F6A
+         PicFond         =   "UDMsgBox.dox":1B74
+         PicTitleFond    =   "UDMsgBox.dox":1B90
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -423,7 +439,7 @@ Begin VB.UserDocument UDMsgBox
             BackStyle       =   0  'Transparent
             Caption         =   "1er bouton"
             BeginProperty Font 
-               Name            =   "MS Sans Serif"
+               Name            =   "Tahoma"
                Size            =   8.25
                Charset         =   0
                Weight          =   700
@@ -435,7 +451,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   255
             Index           =   0
             Left            =   240
-            TabIndex        =   26
+            TabIndex        =   20
             Top             =   360
             Width           =   1215
          End
@@ -443,12 +459,12 @@ Begin VB.UserDocument UDMsgBox
             Appearance      =   0  'Flat
             BackColor       =   &H80000005&
             BackStyle       =   0  'Transparent
-            Caption         =   "2ème bouton"
+            Caption         =   "2e bouton"
             ForeColor       =   &H80000008&
             Height          =   255
             Index           =   1
             Left            =   240
-            TabIndex        =   25
+            TabIndex        =   19
             Top             =   720
             Width           =   1215
          End
@@ -456,12 +472,12 @@ Begin VB.UserDocument UDMsgBox
             Appearance      =   0  'Flat
             BackColor       =   &H80000005&
             BackStyle       =   0  'Transparent
-            Caption         =   "3ème bouton"
+            Caption         =   "3e bouton"
             ForeColor       =   &H80000008&
             Height          =   255
             Index           =   2
             Left            =   240
-            TabIndex        =   24
+            TabIndex        =   18
             Top             =   1080
             Width           =   1215
          End
@@ -469,12 +485,12 @@ Begin VB.UserDocument UDMsgBox
             Appearance      =   0  'Flat
             BackColor       =   &H80000005&
             BackStyle       =   0  'Transparent
-            Caption         =   "4ème bouton"
+            Caption         =   "4e bouton"
             ForeColor       =   &H80000008&
             Height          =   255
             Index           =   3
             Left            =   240
-            TabIndex        =   23
+            TabIndex        =   17
             Top             =   1440
             Width           =   1215
          End
@@ -483,7 +499,7 @@ Begin VB.UserDocument UDMsgBox
          Height          =   240
          Index           =   3
          Left            =   0
-         TabIndex        =   27
+         TabIndex        =   21
          Top             =   720
          Width           =   2895
          _ExtentX        =   5106
@@ -492,22 +508,22 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Modalité"
          Ouvert          =   0   'False
          Hauteur         =   1095
-         ImgOuvert0      =   "UDMsgBox.dox":1F86
-         ImgOuvert1      =   "UDMsgBox.dox":2098
-         ImgFermée0      =   "UDMsgBox.dox":21AA
-         ImgFermée1      =   "UDMsgBox.dox":22BC
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   0
-         CouleurFondTitre=   12648447
+         ImgOuvert0      =   "UDMsgBox.dox":1BAC
+         ImgOuvert1      =   "UDMsgBox.dox":1CBE
+         ImgFermée0      =   "UDMsgBox.dox":1DD0
+         ImgFermée1      =   "UDMsgBox.dox":1EE2
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483625
+         CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":23CE
-         PicTitleFond    =   "UDMsgBox.dox":23EA
+         PicFond         =   "UDMsgBox.dox":1FF4
+         PicTitleFond    =   "UDMsgBox.dox":2010
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -521,9 +537,9 @@ Begin VB.UserDocument UDMsgBox
             Height          =   255
             Index           =   1
             Left            =   240
-            TabIndex        =   29
+            TabIndex        =   23
             Top             =   720
-            Width           =   2415
+            Width           =   1695
          End
          Begin VB.Label lblModal 
             Appearance      =   0  'Flat
@@ -531,7 +547,7 @@ Begin VB.UserDocument UDMsgBox
             BackStyle       =   0  'Transparent
             Caption         =   "Modal / Application"
             BeginProperty Font 
-               Name            =   "MS Sans Serif"
+               Name            =   "Tahoma"
                Size            =   8.25
                Charset         =   0
                Weight          =   700
@@ -543,16 +559,16 @@ Begin VB.UserDocument UDMsgBox
             Height          =   255
             Index           =   0
             Left            =   240
-            TabIndex        =   28
+            TabIndex        =   22
             Top             =   360
-            Width           =   1935
+            Width           =   1695
          End
       End
       Begin c2iExplorer.c2iContainerInt c2iContainerIntMsg 
          Height          =   240
          Index           =   4
          Left            =   0
-         TabIndex        =   30
+         TabIndex        =   24
          Top             =   960
          Width           =   2895
          _ExtentX        =   5106
@@ -561,22 +577,22 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Aide"
          Ouvert          =   0   'False
          Hauteur         =   1455
-         ImgOuvert0      =   "UDMsgBox.dox":2406
-         ImgOuvert1      =   "UDMsgBox.dox":2518
-         ImgFermée0      =   "UDMsgBox.dox":262A
-         ImgFermée1      =   "UDMsgBox.dox":273C
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   16777215
-         CouleurFondTitre=   8421504
+         ImgOuvert0      =   "UDMsgBox.dox":202C
+         ImgOuvert1      =   "UDMsgBox.dox":213E
+         ImgFermée0      =   "UDMsgBox.dox":2250
+         ImgFermée1      =   "UDMsgBox.dox":2362
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483639
+         CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":284E
-         PicTitleFond    =   "UDMsgBox.dox":286A
+         PicFond         =   "UDMsgBox.dox":2474
+         PicTitleFond    =   "UDMsgBox.dox":2490
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -584,14 +600,14 @@ Begin VB.UserDocument UDMsgBox
          Begin VB.TextBox txtHelpFile 
             Height          =   285
             Left            =   240
-            TabIndex        =   33
+            TabIndex        =   27
             Top             =   600
             Width           =   2055
          End
          Begin VB.CommandButton cmdParcoursFile 
             Caption         =   "..."
             BeginProperty Font 
-               Name            =   "MS Sans Serif"
+               Name            =   "Arial"
                Size            =   8.25
                Charset         =   0
                Weight          =   700
@@ -600,15 +616,15 @@ Begin VB.UserDocument UDMsgBox
                Strikethrough   =   0   'False
             EndProperty
             Height          =   255
-            Left            =   2400
-            TabIndex        =   32
+            Left            =   2280
+            TabIndex        =   26
             Top             =   600
-            Width           =   375
+            Width           =   255
          End
          Begin VB.TextBox txtContext 
             Height          =   285
             Left            =   1080
-            TabIndex        =   31
+            TabIndex        =   25
             Top             =   960
             Width           =   1215
          End
@@ -617,7 +633,7 @@ Begin VB.UserDocument UDMsgBox
             Caption         =   "Fichier d'aide"
             Height          =   255
             Left            =   240
-            TabIndex        =   35
+            TabIndex        =   29
             Top             =   360
             Width           =   1215
          End
@@ -626,7 +642,7 @@ Begin VB.UserDocument UDMsgBox
             Caption         =   "Contexte"
             Height          =   255
             Left            =   240
-            TabIndex        =   34
+            TabIndex        =   28
             Top             =   960
             Width           =   735
          End
@@ -635,7 +651,7 @@ Begin VB.UserDocument UDMsgBox
          Height          =   240
          Index           =   5
          Left            =   0
-         TabIndex        =   36
+         TabIndex        =   30
          Top             =   1200
          Width           =   2895
          _ExtentX        =   5106
@@ -644,50 +660,47 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   "Divers"
          Ouvert          =   0   'False
          Hauteur         =   1455
-         ImgOuvert0      =   "UDMsgBox.dox":2886
-         ImgOuvert1      =   "UDMsgBox.dox":2998
-         ImgFermée0      =   "UDMsgBox.dox":2AAA
-         ImgFermée1      =   "UDMsgBox.dox":2BBC
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   0
-         CouleurFondTitre=   12648447
+         ImgOuvert0      =   "UDMsgBox.dox":24AC
+         ImgOuvert1      =   "UDMsgBox.dox":25BE
+         ImgFermée0      =   "UDMsgBox.dox":26D0
+         ImgFermée1      =   "UDMsgBox.dox":27E2
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483625
+         CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":2CCE
-         PicTitleFond    =   "UDMsgBox.dox":2CEA
+         PicFond         =   "UDMsgBox.dox":28F4
+         PicTitleFond    =   "UDMsgBox.dox":2910
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
          Begin VB.CheckBox chkTextAlign 
-            BackColor       =   &H00C0C0C0&
-            Caption         =   "Texte aligner à droite"
+            Caption         =   "Texte aligné à droite"
             Height          =   255
             Left            =   360
-            TabIndex        =   39
+            TabIndex        =   33
             Top             =   1080
             Width           =   1935
          End
          Begin VB.CheckBox chk1Plan 
-            BackColor       =   &H00C0C0C0&
-            Caption         =   "fenêtre de 1er plan"
+            Caption         =   "Fenêtre de 1er plan"
             Height          =   255
             Left            =   360
-            TabIndex        =   38
+            TabIndex        =   32
             Top             =   720
             Width           =   1935
          End
          Begin VB.CheckBox chkHelpButton 
-            BackColor       =   &H00C0C0C0&
             Caption         =   "Bouton d'aide"
             Height          =   255
             Left            =   360
-            TabIndex        =   37
+            TabIndex        =   31
             Top             =   360
             Width           =   1575
          End
@@ -696,7 +709,7 @@ Begin VB.UserDocument UDMsgBox
          Height          =   3015
          Index           =   6
          Left            =   0
-         TabIndex        =   40
+         TabIndex        =   34
          Top             =   1440
          Width           =   2895
          _ExtentX        =   5106
@@ -704,40 +717,40 @@ Begin VB.UserDocument UDMsgBox
          Alignement      =   2
          Caption         =   "Message - Titre"
          Hauteur         =   3015
-         ImgOuvert0      =   "UDMsgBox.dox":2D06
-         ImgOuvert1      =   "UDMsgBox.dox":2E18
-         ImgFermée0      =   "UDMsgBox.dox":2F2A
-         ImgFermée1      =   "UDMsgBox.dox":303C
-         CouleurFond     =   12632256
-         CouleurTexteTitre=   16777215
-         CouleurFondTitre=   8421504
+         ImgOuvert0      =   "UDMsgBox.dox":292C
+         ImgOuvert1      =   "UDMsgBox.dox":2A3E
+         ImgFermée0      =   "UDMsgBox.dox":2B50
+         ImgFermée1      =   "UDMsgBox.dox":2C62
+         CouleurFond     =   -2147483633
+         CouleurTexteTitre=   -2147483639
+         CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":314E
-         PicTitleFond    =   "UDMsgBox.dox":316A
+         PicFond         =   "UDMsgBox.dox":2D74
+         PicTitleFond    =   "UDMsgBox.dox":2D90
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Begin VB.TextBox txtTitle 
-            Height          =   285
-            Left            =   240
-            TabIndex        =   42
-            Top             =   600
-            Width           =   2535
-         End
          Begin VB.TextBox txtMessage 
             Height          =   1695
             Left            =   240
             MultiLine       =   -1  'True
             ScrollBars      =   3  'Both
-            TabIndex        =   41
+            TabIndex        =   35
             Top             =   1200
+            Width           =   2535
+         End
+         Begin VB.TextBox txtTitle 
+            Height          =   285
+            Left            =   240
+            TabIndex        =   36
+            Top             =   600
             Width           =   2535
          End
          Begin VB.Label Label1 
@@ -745,7 +758,7 @@ Begin VB.UserDocument UDMsgBox
             Caption         =   "Titre"
             Height          =   255
             Left            =   240
-            TabIndex        =   44
+            TabIndex        =   38
             Top             =   360
             Width           =   1215
          End
@@ -754,40 +767,23 @@ Begin VB.UserDocument UDMsgBox
             Caption         =   "Message "
             Height          =   255
             Left            =   240
-            TabIndex        =   43
+            TabIndex        =   37
             Top             =   960
             Width           =   1215
          End
       End
    End
-   Begin MSComDlg.CommonDialog cdlg 
-      Left            =   4680
-      Top             =   4800
-      _ExtentX        =   847
-      _ExtentY        =   847
-      _Version        =   393216
-      CancelError     =   -1  'True
-   End
    Begin VB.TextBox txtCode 
-      Height          =   3135
+      Height          =   4275
       Left            =   2880
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Both
       TabIndex        =   1
       Top             =   840
-      Width           =   4215
+      Width           =   4575
    End
    Begin VB.Label Label3 
       Caption         =   "Code"
-      BeginProperty Font 
-         Name            =   "MS Sans Serif"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   700
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Left            =   3000
       TabIndex        =   2
@@ -800,17 +796,47 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
+'
+' ***** END LICENSE BLOCK *****
+
 Option Explicit
 
 
+'Note par René Rhéaume 1er août 2001
+'Avant de compiler :
+'Seul le dernier c2iContainerIntMsg (index 6) doit être ouvert
+'(Ouvert = conVrai) dans la fenêtre de conception. Tous les autres doivent
+'être fermés.
 
 Private Sub c2iContainerIntMsg_OuvertureChange(Index As Integer)
-    Dim iNum As Long, bOuvert As Boolean
-
+    Dim iNum As Long
+    
     If c2iContainerIntMsg(Index).Ouvert Then
         For iNum = 0 To c2iContainerIntMsg.UBound
             If iNum <> Index Then
-                c2iContainerIntMsg(iNum).Ouvert = False
+                c2iContainerIntMsg(iNum).Ouvert = conFaux
             End If
         Next
     End If
@@ -825,6 +851,24 @@ Private Sub c2iContainerIntMsg_TitleDblClick(Index As Integer)
     c2iContainerIntMsg(Index).Ouvert = Not c2iContainerIntMsg(Index).Ouvert
 End Sub
 
+Private Sub picIcones_Click(Index As Integer)
+    Dim iNum As Long, iUnPixel As Long
+
+    iUnPixel = ScaleX(2, vbPixels, vbTwips)
+
+    For iNum = 0 To picIcones.UBound
+        picIcones(iNum).BorderStyle = 0
+        lblIconesInfos(iNum).FontBold = conFaux
+    Next
+    picIcones(Index).BorderStyle = 1
+    lblIconesInfos(Index).FontBold = conVrai
+    shpIconesOmbre.Left = picIcones(Index).Left + iUnPixel
+    shpIconesOmbre.Top = picIcones(Index).Top + iUnPixel
+
+
+    MiseAJourCode
+End Sub
+
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim lngStartLine As Long, lngStartColumn As Long, lngEndLine As Long, lngEndColumn As Long
 
@@ -832,17 +876,20 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
         Case "voir"
             ShowMsgBox
         Case "copie"
-            If VBInstance.ActiveCodePane.CodeModule Is Nothing Then
-                MsgBox "Il n'y a pas de module actif"
+            If Not VBInstance.ActiveCodePane Is Nothing Then
+                With VBInstance.ActiveCodePane
+                    .GetSelection lngStartLine, lngStartColumn, lngEndLine, lngEndColumn
+                    .CodeModule.InsertLines lngStartLine, txtCode
+                End With
+            Else
+                MsgBox "Il n'y a pas de fenêtre de code active", vbInformation
                 Exit Sub
             End If
-            VBInstance.ActiveCodePane.GetSelection lngStartLine, lngStartColumn, lngEndLine, lngEndColumn
-            VBInstance.ActiveCodePane.CodeModule.InsertLines lngStartLine, txtCode
     End Select
 End Sub
 
 Private Sub UserDocument_Initialize()
-    Dim iNum As Long
+'    Dim iNum As Long
 
     Select Case lngLanguage
         Case c2i_Langue_Français
@@ -854,188 +901,187 @@ Private Sub UserDocument_Initialize()
             c2iContainerIntMsg(5).Caption = "Divers"
             c2iContainerIntMsg(6).Caption = "Message - Titre"
             Label1 = "Titre"
+            txtMessage.Text = "Votre message"
         Case c2i_Langue_Anglais
             c2iContainerIntMsg(0).Caption = "Icons"
             c2iContainerIntMsg(1).Caption = "Buttons"
             c2iContainerIntMsg(2).Caption = "Default button"
             c2iContainerIntMsg(3).Caption = "Modal"
             c2iContainerIntMsg(4).Caption = "Help"
-            c2iContainerIntMsg(5).Caption = "Divers"
+            c2iContainerIntMsg(5).Caption = "Miscellaneous"
             c2iContainerIntMsg(6).Caption = "Message - Title"
             Label1 = "Title"
+            txtMessage.Text = "Your message"
     End Select
-
-    For iNum = 0 To c2iContainerIntMsg.UBound
-        c2iContainerIntMsg(iNum).Ouvert = False
-    Next
 
     picIcones_Click 0
     lblButtons_Click 0
     lblDefaultButton_Click 0
     lblModal_Click 0
-    c2iContainerIntMsg_OuvertureChange 0
-
-    c2iContainerIntMsg(6).Ouvert = True
-
-    txtMessage.Text = "Votre message"
-
 End Sub
-
 
 Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String
     Dim lngPos As Long
 
     lngPos = InStr(1, sMessage, vbCrLf)
     Do Until lngPos = 0
-        sMessage = Left(sMessage, lngPos - 1) + """" + "+ vbCrLf + " + """" + Right(sMessage, Len(sMessage) - lngPos - 1)
-        lngPos = InStr(lngPos + 2, sMessage, vbCrLf)
+        sMessage = Left(sMessage, lngPos - 1) & """" & "& vbCrLf & " & """" & Right(sMessage, Len(sMessage) - lngPos - 1)
+        lngPos = InStr(lngPos & 2, sMessage, vbCrLf)
     Loop
 
     If sMessage = "" Then
         ExtraitSautDeLigne = ""
     Else
-        ExtraitSautDeLigne = """" + sMessage + """"
+        ExtraitSautDeLigne = """" & sMessage & """"
     End If
 
 End Function
 
+'Optimisé par René Réaume 2 septembre 2001
 Private Function RetourneIcones() As String
     Dim iNum As Long
 
-    For iNum = 0 To lblIconesInfos.UBound
+    For iNum = 0 To 4 'lblIconesInfos.UBound
         If lblIconesInfos(iNum).FontBold Then
-            Select Case iNum
-                Case 0                                     'aucunes
-                    RetourneIcones = ""
-                Case 1                                     'critique
-                    RetourneIcones = "vbCritical"
-                Case 2                                     'question
-                    RetourneIcones = "vbQuestion"
-                Case 3
-                    RetourneIcones = "vbExclamation"
-                Case 4
-                    RetourneIcones = "vbInformation"
-            End Select
             Exit For
         End If
     Next iNum
+    Select Case iNum
+        Case 0                                     'aucune
+            RetourneIcones = ""
+        Case 1                                     'critique
+            RetourneIcones = "vbCritical"
+        Case 2                                     'question
+            RetourneIcones = "vbQuestion"
+        Case 3
+            RetourneIcones = "vbExclamation"
+        Case 4
+            RetourneIcones = "vbInformation"
+    End Select
 End Function
 
+'Optimisé par René Rhéaume 2 septembre 2001
 Private Function lngRetourneIcones() As Long
     Dim iNum As Long
 
-    For iNum = 0 To lblIconesInfos.UBound
+    For iNum = 0 To 4 'lblIconesInfos.UBound
         If lblIconesInfos(iNum).FontBold Then
-            Select Case iNum
-                Case 0                                     'aucunes
-                    lngRetourneIcones = 0
-                Case 1                                     'critique
-                    lngRetourneIcones = vbCritical
-                Case 2                                     'question
-                    lngRetourneIcones = vbQuestion
-                Case 3
-                    lngRetourneIcones = vbExclamation
-                Case 4
-                    lngRetourneIcones = vbInformation
-            End Select
             Exit For
         End If
     Next iNum
+    'Nouvelle version
+    lngRetourneIcones = iNum * 16
+    ' Ancienne version
+'    Select Case iNum
+'        Case 0                                     'aucune
+'            lngRetourneIcones = 0
+'        Case 1                                     'critique
+'            lngRetourneIcones = vbCritical
+'        Case 2                                     'question
+'            lngRetourneIcones = vbQuestion
+'        Case 3
+'            lngRetourneIcones = vbExclamation
+'        Case 4
+'            lngRetourneIcones = vbInformation
+'    End Select
 End Function
 
-
+'Optimisé par René Rhéaume 2 septembre 2001
 Private Function RetourneBoutons() As String
     Dim iNum As Long
 
-    For iNum = 0 To lblButtons.UBound
+    For iNum = 0 To 5 'lblButtons.UBound
         If lblButtons(iNum).FontBold Then
-            Select Case iNum
-                Case 0
-                    RetourneBoutons = ""
-                Case 1
-                    RetourneBoutons = "vbOKCancel"
-                Case 2
-                    RetourneBoutons = "vbAbortRetryIgnore"
-                Case 3
-                    RetourneBoutons = "vbYesNoCancel"
-                Case 4
-                    RetourneBoutons = "vbYesNo"
-                Case 5
-                    RetourneBoutons = "vbRetryCancel"
-            End Select
             Exit For
         End If
     Next iNum
+    Select Case iNum
+        Case 0
+            RetourneBoutons = ""
+        Case 1
+            RetourneBoutons = "vbOKCancel"
+        Case 2
+            RetourneBoutons = "vbAbortRetryIgnore"
+        Case 3
+            RetourneBoutons = "vbYesNoCancel"
+        Case 4
+            RetourneBoutons = "vbYesNo"
+        Case 5
+            RetourneBoutons = "vbRetryCancel"
+    End Select
 End Function
+
+'Optimisé par René Rhéaume 2 septembre 2001
 Private Function lngRetourneBoutons() As Long
     Dim iNum As Long
 
-    For iNum = 0 To lblButtons.UBound
+    For iNum = 0 To 5 'lblButtons.UBound
         If lblButtons(iNum).FontBold Then
-            Select Case iNum
-                Case 0
-                    lngRetourneBoutons = 0
-                Case 1
-                    lngRetourneBoutons = vbOKCancel
-                Case 2
-                    lngRetourneBoutons = vbAbortRetryIgnore
-                Case 3
-                    lngRetourneBoutons = vbYesNoCancel
-                Case 4
-                    lngRetourneBoutons = vbYesNo
-                Case 5
-                    lngRetourneBoutons = vbRetryCancel
-            End Select
             Exit For
         End If
     Next iNum
+    'Nouvelle version
+    lngRetourneBoutons = iNum
+    'Ancienne version
+'    Select Case iNum
+'        Case 0
+'            lngRetourneBoutons = 0
+'        Case 1
+'            lngRetourneBoutons = vbOKCancel
+'        Case 2
+'            lngRetourneBoutons = vbAbortRetryIgnore
+'        Case 3
+'            lngRetourneBoutons = vbYesNoCancel
+'        Case 4
+'            lngRetourneBoutons = vbYesNo
+'        Case 5
+'            lngRetourneBoutons = vbRetryCancel
+'    End Select
 End Function
 
+'Optimisé par René Rhéaume 2 septembre 2001
 Private Function RetourneDefaultBoutons() As String
     Dim iNum As Long
 
-    For iNum = 0 To lblDefaultButton.UBound
+    For iNum = 0 To 3 'lblDefaultButton.UBound
         If lblDefaultButton(iNum).FontBold Then
-            Select Case iNum
-                Case 0
-                    RetourneDefaultBoutons = ""
-                Case 1
-                    RetourneDefaultBoutons = "vbDefaultButton2"
-                Case 2
-                    RetourneDefaultBoutons = "vbDefaultButton3"
-                Case 3
-                    RetourneDefaultBoutons = "vbDefaultButton4"
-            End Select
             Exit For
         End If
     Next iNum
+    Select Case iNum
+        Case 0
+            RetourneDefaultBoutons = ""
+        Case 1
+            RetourneDefaultBoutons = "vbDefaultButton2"
+        Case 2
+            RetourneDefaultBoutons = "vbDefaultButton3"
+        Case 3
+            RetourneDefaultBoutons = "vbDefaultButton4"
+    End Select
 End Function
 
 Private Function lngRetourneDefaultBoutons() As Long
     Dim iNum As Long
 
-    For iNum = 0 To lblDefaultButton.UBound
+    For iNum = 0 To 3 'lblDefaultButton.UBound
         If lblDefaultButton(iNum).FontBold Then
-            Select Case iNum
-                Case 0
-                    lngRetourneDefaultBoutons = 0
-                Case 1
-                    lngRetourneDefaultBoutons = vbDefaultButton2
-                Case 2
-                    lngRetourneDefaultBoutons = vbDefaultButton3
-                Case 3
-                    lngRetourneDefaultBoutons = vbDefaultButton4
-            End Select
             Exit For
         End If
     Next iNum
+    'Nouvelle version
+    lngRetourneDefaultBoutons = iNum * 256
+    'Ancienne version
+'    Select Case iNum
+'        Case 0
+'            lngRetourneDefaultBoutons = 0
+'        Case 1
+'            lngRetourneDefaultBoutons = vbDefaultButton2
+'        Case 2
+'            lngRetourneDefaultBoutons = vbDefaultButton3
+'        Case 3
+'            lngRetourneDefaultBoutons = vbDefaultButton4
+'    End Select
 End Function
-
-
-
-
-
-
 
 Private Sub chk1Plan_Click()
     MiseAJourCode
@@ -1049,19 +1095,23 @@ Private Sub chkTextAlign_Click()
     MiseAJourCode
 End Sub
 
-
 Private Sub cmdParcoursFile_Click()
     On Error GoTo Fin
-    With cdlg
-        .CancelError = True
+    Dim cCommonDialog As cDlgCom
+    Set cCommonDialog = New cDlgCom
+    With cCommonDialog
+        .DefaultEx = ".hlp"
+        .Flags = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
         .Filter = "Fichiers d'aide (*.chm;*.hlp)|*.chm;*.hlp|Tous les fichiers (*.*)|*.*"
+        .FilterIndex = 1
+        .Filename = txtHelpFile.Text
         .ShowOpen
-        txtHelpFile = .FileName
+        txtHelpFile = .Filename
     End With
 
 Fin:
+    Set cCommonDialog = Nothing
 End Sub
-
 
 Private Sub ShowMsgBox()
     Dim sTitre As String, sMessage As String
@@ -1127,18 +1177,14 @@ Fin:
     MsgBox "Erreur dans le code", vbCritical, "c2iMsgBox"
 End Sub
 
-
-
-
-
 Private Sub lblButtons_Click(Index As Integer)
     Dim iNum As Long
 
     For iNum = 0 To lblButtons.UBound
-        lblButtons(iNum).FontBold = False
+        lblButtons(iNum).FontBold = conFaux
         lblButtons(iNum).BorderStyle = 0
     Next
-    lblButtons(Index).FontBold = True
+    lblButtons(Index).FontBold = conVrai
     lblButtons(Index).BorderStyle = 1
 
     MiseAJourCode
@@ -1148,10 +1194,10 @@ Private Sub lblDefaultButton_Click(Index As Integer)
     Dim iNum As Long
 
     For iNum = 0 To lblDefaultButton.UBound
-        lblDefaultButton(iNum).FontBold = False
+        lblDefaultButton(iNum).FontBold = conFaux
         lblDefaultButton(iNum).BorderStyle = 0
     Next
-    lblDefaultButton(Index).FontBold = True
+    lblDefaultButton(Index).FontBold = conVrai
     lblDefaultButton(Index).BorderStyle = 1
 
     MiseAJourCode
@@ -1165,40 +1211,22 @@ Private Sub lblModal_Click(Index As Integer)
     Dim iNum As Long
 
     For iNum = 0 To lblModal.UBound
-        lblModal(iNum).FontBold = False
+        lblModal(iNum).FontBold = conFaux
         lblModal(iNum).BorderStyle = 0
     Next
-    lblModal(Index).FontBold = True
+    lblModal(Index).FontBold = conVrai
     lblModal(Index).BorderStyle = 1
 
     MiseAJourCode
 End Sub
 
-Private Sub picIcones_Click(Index As Integer)
-    Dim iNum As Long, iUnPixel As Long
-
-    iUnPixel = ScaleX(2, vbPixels, vbTwips)
-
-    For iNum = 0 To picIcones.UBound
-        picIcones(iNum).BorderStyle = 0
-        lblIconesInfos(iNum).FontBold = False
-    Next
-    picIcones(Index).BorderStyle = 1
-    lblIconesInfos(Index).FontBold = True
-    picIconesOmbre.Left = picIcones(Index).Left + iUnPixel
-    picIconesOmbre.Top = picIcones(Index).Top + iUnPixel
-
-
-    MiseAJourCode
-End Sub
-
-Private Function MiseAJourCode()
+Private Sub MiseAJourCode()
     Dim sTitre As String, sMessage As String
 
     txtCode = ""
     'le titre et le message
     If txtTitle.Text <> "" Then
-        sTitre = """" + txtTitle.Text + """"
+        sTitre = """" & txtTitle.Text & """"
     End If
 
     sMessage = ExtraitSautDeLigne(txtMessage.Text)
@@ -1229,7 +1257,7 @@ Private Function MiseAJourCode()
     'les boutons
     If sButtons <> "" Then
         If sButtonsDef <> "" Then
-            sButtonsDef = sButtonsDef + " + " + sButtons
+            sButtonsDef = sButtonsDef & " + " & sButtons
         Else
             sButtonsDef = sButtons
         End If
@@ -1237,7 +1265,7 @@ Private Function MiseAJourCode()
     'le bouton par default
     If sDefaultButton <> "" Then
         If sButtonsDef <> "" Then
-            sButtonsDef = sButtonsDef + " + " + sDefaultButton
+            sButtonsDef = sButtonsDef & " + " & sDefaultButton
         Else
             sButtonsDef = sDefaultButton
         End If
@@ -1245,7 +1273,7 @@ Private Function MiseAJourCode()
     'la modalité
     If sModal <> "" Then
         If sButtonsDef <> "" Then
-            sButtonsDef = sButtonsDef + " + " + sModal
+            sButtonsDef = sButtonsDef & " + " & sModal
         Else
             sButtonsDef = sModal
         End If
@@ -1253,98 +1281,98 @@ Private Function MiseAJourCode()
     'les divers
     If chkHelpButton.Value = vbChecked Then
         If sButtonsDef <> "" Then
-            sButtonsDef = sButtonsDef + " + vbMsgBoxHelpButton"
+            sButtonsDef = sButtonsDef & " + vbMsgBoxHelpButton"
         Else
             sButtonsDef = "vbMsgBoxHelpButton"
         End If
     End If
     If chk1Plan.Value = vbChecked Then
         If sButtonsDef <> "" Then
-            sButtonsDef = sButtonsDef + " + vbMsgBoxSetForeground"
+            sButtonsDef = sButtonsDef & " + vbMsgBoxSetForeground"
         Else
             sButtonsDef = "vbMsgBoxSetForeground"
         End If
     End If
     If chkTextAlign.Value = vbChecked Then
         If sButtonsDef <> "" Then
-            sButtonsDef = sButtonsDef + " + vbMsgBoxRight"
+            sButtonsDef = sButtonsDef & " + vbMsgBoxRight"
         Else
             sButtonsDef = "vbMsgBoxRight"
         End If
     End If
     '// fin du string
     If sButtons <> "" Then                                 'il y a un code retour
-        txtCode = txtCode + "Dim sc2iMsgBox As VbMsgBoxResult" + vbCrLf + vbCrLf
-        txtCode = txtCode + "sc2iMsgBox = MsgBox(" + sMessage
+        txtCode = txtCode & "Dim sc2iMsgBox As VbMsgBoxResult" & vbCrLf & vbCrLf
+        txtCode = txtCode & "sc2iMsgBox = MsgBox(" & sMessage
         If sButtonsDef <> "" Then
-            txtCode = txtCode + "," + sButtonsDef
+            txtCode = txtCode & "," & sButtonsDef
         End If
         If sTitre <> "" Then
             If sButtonsDef = "" Then
-                txtCode = txtCode + ", ," + sTitre
+                txtCode = txtCode & ", ," & sTitre
             Else
-                txtCode = txtCode + "," + sTitre
+                txtCode = txtCode & "," & sTitre
             End If
         End If
         If Trim(txtHelpFile) <> "" Then
             If sTitre <> "" Then
-                txtCode = txtCode + "," + txtHelpFile + "," + txtContext
+                txtCode = txtCode & "," & txtHelpFile & "," & txtContext
             Else
                 If sButtons = "" Then
-                    txtCode = txtCode + ",,," + """" + txtHelpFile + """" + "," + txtContext
+                    txtCode = txtCode & ",,," & """" & txtHelpFile & """" & "," & txtContext
                 Else
-                    txtCode = txtCode + ",," + """" + txtHelpFile + """" + "," + txtContext
+                    txtCode = txtCode & ",," & """" & txtHelpFile & """" & "," & txtContext
                 End If
             End If
         End If
-        txtCode = txtCode + ")"
+        txtCode = txtCode & ")" & vbCrLf & "Select Case sc2iMsgbox" & vbCrLf
 
-        txtCode = txtCode + vbCrLf
-        txtCode = txtCode + "Select Case sc2iMsgbox" + vbCrLf
         Select Case sButtons
             Case "vbOKCancel"
-                txtCode = txtCode + Chr(9) + "Case vbOK" + vbCrLf + Chr(9) + "Case vbCancel" + vbCrLf
-                txtCode = txtCode + "End Select"
+                txtCode = txtCode & Chr(9) & "Case vbOK" & vbCrLf & _
+                            Chr(9) & "Case vbCancel" & vbCrLf & "End Select"
             Case "vbAbortRetryIgnore"
-                txtCode = txtCode + Chr(9) + "Case vbAbort" + vbCrLf + Chr(9) + "Case vbRetry" + vbCrLf + Chr(9) + "Case vbIgnore" + vbCrLf
-                txtCode = txtCode + "End Select"
+                txtCode = txtCode & Chr(9) & "Case vbAbort" & vbCrLf & _
+                            Chr(9) & "Case vbRetry" & vbCrLf & Chr(9) & _
+                            "Case vbIgnore" & vbCrLf & "End Select"
             Case "vbYesNoCancel"
-                txtCode = txtCode + Chr(9) + "Case vbYes" + vbCrLf + Chr(9) + "Case vbNo" + vbCrLf + Chr(9) + "Case vbCancel" + vbCrLf
-                txtCode = txtCode + "End Select"
+                txtCode = txtCode & Chr(9) & "Case vbYes" & vbCrLf _
+                            & Chr(9) & "Case vbNo" & vbCrLf & Chr(9) _
+                            & "Case vbCancel" & vbCrLf & "End Select"
             Case "vbYesNo"
-                txtCode = txtCode + Chr(9) + "Case vbYes" + vbCrLf + Chr(9) + "Case vbNo" + vbCrLf
-                txtCode = txtCode + "End Select"
+                txtCode = txtCode & Chr(9) & "Case vbYes" & vbCrLf & _
+                            Chr(9) & "Case vbNo" & vbCrLf & "End Select"
             Case "vbRetryCancel"
-                txtCode = txtCode + Chr(9) + "Case vbRetry" + vbCrLf + Chr(9) + "Case vCancel" + vbCrLf
-                txtCode = txtCode + "End Select"
+                txtCode = txtCode & Chr(9) & "Case vbRetry" & vbCrLf _
+                        & Chr(9) & "Case vCancel" & vbCrLf & "End Select"
         End Select
 
     Else                                                   'sans retour de code
-        txtCode = txtCode + "MsgBox " + sMessage
+        txtCode = txtCode & "MsgBox " & sMessage
         If sButtonsDef <> "" Then
-            txtCode = txtCode + "," + sButtonsDef
+            txtCode = txtCode & "," & sButtonsDef
         End If
         If sTitre <> "" Then
             If sButtonsDef = "" Then
-                txtCode = txtCode + ", ," + sTitre
+                txtCode = txtCode & ", ," & sTitre
             Else
-                txtCode = txtCode + "," + sTitre
+                txtCode = txtCode & "," & sTitre
             End If
         End If
         If Trim(txtHelpFile) <> "" Then
             If sTitre <> "" Then
-                txtCode = txtCode + "," + txtHelpFile + "," + txtContext
+                txtCode = txtCode & "," & txtHelpFile & "," & txtContext
             Else
                 If sButtons = "" Then
-                    txtCode = txtCode + ",,," + """" + txtHelpFile + """" + "," + txtContext
+                    txtCode = txtCode & ",,," & """" & txtHelpFile & """" & "," & txtContext
                 Else
-                    txtCode = txtCode + ",," + """" + txtHelpFile + """" + "," + txtContext
+                    txtCode = txtCode & ",," & """" & txtHelpFile & """" & "," & txtContext
                 End If
             End If
         End If
     End If
 
-End Function
+End Sub
 
 Private Sub txtContext_Change()
     MiseAJourCode
@@ -1353,7 +1381,6 @@ End Sub
 Private Sub txtHelpFile_Change()
     MiseAJourCode
 End Sub
-
 
 Private Sub txtMessage_Change()
     MiseAJourCode
@@ -1366,5 +1393,5 @@ End Sub
 Private Sub UserDocument_Resize()
     On Error Resume Next
     txtCode.Width = ScaleWidth - txtCode.Left
-    txtCode.Height = ScaleHeight - txtCode.Height
+    txtCode.Height = ScaleHeight - txtCode.Top
 End Sub

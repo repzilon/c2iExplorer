@@ -1,19 +1,29 @@
 VERSION 5.00
 Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "COMDLG32.OCX"
 Begin VB.UserDocument UDBiblio 
    ClientHeight    =   5310
    ClientLeft      =   285
    ClientTop       =   1050
-   ClientWidth     =   8640
+   ClientWidth     =   4500
+   BeginProperty Font 
+      Name            =   "Tahoma"
+      Size            =   8.25
+      Charset         =   0
+      Weight          =   400
+      Underline       =   0   'False
+      Italic          =   0   'False
+      Strikethrough   =   0   'False
+   EndProperty
    HScrollSmallChange=   225
+   LockControls    =   -1  'True
+   PaletteMode     =   2  'Custom
    ScaleHeight     =   5310
-   ScaleWidth      =   8640
+   ScaleWidth      =   4500
    ScrollBars      =   0  'None
    VScrollSmallChange=   225
    Begin MSComctlLib.ImageList imgTB 
-      Left            =   4080
-      Top             =   3480
+      Left            =   3780
+      Top             =   780
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   -2147483643
@@ -22,7 +32,7 @@ Begin VB.UserDocument UDBiblio
       MaskColor       =   128
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   13
+         NumListImages   =   14
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDBiblio.dox":0000
             Key             =   "save"
@@ -75,6 +85,10 @@ Begin VB.UserDocument UDBiblio
             Picture         =   "UDBiblio.dox":3C18
             Key             =   "voir"
          EndProperty
+         BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":411A
+            Key             =   "newdata"
+         EndProperty
       EndProperty
    End
    Begin MSComctlLib.Toolbar tbMain 
@@ -93,16 +107,9 @@ Begin VB.UserDocument UDBiblio
       Style           =   1
       _Version        =   393216
    End
-   Begin MSComDlg.CommonDialog cdlg 
-      Left            =   5640
-      Top             =   2640
-      _ExtentX        =   847
-      _ExtentY        =   847
-      _Version        =   393216
-   End
    Begin MSComctlLib.ImageList imgTV 
-      Left            =   6600
-      Top             =   2400
+      Left            =   3780
+      Top             =   120
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   -2147483643
@@ -113,35 +120,35 @@ Begin VB.UserDocument UDBiblio
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   5
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":411A
+            Picture         =   "UDBiblio.dox":46FE
             Key             =   "biblio"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":422C
+            Picture         =   "UDBiblio.dox":481A
             Key             =   "web"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":457E
+            Picture         =   "UDBiblio.dox":4D6E
             Key             =   "mail"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":48D0
+            Picture         =   "UDBiblio.dox":4E8A
             Key             =   "categorie"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":49E2
+            Picture         =   "UDBiblio.dox":4FA6
             Key             =   "element"
          EndProperty
       EndProperty
    End
    Begin MSComctlLib.TreeView tv 
-      Height          =   5535
+      Height          =   5055
       Left            =   480
       TabIndex        =   0
       Top             =   120
       Width           =   3135
       _ExtentX        =   5530
-      _ExtentY        =   9763
+      _ExtentY        =   8916
       _Version        =   393217
       HideSelection   =   0   'False
       Indentation     =   529
@@ -153,6 +160,15 @@ Begin VB.UserDocument UDBiblio
       HotTracking     =   -1  'True
       ImageList       =   "imgTV"
       Appearance      =   1
+      BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Tahoma"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
    End
 End
 Attribute VB_Name = "UDBiblio"
@@ -160,21 +176,51 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+' René Rhéaume (rener@mediom.qc.ca)
+'
+' ***** END LICENSE BLOCK *****
+
 Option Explicit
 Public bFrmBiblio As Boolean
-
 Public TVEx As TreeView
 
-Private Function Enregistrement(ByVal sFile As String)
-    On Error GoTo Fin
-    'destrcution du fichier
-    If FichierExiste(sFile) Then Kill sFile
+Private Sub Enregistrement(ByVal sFile As String)
+    Dim db As Database, rs As Recordset
+    Dim mNode As Node, objE As cElement
+    
+    On Error GoTo RestaurerSauvegarde
+    'Modifié par René Rhéaume, 29 juillet 2001
+    If FichierExiste(sFile) Then
+        'Copie de sauvegarde du fichier
+        FileCopy sFile, sFile & ".bak"
+        'destruction du fichier
+        Kill sFile
+    End If
     'copie du fichier de base
     FileCopy c2iDataFileNameOrigine, sFile
 
-    Dim db As Database, rs As Recordset
-    Dim mNode As Node, objE As cElement
-
+    On Error GoTo Fin
     Set db = OpenDatabase(sFile)
     Set rs = db.OpenRecordset("Elements", dbOpenDynaset)
     For Each mNode In tv.Nodes
@@ -208,13 +254,26 @@ Private Function Enregistrement(ByVal sFile As String)
     db.Close
     Set rs = Nothing
     Set db = Nothing
-    Exit Function
-Fin:
-    MsgBox "Error"
-    Debug.Print Err.Description
-End Function
+    If FichierExiste(sFile & ".bak") Then Kill sFile & ".bak"
 
-Private Function ValideInsertion(ByVal objE As cElement)
+SortieFunc:
+    Exit Sub
+RestaurerSauvegarde:
+    MsgBox "Il y a eu une erreur lors de l'initialisation de la sauvegarde." & vbCrLf & _
+            "c2iExplorer a cependant peut-être créé un fichier de sauvegarde sous le nom de" & vbCrLf & _
+            sFile & ".bak" & " ." & vbCrLf & _
+            "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    Resume SortieFunc
+Fin:
+    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    rs.Close
+    db.Close
+    Set rs = Nothing
+    Set db = Nothing
+    Resume SortieFunc
+End Sub
+
+Private Sub ValideInsertion(ByVal objE As cElement)
     Dim sDP As String, sH As String, sI As String, sE As String
 
     If tbMain.Buttons("declareproc").Value = tbrPressed Then
@@ -231,7 +290,7 @@ Private Function ValideInsertion(ByVal objE As cElement)
     End If
 
     InsertCode sDP, sH, sI, sE
-End Function
+End Sub
 
 Private Sub tv_DblClick()
     tbMain_ButtonClick tbMain.Buttons("copie")
@@ -244,60 +303,66 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     Select Case Node.Image
         Case "element"
             Set objE = Explorer.Elements(Node.FullPath)
-            If Trim(objE.DeclareProc) = "" Then
-                tbMain.Buttons("declareproc").Value = tbrUnpressed
-            Else
-                tbMain.Buttons("declareproc").Value = tbrPressed
-            End If
-            If Trim(objE.HeadProc) = "" Then
-                tbMain.Buttons("headproc").Value = tbrUnpressed
-            Else
-                tbMain.Buttons("headproc").Value = tbrPressed
-            End If
-            If Trim(objE.InLineProc) = "" Then
-                tbMain.Buttons("inlineproc").Value = tbrUnpressed
-            Else
-                tbMain.Buttons("inlineproc").Value = tbrPressed
-            End If
-            If Trim(objE.EndProc) = "" Then
-                tbMain.Buttons("endproc").Value = tbrUnpressed
-            Else
-                tbMain.Buttons("endproc").Value = tbrPressed
-            End If
+            'Optimisation par René Rhéaume 2 septembre 2001
+            'Ne fonctionnerait pas sous .net car conVrai = 1 sur .net
+            'alors que dans VB 5/6, conVrai = -1
+            'Équivalent à :
+'            If Trim$(objE.DeclareProc) = "" Then
+'                tbMain.Buttons("declareproc").Value = tbrUnpressed
+'            Else
+'                tbMain.Buttons("declareproc").Value = tbrPressed
+'            End If
+'            .
+'            .
+'            .
+            With tbMain
+                .Buttons("declareproc").Value = (Trim$(objE.DeclareProc) = "") + 1
+                .Buttons("headproc").Value = (Trim$(objE.HeadProc) = "") + 1
+                .Buttons("inlineproc").Value = (Trim$(objE.InLineProc) = "") + 1
+                .Buttons("endproc").Value = (Trim$(objE.EndProc) = "") + 1
+            End With
             'mise à jour de l'affichage du détail
             If bFrmBiblio Then
                 Set frmBiblio.Element = objE
             End If
+        Case Else
+            With tbMain
+                .Buttons("declareproc").Value = tbrUnpressed
+                .Buttons("headproc").Value = tbrUnpressed
+                .Buttons("inlineproc").Value = tbrUnpressed
+                .Buttons("endproc").Value = tbrUnpressed
+            End With
     End Select
 End Sub
 
-
 Private Sub UserDocument_Initialize()
-    c2iCurrentDataFileName = GetSetting("MesCompléments", App.Title, "Data")
-
+    'Modifié par rené Rhéaume 29 juillet 2001
+    c2iCurrentDataFileName = LireChaineFichierINI("General", "Data", "", c2iINIFile)
+    'Fin de modification
+    
     MakeToolBar
-
-    bFrmBiblio = False
+    bFrmBiblio = conFaux
 
     If c2iCurrentDataFileName <> "" Then
         ChargeBase c2iCurrentDataFileName
     End If
-
+    
+    UserDocument_Resize
     Set TVEx = tv
 End Sub
 
-Private Function RempliTV()
+Private Sub RempliTV()
     Dim objElement As cElement
 
     For Each objElement In Explorer.Elements
         AddElement objElement
     Next
     Set objElement = Nothing
-End Function
+End Sub
 
-Public Function AddElement(ByVal objElement As cElement)
+Public Sub AddElement(ByVal objElement As cElement)
     Dim iNum As Long
-    Dim mNode As Node, mNodeParent As Node, mNodeNewRep As Node, sM As String
+    Dim mNodeParent As Node, mNodeNewRep As Node, sM As String
 
     On Error Resume Next
     For iNum = 0 To objElement.Ident - 1
@@ -314,20 +379,20 @@ Public Function AddElement(ByVal objElement As cElement)
             Set mNodeParent = mNodeNewRep
         End If
     Next
-    If objElement.Titre = "[Web Site]" Then
-        tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, "web"
-    Else
-        If objElement.Titre = "[Mail]" Then
+    'Optimisation par René Rhéaume 2 septembre 2001
+    Select Case objElement.Titre
+        Case "[Web Site]"
+            tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, "web"
+        Case "[Mail]"
             tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, "mail"
-        Else
+        Case Else
             tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, "element"
-        End If
-    End If
+    End Select
     Set mNodeParent = Nothing
 
-End Function
+End Sub
 
-Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As String, sEnd As String)
+Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sInLine As String, ByVal sEnd As String)
     Dim objCodeModule As VBIDE.CodeModule
     Dim lngStartLine As Long, lngStartColumn As Long, lngEndLine As Long, lngEndColumn As Long
     Dim objMember As VBIDE.Member
@@ -345,11 +410,11 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
     objCodeModule.CodePane.GetSelection lngStartLine, lngStartColumn, lngEndLine, lngEndColumn
     On Error Resume Next
     Set objMember = objCodeModule.Members(objCodeModule.ProcOfLine(lngStartLine, vbext_pk_Proc))
-    If objMember.Type <> vbext_mt_Property Then
-        If lngStartLine <= objMember.CodeLocation Then
+    Select Case conFaux
+        Case objMember.Type <> vbext_mt_Property, lngStartLine <= objMember.CodeLocation
+        Case Else
             Err.Raise 13
-        End If
-    End If
+    End Select
     If Err.Number <> 0 Then
         objCodeModule.InsertLines objCodeModule.CountOfDeclarationLines + 1, sDeclare
         objCodeModule.InsertLines objCodeModule.CountOfDeclarationLines + 1, sHead
@@ -367,7 +432,7 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
 
     'on détermine si on est a la fin du code
     lngLine = lngCodeLocation + 1
-    bTrouve = False
+    bTrouve = conFaux
     On Error Resume Next
     Err.Clear
     Do Until bTrouve
@@ -375,22 +440,22 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
         If Err.Number <> 0 Then Exit Do
         If lngLine > objCodeModule.CountOfLines Then Exit Do
         If RechercheString(sTexte, "End Sub") Then
-            bTrouve = True
+            bTrouve = conVrai
             Exit Do
         End If
         If RechercheString(sTexte, "End Function") Then
-            bTrouve = True
+            bTrouve = conVrai
             Exit Do
         End If
         If RechercheString(sTexte, "End Property") Then
-            bTrouve = True
+            bTrouve = conVrai
             Exit Do
         End If
         lngLine = lngLine + 1
     Loop
 
     'Insertion de la déclaration
-    If Trim(sDeclare) <> "" Then
+    If Trim$(sDeclare) <> "" Then
         objCodeModule.InsertLines objCodeModule.CountOfDeclarationLines + 1, sDeclare
     End If
 
@@ -403,7 +468,7 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
         lngCodeLocation = objMember.CodeLocation
     End If
 
-    If Trim(sHead) <> "" Then
+    If Trim$(sHead) <> "" Then
         If bTrouve Then
             objCodeModule.InsertLines lngCodeLocation + 1, sHead
         Else
@@ -412,7 +477,7 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
     End If
 
     'Insertion du InLine
-    If Trim(sInLine) <> "" Then
+    If Trim$(sInLine) <> "" Then
         If bTrouve Then
             objCodeModule.CodePane.GetSelection lngStartLine, lngStartColumn, lngEndLine, lngEndColumn
             objCodeModule.InsertLines lngStartLine, sInLine
@@ -430,10 +495,10 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
         lngCodeLocation = objMember.CodeLocation
     End If
 
-    If Trim(sEnd) <> "" Then
+    If Trim$(sEnd) <> "" Then
         If bTrouve Then
             lngLine = lngCodeLocation + 1
-            bTrouve = False
+            bTrouve = conFaux
             Err.Clear
             Do Until bTrouve
                 sTexte = objCodeModule.Lines(lngLine, 1)
@@ -452,33 +517,35 @@ Private Sub InsertCode(ByVal sDeclare As String, sHead As String, sInLine As Str
     Set objCodeModule = Nothing
 End Sub
 
-
-
-Private Function MakeToolBar()
+Private Sub MakeToolBar()
     Dim objButton As Button
 
     With tbMain
         Set .ImageList = imgTB
         Set .HotImageList = imgTB
-
+                
+        Set objButton = .Buttons.Add(, "newdata", , , "newdata")
         Set objButton = .Buttons.Add(, "biblio", , , "biblio")
+        Set objButton = .Buttons.Add(, "save", , , "save")
         Set objButton = .Buttons.Add(, , , tbrSeparator)
+        
         Set objButton = .Buttons.Add(, "newbiblio", , , "newbiblio")
         Set objButton = .Buttons.Add(, "newcategorie", , , "newcategorie")
-
         Set objButton = .Buttons.Add(, , , tbrSeparator)
+        
         Set objButton = .Buttons.Add(, "delete", , , "delete")
-        Set objButton = .Buttons.Add(, "save", , , "save")
-
         Set objButton = .Buttons.Add(, , , tbrSeparator)
+        
         Set objButton = .Buttons.Add(, "voir", , , "voir")
+        Set objButton = .Buttons.Add(, "copie", , , "copie")
         Set objButton = .Buttons.Add(, , , tbrSeparator)
+        
         Set objButton = .Buttons.Add(, "declareproc", , tbrCheck, "declareproc")
         Set objButton = .Buttons.Add(, "headproc", , tbrCheck, "headproc")
         Set objButton = .Buttons.Add(, "inlineproc", , tbrCheck, "inlineproc")
         Set objButton = .Buttons.Add(, "endproc", , tbrCheck, "endproc")
         Set objButton = .Buttons.Add(, , , tbrSeparator)
-        Set objButton = .Buttons.Add(, "copie", , , "copie")
+        
 
         'Set objButton = .Buttons.Add(, , , tbrSeparator)
         'Set objButton = .Buttons.Add(, "export", , , "export")
@@ -488,50 +555,67 @@ Private Function MakeToolBar()
 
         Select Case lngLanguage
             Case c2i_Langue_Français
-                .Buttons("biblio").ToolTipText = "Charger une bibliothèque"
+                .Buttons("newdata").ToolTipText = "Nouvelle base de données"
+                .Buttons("biblio").ToolTipText = "Charger une base de données"
+                .Buttons("save").ToolTipText = "Sauvegarder la base de données"
+                
                 .Buttons("newbiblio").ToolTipText = "Créer une bibliothèque"
                 .Buttons("newcategorie").ToolTipText = "Créer une catégorie"
 
-                .Buttons("voir").ToolTipText = "Voir le code"
                 .Buttons("delete").ToolTipText = "Supprimer"
+                
+                .Buttons("voir").ToolTipText = "Voir/ajouter un élément"
+                .Buttons("copie").ToolTipText = "Insérer le code"
 
                 .Buttons("declareproc").ToolTipText = "Insérer le code des déclarations"
                 .Buttons("headproc").ToolTipText = "Insérer le code de début de procédure"
                 .Buttons("inlineproc").ToolTipText = "Insérer le code interne"
                 .Buttons("endproc").ToolTipText = "Insérer le code de fin deprocédure"
-                .Buttons("copie").ToolTipText = "Insérer le code"
 
-                '.Buttons("export").ToolTipText = "Export"
-                '.Buttons("import").ToolTipText = "Import"
-                .Buttons("save").ToolTipText = "Sauvegarder la bibliothèque"
+                '.Buttons("export").ToolTipText = "Exporter"
+                '.Buttons("import").ToolTipText = "Importer"
             Case Else
-                .Buttons("biblio").ToolTipText = "Load a library"
+                .Buttons("newdata").ToolTipText = "New database"
+                .Buttons("biblio").ToolTipText = "Load a database"
+                .Buttons("save").ToolTipText = "Save database"
+                
                 .Buttons("newbiblio").ToolTipText = "Create a new library"
                 .Buttons("newcategorie").ToolTipText = "Create a new folder"
 
-                .Buttons("voir").ToolTipText = "See code"
-                .Buttons("delete").ToolTipText = "delete"
+                .Buttons("delete").ToolTipText = "Delete"
 
-                .Buttons("declareproc").ToolTipText = "Insert declaration code"
-                .Buttons("headproc").ToolTipText = "Insert Head code"
-                .Buttons("inlineproc").ToolTipText = "Insert Inline code"
-                .Buttons("endproc").ToolTipText = "Insert End code"
+                .Buttons("voir").ToolTipText = "View/Add element"
                 .Buttons("copie").ToolTipText = "Insert code"
-
+                
+                .Buttons("declareproc").ToolTipText = "Insert declaration code"
+                .Buttons("headproc").ToolTipText = "Insert head code"
+                .Buttons("inlineproc").ToolTipText = "Insert inline code"
+                .Buttons("endproc").ToolTipText = "Insert end code"
+                
                 '.Buttons("export").ToolTipText = "Export"
                 '.Buttons("import").ToolTipText = "Import"
-                .Buttons("save").ToolTipText = "Save library"
+                
         End Select
     End With
 
     Set objButton = Nothing
-End Function
+End Sub
 
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim objE As cElement
 
     On Error Resume Next
     Select Case Button.Key
+        Case "newdata"
+            If tv.Nodes.Count > 0 Then
+                If Len(c2iCurrentDataFileName) > 0 Then
+                    Enregistrement c2iCurrentDataFileName
+                Else
+                    SaveLibrary
+                End If
+            End If
+            tv.Nodes.Clear
+            c2iCurrentDataFileName = ""
         Case "biblio"
             OpenBiblio
         Case "newbiblio"
@@ -560,7 +644,7 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                     Case "element"
                         Load frmBiblio
                         Set frmBiblio.Element = Explorer.Elements(tv.SelectedItem.FullPath)
-                        bFrmBiblio = True
+                        bFrmBiblio = conVrai
                         frmBiblio.Show
                     Case "web"                             'connexion Internet
                         ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description
@@ -569,7 +653,7 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
                     Case Else
                         Load frmBiblio
                         Set frmBiblio.Element = Nothing
-                        bFrmBiblio = True
+                        bFrmBiblio = conVrai
                         frmBiblio.Show
                 End Select
             End If
@@ -578,7 +662,7 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     End Select
 End Sub
 
-Private Function MailInternet(ByVal sMail As String)
+Private Sub MailInternet(ByVal sMail As String)
     Dim lngRep As Long
     lngRep = ShellExecute(0, "open", "mailto:" + sMail, vbNullString, vbNullString, SW_NORMAL)
     If lngRep = 0 Then
@@ -590,39 +674,79 @@ Private Function MailInternet(ByVal sMail As String)
         End Select
     End If
 
-End Function
+End Sub
 
-Private Function SaveLibrary()
+'Fonction modifiée par René Rhéaume, 29 juillet 2001
+'Renvoie 0 s'il n'y a pas d'erreur, 1 si l'erreur provient de l'absence
+'de nom de fichier dans la boîte de dialogue ou 2 dans le cas d'une autre
+'erreur.
+Private Function SaveLibrary() As Byte
     On Error GoTo Fin
-    With cdlg
-        .CancelError = True
-        .Filter = "Bases (*.mdb)|*.mdb"
-        .FileName = c2iCurrentDataFileName
+    Dim cCommonDialog As cDlgCom
+    Set cCommonDialog = New cDlgCom
+    With cCommonDialog
+        .DefaultEx = ".mdb"
+        .Filter = "Bases de données (*.mdb)|*.mdb"
+        .FilterIndex = 1
+        .Filename = c2iCurrentDataFileName
+        .Flags = OFN_HIDEREADONLY + OFN_NOREADONLYRETURN
+        .InitDir = App.Path & "\data"
         .ShowSave
-        Enregistrement .FileName
+        If .Filename = "" Then
+            SaveLibrary = 1
+        Else
+            Enregistrement .Filename
+            c2iCurrentDataFileName = .Filename
+            SaveLibrary = 0
+        End If
     End With
-
+    Set cCommonDialog = Nothing
+    Exit Function
+    
 Fin:
-
+    Set cCommonDialog = Nothing
+    SaveLibrary = 2
+    Exit Function
 End Function
-Private Function DeleteNode()
+
+Private Sub DeleteNode()
     tv.Nodes.Remove tv.SelectedItem.Key
-End Function
+End Sub
 
-Private Function OpenBiblio()
+'Fonction modifiée par René Rhéaume, 29 juillet 2001
+'Renvoie 0 s'il n'y a pas d'erreur, 1 si l'erreur provient de l'absence
+'de nom de fichier dans la boîte de dialogue ou 2 dans le cas d'une autre
+'erreur.
+Private Function OpenBiblio() As Byte
     On Error GoTo Fin
-    With cdlg
-        .CancelError = True
-        .Filter = "Bases (*.mdb)|*.mdb"
+    Dim cCommonDialog As cDlgCom
+    Set cCommonDialog = New cDlgCom
+    With cCommonDialog
+        .DefaultEx = ".mdb"
+        .Filter = "Bases de données (*.mdb)|*.mdb"
+        .FilterIndex = 1
+        .Filename = c2iCurrentDataFileName
+        .Flags = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
+        .InitDir = App.Path & "\data"
         .ShowOpen
-        ChargeBase .FileName
-        c2iCurrentDataFileName = .FileName
+        If .Filename = "" Then
+            OpenBiblio = 1
+        Else
+            OpenBiblio = 0
+            ChargeBase .Filename
+            c2iCurrentDataFileName = .Filename
+        End If
     End With
-
+    Set cCommonDialog = Nothing
+    Exit Function
+    
 Fin:
+    Set cCommonDialog = Nothing
+    OpenBiblio = 2
+    Exit Function
 End Function
 
-Private Function ChargeBase(ByVal sFileName As String)
+Private Sub ChargeBase(ByVal sFileName As String)
     tv.Nodes.Clear
 
     On Error GoTo GestErr
@@ -646,7 +770,7 @@ Private Function ChargeBase(ByVal sFileName As String)
     Set db = Nothing
     'on lance le remplissage de la bibliothèque
     RempliTV
-    Exit Function
+    Exit Sub
 
 GestErr:
     Set rs = Nothing
@@ -659,11 +783,11 @@ GestErr:
     Else
         MsgBox "Error in loading database", vbExclamation, "c2iExplorer : Library"
     End If
-    Debug.Print Err.Description
+    MsgBox "Erreur no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
     'destruction de la hiérarchie
     Set Explorer = Nothing
     Set Explorer = New cExplorer
-End Function
+End Sub
 
 Private Function AnnuleNull(rs As Recordset, sField As String) As String
     If IsNull(rs.Fields(sField)) Then
@@ -672,7 +796,8 @@ Private Function AnnuleNull(rs As Recordset, sField As String) As String
         AnnuleNull = rs.Fields(sField)
     End If
 End Function
-Private Function AddBiblio()
+
+Private Sub AddBiblio()
     Dim sTitle As String, sMessage As String, sM2 As String
     Dim sResult As String
 
@@ -692,29 +817,31 @@ Private Function AddBiblio()
     On Error Resume Next
     Set mNode = tv.Nodes(sResult)
     If mNode Is Nothing Then
-        On Error GoTo Fin
-        tv.Nodes.Add , , sResult, sResult, "biblio"
+        If Trim$(sResult) <> "" Then
+            On Error GoTo Fin
+            tv.Nodes.Add , , sResult, sResult, "biblio"
+        End If
     Else
         MsgBox sM2, , sTitle
     End If
     Set mNode = Nothing
 
-    Exit Function
+    Exit Sub
 Fin:
     Set mNode = Nothing
     Select Case lngLanguage
         Case c2i_Langue_Français
             MsgBox "Le nom de la bibliothèque n'est pas correct", vbInformation
         Case Else
-            MsgBox "The library name is invalide", vbInformation
+            MsgBox "The library name is invalid", vbInformation
     End Select
-End Function
+End Sub
 
-Private Function AddCategorie()
+Private Sub AddCategorie()
     Dim sTitle As String, sMessage As String, sM2 As String
     Dim sResult As String
 
-    If tv.SelectedItem Is Nothing Then Exit Function
+    If tv.SelectedItem Is Nothing Then Exit Sub
 
     If tv.SelectedItem.Image <> "element" Then
         sTitle = "c2iExplorer"
@@ -728,7 +855,7 @@ Private Function AddCategorie()
         End Select
 
         sResult = InputBox(sMessage, sTitle)
-        If sResult = "" Then Exit Function
+        If sResult = "" Then Exit Sub
 
         Dim mNode As Node
         On Error Resume Next
@@ -740,13 +867,13 @@ Private Function AddCategorie()
         End If
     Else
         If lngLanguage = c2i_Langue_Français Then
-            MsgBox "Sélectionnez une bibliothèque ou une categorie pour ajouter une catégorie", vbInformation, "c2iExplorer"
+            MsgBox "Sélectionnez une bibliothèque ou une catégorie pour ajouter une catégorie", vbInformation, "c2iExplorer"
         Else
             MsgBox "Select a library or a folder to add a folder", vbInformation, "c2iExplorer"
         End If
     End If
 
-End Function
+End Sub
 
 Private Sub UserDocument_Paint()
     UserDocument_Resize

@@ -9,8 +9,10 @@ Begin VB.Form frmBiblio
    ClientWidth     =   6660
    Icon            =   "frmBiblio.frx":0000
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
+   PaletteMode     =   2  'Custom
    ScaleHeight     =   5985
    ScaleWidth      =   6660
    StartUpPosition =   2  'CenterScreen
@@ -47,6 +49,8 @@ Begin VB.Form frmBiblio
       _ExtentY        =   661
       ButtonWidth     =   1508
       ButtonHeight    =   609
+      AllowCustomize  =   0   'False
+      Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
       ImageList       =   "imgTB"
@@ -79,10 +83,10 @@ Begin VB.Form frmBiblio
          Appearance      =   0  'Flat
          BackColor       =   &H00C0C0C0&
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -98,6 +102,15 @@ Begin VB.Form frmBiblio
       End
       Begin VB.TextBox txtDeclaration 
          BackColor       =   &H00C0C0C0&
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   855
          Left            =   1320
          MultiLine       =   -1  'True
@@ -108,12 +121,12 @@ Begin VB.Form frmBiblio
       End
       Begin VB.TextBox txtName 
          Appearance      =   0  'Flat
-         BackColor       =   &H00C0FFFF&
+         BackColor       =   &H80000018&
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -126,7 +139,15 @@ Begin VB.Form frmBiblio
          Width           =   5175
       End
       Begin VB.TextBox txtHead 
-         BackColor       =   &H00FFFFFF&
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   975
          Left            =   1320
          MultiLine       =   -1  'True
@@ -137,6 +158,15 @@ Begin VB.Form frmBiblio
       End
       Begin VB.TextBox txtInline 
          BackColor       =   &H00C0C0C0&
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   975
          Left            =   1320
          MultiLine       =   -1  'True
@@ -146,7 +176,15 @@ Begin VB.Form frmBiblio
          Width           =   5175
       End
       Begin VB.TextBox txtEnd 
-         BackColor       =   &H00FFFFFF&
+         BeginProperty Font 
+            Name            =   "Tahoma"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
          Height          =   975
          Left            =   1320
          MultiLine       =   -1  'True
@@ -159,10 +197,10 @@ Begin VB.Form frmBiblio
          AutoSize        =   -1  'True
          Caption         =   "Description"
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -171,16 +209,16 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   12
          Top             =   600
-         Width           =   975
+         Width           =   795
       End
       Begin VB.Label lblNom 
          AutoSize        =   -1  'True
          Caption         =   "Nom"
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -189,21 +227,21 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   11
          Top             =   240
-         Width           =   390
+         Width           =   315
       End
       Begin VB.Label lblEndProc 
          AutoSize        =   -1  'True
          Caption         =   "Fin de procédure"
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   855
+         Height          =   390
          Left            =   120
          TabIndex        =   10
          Top             =   4440
@@ -214,10 +252,10 @@ Begin VB.Form frmBiblio
          AutoSize        =   -1  'True
          Caption         =   "Code"
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -226,21 +264,21 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   9
          Top             =   3480
-         Width           =   450
+         Width           =   375
       End
       Begin VB.Label lblHeadProc 
          AutoSize        =   -1  'True
          Caption         =   "En-tête de procédure"
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   915
+         Height          =   390
          Left            =   120
          TabIndex        =   8
          Top             =   2520
@@ -251,10 +289,10 @@ Begin VB.Form frmBiblio
          AutoSize        =   -1  'True
          Caption         =   "Déclaration"
          BeginProperty Font 
-            Name            =   "MS Sans Serif"
+            Name            =   "Tahoma"
             Size            =   8.25
             Charset         =   0
-            Weight          =   700
+            Weight          =   400
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
@@ -263,7 +301,7 @@ Begin VB.Form frmBiblio
          Left            =   120
          TabIndex        =   7
          Top             =   1560
-         Width           =   990
+         Width           =   810
       End
    End
 End
@@ -272,11 +310,35 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+' ***** BEGIN LICENSE BLOCK *****
+' Version: MPL 1.1
+'
+' The contents of this file are subject to the Mozilla Public License Version
+' 1.1 (the "License"); you may not use this file except in compliance with
+' the License. You may obtain a copy of the License at
+' http://www.mozilla.org/MPL/
+'
+' Software distributed under the License is distributed on an "AS IS" basis,
+' WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+' for the specific language governing rights and limitations under the
+' License.
+'
+' The Original Code is c2iExplorer (for Visual Basic 6).
+'
+' The Initial Developer of the Original Code is
+' c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+' Portions created by the Initial Developer are Copyright (C) 2000
+' the Initial Developer. All Rights Reserved.
+'
+' Contributor(s):
+'
+' ***** END LICENSE BLOCK *****
+
 Option Explicit
 Private mObjE As cElement
 
 Private Sub Form_Load()
-    PositionForm Me
+'    PositionForm Me
     Select Case lngLanguage
         Case c2i_Langue_Français
             lblNom = "Nom"
@@ -300,8 +362,8 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    PositionForm Me, False
-    objUDBiblio.bFrmBiblio = False
+'    PositionForm Me, conFaux
+    objUDBiblio.bFrmBiblio = conFaux
     Set mObjE = Nothing
 End Sub
 
@@ -327,14 +389,14 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     End Select
 End Sub
 
-Private Function AddCode()
+Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
 
     On Error Resume Next
-    If objUDBiblio.TVEx.SelectedItem Is Nothing Then Exit Function
+    If objUDBiblio.TVEx.SelectedItem Is Nothing Then Exit Sub
 
-    If Trim(txtName) = "" Then Exit Function
+    If Trim$(txtName) = "" Then Exit Sub
 
     If objUDBiblio.TVEx.SelectedItem.Image = "element" Then
         Set mNodeParent = objUDBiblio.TVEx.SelectedItem.Parent
@@ -342,18 +404,18 @@ Private Function AddCode()
         Set mNodeParent = objUDBiblio.TVEx.SelectedItem
     End If
 
-    sKey = mNodeParent.FullPath + "/" + Trim(txtName)
+    sKey = mNodeParent.FullPath + "/" + Trim$(txtName)
     Set objE = Explorer.Elements(sKey)
     If objE Is Nothing Then
         'on ajoute un nouvel élément
-        Set objE = Explorer.Elements.Add(Trim(txtDeclaration), Trim(txtHead), Trim(txtInline), Trim(txtEnd), Trim(txtDescription), mNodeParent.FullPath + "/" + Trim(txtName), mNodeParent.FullPath + "/" + Trim(txtName))
+        Set objE = Explorer.Elements.Add(Trim$(txtDeclaration), Trim$(txtHead), Trim$(txtInline), Trim$(txtEnd), Trim$(txtDescription), mNodeParent.FullPath + "/" + Trim$(txtName), mNodeParent.FullPath + "/" + Trim$(txtName))
         objUDBiblio.AddElement objE
     Else
-        objE.DeclareProc = Trim(txtDeclaration)
-        objE.HeadProc = Trim(txtHead)
-        objE.InLineProc = Trim(txtInline)
-        objE.EndProc = Trim(txtEnd)
-        objE.Description = Trim(txtDescription)
+        objE.DeclareProc = Trim$(txtDeclaration)
+        objE.HeadProc = Trim$(txtHead)
+        objE.InLineProc = Trim$(txtInline)
+        objE.EndProc = Trim$(txtEnd)
+        objE.Description = Trim$(txtDescription)
     End If
     Set mNodeParent = Nothing
-End Function
+End Sub
