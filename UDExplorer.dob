@@ -1979,7 +1979,7 @@ Private Sub InitialiserTbGene()
             "info", "propgene", "msgboxgene", "biblio", "internet", "capture", "options"
     StrArray strarNomsBtnMenu, _
             "Durée du développement", "Générateur de propriétés", "Générateur de MsgBox", _
-            "Bibliothèque de code", "c2iExplorer sur le Web", "Imprimer un rapport", "Options"
+            "Bibliothèque de code", "c2iExplorer sur le Web", "Générer un rapport", "Options"
             
     With tbGene
 '        Set .ImageList = ImgTBGene

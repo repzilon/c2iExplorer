@@ -57,6 +57,7 @@ Public Const conSecDurees As String = "Durees"
 Public Const conValData As String = "Data"
 Public Const conValSauveDur As String = "SaveDurations"
 Public Const conValDurSavNtrv As String = "DurationSaveInterval"
+Public Const conValSauvBibl As String = "AutosaveLibrary"
 Public Const conValLang As String = "Language"
 Public Const conNomApp As String = "c2iExplorer"
 Public Const conBS As String = "\"
@@ -110,6 +111,7 @@ Public strFichLangueActuel As String
 Public blnMultilingueActive As Boolean
 Public lngDureeSauve As Long
 Public bSauve As Boolean
+Public blnSauvAutoBiblCode As Boolean                      'Ajout par René Rhéaume, 16 avril 2003
 
 'variables d'affichage dans le listview et le treeview
 Public bAfficheConstante As Boolean
@@ -396,7 +398,8 @@ End Function
 '    Dim lsiExtract As ListImage
 '    For Each lsiExtract In imlAExtraire.ListImages
 '        SavePicture lsiExtract.Picture, App.Path & conDossierData & _
-'                    "\" & strDebutNomFich & "(" & lsiExtract.Key & ")[" & lsiExtract.Index & "].bmp"
+'                    "\" & strDebutNomFich & "[" & Format$(lsiExtract.Index, "00") & _
+'                    "](" & lsiExtract.Key & ").bmp"
 '    Next
 '    Set lsiExtract = Nothing
 'End Sub

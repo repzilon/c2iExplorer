@@ -35,7 +35,7 @@ HelpContextID="0"
 CompatibleMode="0"
 MajorVer=1
 MinorVer=60
-RevisionVer=156
+RevisionVer=157
 AutoIncrementVer=0
 ServerSupportFiles=0
 DllBaseAddress=&H3aed0000
@@ -45,7 +45,7 @@ VersionFileDescription="Complément explorateur de projet pour VB5"
 VersionLegalCopyright="c2i - Richard Clark, Fred Just, René Rhéaume, Joël Guelluy, Pascal Martin. Programme couvert par la MPL 1.1 ."
 VersionLegalTrademarks="c2i - Richard Clark"
 VersionProductName="c2iExplorer"
-CondComp="VersionVB = 5 : OldC2iStyle = 0 : JGuelluyRightMenu = 1"
+CondComp="VersionVB = 5 : OldC2iStyle = 0 : JGuelluyRightMenu = 1 : NoContainerDownImage = 1 : SlimC2iContainer = 1"
 CompilationType=0
 OptimizationType=0
 FavorPentiumPro(tm)=0

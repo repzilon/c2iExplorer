@@ -29,7 +29,7 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 156
+!define Revision 157
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !define NomApp "c2iExplorer"

@@ -227,7 +227,7 @@ End Sub
 Private Sub Form_Load()
     Dim I As Long
     
-    Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, "Imprimer")
+    Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, "Générer un rapport")
     If (blnMultilingueActive) Then
         For I = 1 To 5 Step 2
             Toolbar1.Buttons(I).ToolTipText = LireChaineLocalisee(conNomForm, _

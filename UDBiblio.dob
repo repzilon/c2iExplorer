@@ -64,23 +64,23 @@ Begin VB.UserDocument UDBiblio
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "UDBiblio.dox":06E4
-            Key             =   "biblio"
-         EndProperty
-         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":082A
             Key             =   "voir"
          EndProperty
-         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0952
+         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":080C
             Key             =   "newbiblio"
          EndProperty
-         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0A8C
+         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":0946
             Key             =   "newcategorie"
          EndProperty
-         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0B60
+         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":0A1A
             Key             =   "newdata"
+         EndProperty
+         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":0CEF
+            Key             =   "biblio"
          EndProperty
       EndProperty
    End
@@ -114,23 +114,23 @@ Begin VB.UserDocument UDBiblio
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   5
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0E34
+            Picture         =   "UDBiblio.dox":0FDD
             Key             =   "biblio"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0F50
+            Picture         =   "UDBiblio.dox":10F9
             Key             =   "web"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":14A4
+            Picture         =   "UDBiblio.dox":164D
             Key             =   "mail"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":15C0
+            Picture         =   "UDBiblio.dox":1769
             Key             =   "categorie"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":16DC
+            Picture         =   "UDBiblio.dox":1885
             Key             =   "element"
          EndProperty
       EndProperty
@@ -391,10 +391,13 @@ End Sub
 ' données spécifié dans le fichier INI n'existe pas
 'Procédure modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Procédure modifiée par René Rhéaume le 16 avril 2002
+' Sauvegarde automatique optionnelle
 Private Sub UserDocument_Initialize()
     Dim strDebutFiltreBD As String
 
     c2iCurrentDataFileName = LireChaineFichierINI(conSecGen, conValData, vbNullString, c2iINIFile)
+    blnSauvAutoBiblCode = GetPrivateProfileInt(conSecGen, conValSauvBibl, 1, c2iINIFile)
     bFrmBiblio = conFaux
     tv.PathSeparator = conSepChemBiblio
     If (FichierExiste(c2iCurrentDataFileName)) Then

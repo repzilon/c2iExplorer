@@ -1,9 +1,9 @@
 Type=OleDll
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINNT\System32\stdole2.tlb#OLE Automation
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINNT\System32\STDOLE2.TLB#OLE Automation
 Reference=*\G{00025E01-0000-0000-C000-000000000046}#4.0#0#C:\Program Files\Fichiers communs\Microsoft Shared\DAO\DAO350.DLL#Microsoft DAO 3.5 Object Library
 Reference=*\G{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}#2.0#0#C:\Program Files\Microsoft Office\Office\MSO9.DLL#Microsoft Office 8.0 Object Library
 Reference=*\G{EF404E00-EDA6-101A-8DAF-00DD010F7EBB}#5.3#0#C:\Program Files\Microsoft Visual Studio\VB98\VB6EXT.OLB#Microsoft Visual Basic 6.0 Extensibility
-Object={831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0; mscomctl.ocx
+Object={831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0; MSCOMCTL.OCX
 Module=MExtraitIcone; MExtraitIcone.bas
 UserDocument=UDExplorer.dob
 Form=frmPrint.frm
@@ -35,7 +35,7 @@ HelpContextID="0"
 CompatibleMode="0"
 MajorVer=1
 MinorVer=60
-RevisionVer=156
+RevisionVer=157
 AutoIncrementVer=0
 ServerSupportFiles=0
 DllBaseAddress=&H3af70000
@@ -45,7 +45,7 @@ VersionFileDescription="Complément explorateur de projet pour VB6"
 VersionLegalCopyright="c2i - Richard Clark, Fred Just, René Rhéaume, Joël Guelluy, Pascal Martin. Programme couvert par la MPL 1.1 ."
 VersionLegalTrademarks="c2i - Richard Clark"
 VersionProductName="c2iExplorer"
-CondComp="VersionVB = 6 : OldC2iStyle = 0 : JGuelluyRightMenu = 1"
+CondComp="VersionVB = 6 : OldC2iStyle = 0 : JGuelluyRightMenu = 1 : NoContainerDownImage = 1 : SlimC2iContainer = 1"
 CompilationType=0
 OptimizationType=0
 FavorPentiumPro(tm)=0

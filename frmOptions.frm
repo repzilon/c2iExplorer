@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin VB.Form frmOptions 
    BorderStyle     =   4  'Fixed ToolWindow
-   ClientHeight    =   2850
+   ClientHeight    =   3225
    ClientLeft      =   45
    ClientTop       =   285
    ClientWidth     =   3480
@@ -16,56 +16,13 @@ Begin VB.Form frmOptions
    EndProperty
    Icon            =   "frmOptions.frx":0000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   2850
+   ScaleHeight     =   3225
    ScaleWidth      =   3480
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
-   Begin VB.CommandButton cmdCancel 
-      Cancel          =   -1  'True
-      Height          =   375
-      Left            =   2280
-      TabIndex        =   6
-      Top             =   2400
-      Width           =   1095
-   End
-   Begin VB.CommandButton cmdOK 
-      Default         =   -1  'True
-      Height          =   375
-      Left            =   1080
-      TabIndex        =   5
-      Top             =   2400
-      Width           =   1095
-   End
-   Begin VB.ComboBox cboLangPack 
-      Height          =   315
-      Left            =   120
-      Sorted          =   -1  'True
-      Style           =   2  'Dropdown List
-      TabIndex        =   4
-      Top             =   1320
-      Width           =   3255
-   End
-   Begin VB.CheckBox chkUseLangPack 
-      Height          =   285
-      Left            =   120
-      TabIndex        =   3
-      Top             =   960
-      Width           =   3255
-   End
-   Begin VB.TextBox txtSaveInterval 
-      Alignment       =   1  'Right Justify
-      Height          =   285
-      Left            =   3000
-      MaxLength       =   2
-      TabIndex        =   2
-      Text            =   "0"
-      Top             =   480
-      Width           =   375
-   End
-   Begin VB.CheckBox chkSaveDurations 
+   Begin VB.CheckBox chkAutosaveLibrary 
       Alignment       =   1  'Right Justify
       Height          =   285
       Left            =   120
@@ -73,11 +30,61 @@ Begin VB.Form frmOptions
       Top             =   120
       Width           =   3255
    End
+   Begin VB.CommandButton cmdCancel 
+      Cancel          =   -1  'True
+      Height          =   375
+      Left            =   2280
+      TabIndex        =   7
+      Top             =   2760
+      Width           =   1095
+   End
+   Begin VB.CommandButton cmdOK 
+      Default         =   -1  'True
+      Height          =   375
+      Left            =   1080
+      TabIndex        =   6
+      Top             =   2760
+      Width           =   1095
+   End
+   Begin VB.ComboBox cboLangPack 
+      Height          =   315
+      Left            =   120
+      Sorted          =   -1  'True
+      Style           =   2  'Dropdown List
+      TabIndex        =   5
+      Top             =   1680
+      Width           =   3255
+   End
+   Begin VB.CheckBox chkUseLangPack 
+      Height          =   285
+      Left            =   120
+      TabIndex        =   4
+      Top             =   1320
+      Width           =   3255
+   End
+   Begin VB.TextBox txtSaveInterval 
+      Alignment       =   1  'Right Justify
+      Height          =   285
+      Left            =   3000
+      MaxLength       =   2
+      TabIndex        =   3
+      Text            =   "0"
+      Top             =   840
+      Width           =   375
+   End
+   Begin VB.CheckBox chkSaveDurations 
+      Alignment       =   1  'Right Justify
+      Height          =   285
+      Left            =   120
+      TabIndex        =   1
+      Top             =   480
+      Width           =   3255
+   End
    Begin VB.Label lblNote 
       Height          =   435
       Left            =   120
-      TabIndex        =   7
-      Top             =   1740
+      TabIndex        =   8
+      Top             =   2100
       Width           =   3255
    End
    Begin VB.Line linSep 
@@ -85,22 +92,22 @@ Begin VB.Form frmOptions
       Index           =   1
       X1              =   120
       X2              =   3420
-      Y1              =   855
-      Y2              =   855
+      Y1              =   1215
+      Y2              =   1215
    End
    Begin VB.Line linSep 
       BorderColor     =   &H80000010&
       Index           =   0
       X1              =   120
       X2              =   3420
-      Y1              =   840
-      Y2              =   840
+      Y1              =   1200
+      Y2              =   1200
    End
    Begin VB.Label lblSaveInterval 
       Height          =   285
       Left            =   150
-      TabIndex        =   1
-      Top             =   480
+      TabIndex        =   2
+      Top             =   840
       Width           =   2775
    End
 End
@@ -136,36 +143,13 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-'http://c2i.fr/code.asp?IDCode=60&type=&IDCate=&Cate=
-Private Const MAX_PATH = 260
-Private Const INVALID_HANDLE_VALUE = -1
-Private Declare Function FindFirstFile Lib "kernel32" Alias "FindFirstFileA" ( _
-    ByVal lpFileName As String, lpFindFileData As WIN32_FIND_DATA) As Long
-Private Declare Function FindNextFile Lib "kernel32" Alias "FindNextFileA" ( _
-    ByVal hFindFile As Long, lpFindFileData As WIN32_FIND_DATA) As Long
-Private Declare Function FindClose Lib "kernel32" (ByVal hFindFile As Long) As Long
-Private Type FILETIME
-    dwLowDateTime As Long
-    dwHighDateTime As Long
-End Type
-Private Type WIN32_FIND_DATA
-    dwFileAttributes As Long
-    ftCreationTime As FILETIME
-    ftLastAccessTime As FILETIME
-    ftLastWriteTime As FILETIME
-    nFileSizeHigh As Long
-    nFileSizeLow As Long
-    dwReserved0 As Long
-    dwReserved1 As Long
-    cFileName As String * MAX_PATH
-    cAlternate As String * 14
-End Type
-
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
+'Procédure modifiée par René Rhéaume le 16 avril 2003
 Private Sub Form_Load()
     ChargerChainesLocales
     RemplirCombo
     SelectionnerCombo
+    chkAutosaveLibrary.Value = Abs(blnSauvAutoBiblCode)
     chkSaveDurations.Value = Abs(bSauve)
     txtSaveInterval.Text = CStr(lngDureeSauve)
     chkSaveDurations_Click
@@ -192,21 +176,27 @@ Private Sub cmdCancel_Click()
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
+'Procédure modifiée par René Rhéaume le 16 avril 2003
+' Sauvegarde automatique de la bibliothèque de code optionnelle
 Private Sub cmdOK_Click()
+    Dim intSauverBiblio As Integer
     Dim intSauverDurees As Integer
     Dim lngIntervalle As Long
     Dim strFichierLangue As String
     
+    intSauverBiblio = chkAutosaveLibrary.Value
     intSauverDurees = chkSaveDurations.Value
     lngIntervalle = CLng(txtSaveInterval.Text)
     If (chkUseLangPack.Value = 1) Then
         strFichierLangue = cboLangPack.List(cboLangPack.ListIndex)
     End If
     
+    WritePrivateProfileString conSecGen, conValSauvBibl, CStr(intSauverBiblio), c2iINIFile
     WritePrivateProfileString conSecGen, conValSauveDur, CStr(intSauverDurees), c2iINIFile
     WritePrivateProfileString conSecGen, conValDurSavNtrv, CStr(lngIntervalle), c2iINIFile
     WritePrivateProfileString conSecGen, conValLang, strFichierLangue, c2iINIFile
     
+    blnSauvAutoBiblCode = CBool(intSauverBiblio)
     bSauve = CBool(intSauverDurees)
     lngDureeSauve = lngIntervalle
     
@@ -231,43 +221,44 @@ Private Sub txtSaveInterval_KeyPress(KeyAscii As Integer)
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
+'Procédure modifiée par René Rhéaume le 18 avril 2003
+' Utilise la fonction Dir au lieu des API
+' Légèrement plus lent mais plus petit et plus simple
 Private Sub RemplirCombo()
-    Dim hFile As Long
-    Dim tFindFile As WIN32_FIND_DATA
-    Dim blnTrouve As Boolean
     Dim strCheminLang As String
+    Dim strFichLang As String
     
 '    cboLangPack.AddItem vbNullString
     
     strCheminLang = App.Path & "\Lang\"
-    'trouve le premier fichier, retourne le handle de celui-ci
-    hFile = FindFirstFile(strCheminLang & "*.lng", tFindFile)
-    blnTrouve = (hFile <> INVALID_HANDLE_VALUE)
-    Do While (blnTrouve)
-        If (ValiderFichierLangue(strCheminLang & tFindFile.cFileName)) Then
-            cboLangPack.AddItem tFindFile.cFileName
+    strFichLang = Dir(strCheminLang & "*.lng")
+    Do While (LenB(strFichLang) > 0)
+        If (ValiderFichierLangue(strCheminLang & strFichLang)) Then
+            cboLangPack.AddItem strFichLang
         End If
-        blnTrouve = FindNextFile(hFile, tFindFile) 'trouve le suivant
+        strFichLang = Dir
     Loop
-    FindClose hFile 'libère le handle
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
+'Procédure modifiée par René Rhéaume le 16 avril 2003
 Private Sub ChargerChainesLocales()
     Const conNomForm As String = "frmOptions"
     
     Caption = LireChaineLocalisee(conNomForm, conL10nWCap, "Options")
+    chkAutosaveLibrary.Caption = LireChaineLocalisee(conNomForm, _
+        "Obj.chkAutosaveLibrary.Caption", "Sauvegarder automatiquement la biblio")
     chkSaveDurations.Caption = LireChaineLocalisee(conNomForm, _
-            "Obj.chkSaveDurations.Caption", "Sauvegarder les durées")
+        "Obj.chkSaveDurations.Caption", "Sauvegarder les durées")
     lblSaveInterval.Caption = LireChaineLocalisee(conNomForm, _
-            "Obj.lblSaveInterval.Caption", "Intervalle de sauvegarde des durées :")
+        "Obj.lblSaveInterval.Caption", "Intervalle de sauvegarde des durées :")
     txtSaveInterval.ToolTipText = LireChaineLocalisee(conNomForm, _
-            "Obj.txtSaveInterval.ToolTipText", "En minutes")
+        "Obj.txtSaveInterval.ToolTipText", "En minutes")
     chkUseLangPack.Caption = LireChaineLocalisee(conNomForm, _
-            "Obj.chkUseLangPack.Caption", "Utiliser le fichier de traduction suivant :")
+        "Obj.chkUseLangPack.Caption", "Utiliser le fichier de traduction suivant :")
     lblNote.Caption = LireChaineLocalisee(conNomForm, _
-            "Obj.lblNote.Caption", _
-            "Le changement de langue s'appliquera au prochain démarrage de Visual Basic.")
+        "Obj.lblNote.Caption", _
+        "Le changement de langue s'appliquera au prochain démarrage de Visual Basic.")
     cmdOK.Caption = LireChaineLocalisee(conNomForm, "Obj.cmdOK.Caption", "&OK")
     cmdCancel.Caption = LireChaineLocalisee(conNomForm, "Obj.cmdCancel.Caption", "&Annuler")
 End Sub

@@ -250,7 +250,7 @@ Private mObjE As cElement
 'Modifié par René Rhéaume le 3 novembre 2002
 ' Ajout d'une info-bulle
 Private Sub Form_Load()
-    '    PositionForm Me
+'    PositionForm Me
     If (blnMultilingueActive) Then
         Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, Me.Caption)
     End If
@@ -270,10 +270,11 @@ Private Sub Form_Load()
             "Obj.tbMain.Buttons(3-->'quit').ToolTipText", "Quitter")
     tbMain.Buttons(conReset).ToolTipText = LireChaineLocalisee(conNomForm, _
             "Obj.tbMain.Buttons(4-->'reset').ToolTipText", "Remettre à zéro")
+'    ExtraireImageList imgTB, "frmBiblio.imgTB"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
-    '    PositionForm Me, conFaux
+'    PositionForm Me, conFaux
     objUDBiblio.bFrmBiblio = conFaux
     Set mObjE = Nothing
 End Sub
@@ -312,6 +313,8 @@ End Sub
 ' Optimisé par René Rhéaume le 13 janvier 2003
 ' Modifié par René Rhéaume le 23 mars 2003
 '  Sauvegarde automatique
+' Modifié par René Rhéaume le 16 avril 2003
+'  Sauvegarde automatique optionnelle
 Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
@@ -346,8 +349,11 @@ Private Sub AddCode()
                 objE.EndProc = Trim$(txtEnd)
                 objE.Description = Trim$(txtDescription)
             End If
+            
             objUDBiblio.blnModifie = conVrai
-            objUDBiblio.SauvegarderBibliotheque c2iCurrentDataFileName
+            If (blnSauvAutoBiblCode) Then
+                objUDBiblio.SauvegarderBibliotheque c2iCurrentDataFileName
+            End If
     End Select
 
 SortieProc:

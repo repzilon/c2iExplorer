@@ -75,19 +75,19 @@ Begin VB.UserDocument UDClassViewer
             Key             =   "methode"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":01CE
+            Picture         =   "UDClassViewer.dox":01A4
             Key             =   "proppublic"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":02E0
+            Picture         =   "UDClassViewer.dox":02BE
             Key             =   "propget"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0400
+            Picture         =   "UDClassViewer.dox":03C4
             Key             =   "proplet"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":051F
+            Picture         =   "UDClassViewer.dox":04CB
             Key             =   "propgetlet"
          EndProperty
       EndProperty
@@ -141,15 +141,15 @@ Begin VB.UserDocument UDClassViewer
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   3
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0667
+            Picture         =   "UDClassViewer.dox":05DC
             Key             =   "print"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":07A4
+            Picture         =   "UDClassViewer.dox":079F
             Key             =   "actu"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0843
+            Picture         =   "UDClassViewer.dox":083E
             Key             =   "descro"
          EndProperty
       EndProperty
@@ -386,10 +386,10 @@ Private Sub Imprime()
     Dim lngDC As Long
 
     On Error GoTo GestErr
-    lngDC = GetDC(UserDocument.hwnd)
+    lngDC = GetDC(UserDocument.hWnd)
     BitBlt PicSource.hdc, 0, 0, UserDocument.ScaleWidth, _
             UserDocument.ScaleHeight - tbMain.Height, lngDC, 0, tbMain.Height, vbSrcCopy
-    ReleaseDC UserDocument.hwnd, lngDC
+    ReleaseDC UserDocument.hWnd, lngDC
     PicSource.Refresh
     Printer.PaintPicture PicSource.Image, 0, 0
     Printer.EndDoc
