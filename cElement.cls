@@ -34,7 +34,6 @@ Attribute VB_Ext_KEY = "Top_Level" ,"Yes"
 '
 ' ***** END LICENSE BLOCK *****
 Option Explicit
-Private Const conSlash As String = "/"
 '//************Généré par c2iExplorer*******************
 Private sNom As String
 Private sDescription As String
@@ -60,10 +59,10 @@ Public Property Get Titre() As String
     Dim iPos As Long, iDeb As Long
 
     iDeb = 1
-    iPos = InStr(iDeb, sNom, conSlash)
+    iPos = InStr(iDeb, sNom, conSepChemBiblio)
     Do Until iPos = 0
         iDeb = iPos
-        iPos = InStr(iPos + 1, sNom, conSlash)
+        iPos = InStr(iPos + 1, sNom, conSepChemBiblio)
     Loop
     Titre = Right$(sNom, Len(sNom) - iDeb)
 
@@ -126,12 +125,12 @@ Public Property Get Ident() As Long
     Dim iPos As Long
 
     iPos = 1
-    iPos = InStr(iPos, sNom, conSlash)
+    iPos = InStr(iPos, sNom, conSepChemBiblio)
 
     On Error Resume Next
     Do Until iPos = 0
         Ident = Ident + 1
-        iPos = InStr(iPos + 1, sNom, conSlash)
+        iPos = InStr(iPos + 1, sNom, conSepChemBiblio)
     Loop
 
 End Property
@@ -167,11 +166,11 @@ Private Function ChercherNomDossier(ByVal iIdent As Long, ByVal blnCheminComplet
         Case Else
 '            On Error Resume Next
             iPos = 1
-            iPosNext = InStr(iPos, sNom, conSlash)
+            iPosNext = InStr(iPos, sNom, conSepChemBiblio)
             iNum = 0
             Do Until (iNum = iIdent)
                 iPos = iPosNext + 1
-                iPosNext = InStr(iPos, sNom, conSlash)
+                iPosNext = InStr(iPos, sNom, conSepChemBiblio)
                 iNum = iNum + 1
             Loop
             If (blnCheminComplet) Then

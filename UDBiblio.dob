@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.UserDocument UDBiblio 
    ClientHeight    =   5310
    ClientLeft      =   285
@@ -398,6 +398,7 @@ Private Sub UserDocument_Initialize()
 
     c2iCurrentDataFileName = LireChaineFichierINI(conSecGen, conValData, vbNullString, c2iINIFile)
     bFrmBiblio = conFaux
+    tv.PathSeparator = conSepChemBiblio
     If (FichierExiste(c2iCurrentDataFileName)) Then
         ChargeBase c2iCurrentDataFileName
     End If
@@ -749,8 +750,18 @@ Fin:
     SaveLibrary = 2
 End Function
 
+' Modifié par René Rhéaume le 19 octobre 2002
+'  Supprime également l'élément de la collection.
+'  Corrige un bogue qui empêchait d'ajouter un élément
+'  du même nom qu'un élément effacé auparavant.
 Private Sub DeleteNode()
-    tv.Nodes.Remove tv.SelectedItem.Key
+    With tv.SelectedItem
+        Select Case .Image
+            Case conElement, conWeb, conMail
+                Explorer.Elements.Remove .Key
+        End Select
+        tv.Nodes.Remove .Key
+    End With
 End Sub
 
 'Fonction modifiée par René Rhéaume, 29 juillet 2001
@@ -916,7 +927,7 @@ Private Sub AddCategorie()
             sResult = Trim$(InputBox(mlgarMsgCat(0)))
             If (sResult <> vbNullString) Then
                 On Error Resume Next
-                strClef = tv.SelectedItem.Key & tv.PathSeparator & sResult
+                strClef = tv.SelectedItem.Key & conSepChemBiblio & sResult
                 Set mNode = tv.Nodes(strClef)
                 If (mNode Is Nothing) Then
                     tv.Nodes.Add tv.SelectedItem, tvwChild, strClef, sResult, "categorie"
@@ -951,7 +962,7 @@ End Sub
 
 'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
-Public Sub GererBoutonNouvBD()
+Private Sub GererBoutonNouvBD()
     If (tv.Nodes.Count > 0) Then
         If (LenB(c2iCurrentDataFileName) > 0) Then
             Enregistrement c2iCurrentDataFileName
@@ -965,7 +976,7 @@ End Sub
 
 'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
-Public Sub GererBoutonCopie()
+Private Sub GererBoutonCopie()
     Dim objE As cElement
     Dim strImage As String
     strImage = tv.SelectedItem.Image
@@ -982,7 +993,7 @@ End Sub
 
 'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
-Public Sub GererBoutonVoir()
+Private Sub GererBoutonVoir()
     Dim strImage As String
     strImage = tv.SelectedItem.Image
     Select Case (strImage)

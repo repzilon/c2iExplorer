@@ -71,6 +71,7 @@ Public Const conOpen As String = "open"
 Public Const conPF As String = ")"
 Public Const conEsp As String = " "
 Public Const conL10nWCap As String = "WProp.Caption"
+Public Const conSepChemBiblio As String = "/"
 
 Public conarClefTypeModule() As String
 Public conarClefTypeMembre() As String

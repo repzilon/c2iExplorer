@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmBiblio 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Détails"
@@ -36,7 +36,7 @@ Begin VB.Form frmBiblio
       MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   2
+         NumListImages   =   3
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmBiblio.frx":030A
             Key             =   "putinlib"
@@ -44,6 +44,10 @@ Begin VB.Form frmBiblio
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmBiblio.frx":047E
             Key             =   "quit"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmBiblio.frx":05C9
+            Key             =   "reset"
          EndProperty
       EndProperty
    End
@@ -65,7 +69,7 @@ Begin VB.Form frmBiblio
       ImageList       =   "imgTB"
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   3
+         NumButtons      =   4
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "add"
             ImageIndex      =   1
@@ -76,6 +80,10 @@ Begin VB.Form frmBiblio
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "quit"
             ImageIndex      =   2
+         EndProperty
+         BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Key             =   "reset"
+            ImageIndex      =   3
          EndProperty
       EndProperty
    End
@@ -230,17 +238,22 @@ Attribute VB_Exposed = False
 Option Explicit
 Private Const conQuit As String = "quit"
 Private Const conAdd As String = "add"
+Private Const conReset As String = "reset"
 Private mObjE As cElement
 
 'Modifié par René Rhéaume le 5 janvier 2002
 'Modifié par René Rhéaume le 18 juin 2002
 ' Support multilingue
+'Modifié par René Rhéaume le 3 novembre 2002
+' Ajout d'une info-bulle
 Private Sub Form_Load()
     '    PositionForm Me
     Const conNomForm As String = "frmBiblio"
     If (blnMultilingueActive) Then
         Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, Me.Caption)
     End If
+    txtName.ToolTipText = LireChaineLocalisee(conNomForm, "Obj.txtName.ToolTipText", _
+            "Pour créer une sous-catégorie, tapez le nom de la catégorie, une barre oblique et le nom de l'élément.")
     lblNom.Caption = LireChaineLocalisee(conNomForm, "Obj.lblNom.Caption", "Nom")
     lblDescription.Caption = mlgLibelDescrpt
     lblDeclare.Caption = LireChaineLocalisee(conNomForm, "Obj.lblDeclar.Caption", "Déclaration")
@@ -253,6 +266,8 @@ Private Sub Form_Load()
             "Obj.tbMain.Buttons(1-->'add').ToolTipText", "Ajouter à la catégorie sélectionnée")
     tbMain.Buttons(conQuit).ToolTipText = LireChaineLocalisee(conNomForm, _
             "Obj.tbMain.Buttons(3-->'quit').ToolTipText", "Quitter")
+    tbMain.Buttons(conReset).ToolTipText = LireChaineLocalisee(conNomForm, _
+            "Obj.tbMain.Buttons(4-->'reset').ToolTipText", "Remettre à zéro")
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -275,18 +290,23 @@ Public Property Set Element(ByVal objE As cElement)
     End If
 End Property
 
+' Modifié par René Rhéaume le 19 octobre 2002
+'  Ajout du bouton «Remettre à zéro»
 Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     Select Case Button.Key
         Case conQuit
             Unload Me
         Case conAdd
             AddCode
+        Case conReset
+            RemettreAZero
     End Select
 End Sub
 
 ' Optimisé par René Rhéaume le 18 janvier 2002
 ' Modifié par René Rhéaume le 1 septembre 2002
 '  Correction d'un plantage
+' Modifié par René Rhéaume le 19 octobre 2002
 Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
@@ -302,7 +322,7 @@ Private Sub AddCode()
                 Set mNodeParent = mNodeParent.Parent
             End If
 
-            sKey = mNodeParent.FullPath & "/" & Trim$(txtName)
+            sKey = mNodeParent.FullPath & conSepChemBiblio & Trim$(txtName)
             On Error Resume Next
             Set objE = Explorer.Elements(sKey)
             On Error GoTo GestErr
@@ -329,4 +349,14 @@ SortieProc:
 GestErr:
     GererErrInattendue , "frmBiblio.AddCode"
     Resume SortieProc
+End Sub
+
+' Ajouté par René Rhéaume le 19 octobre 2002
+Private Sub RemettreAZero()
+    txtName.Text = vbNullString
+    txtDescription.Text = vbNullString
+    txtDeclaration.Text = vbNullString
+    txtHead.Text = vbNullString
+    txtInline.Text = vbNullString
+    txtEnd.Text = vbNullString
 End Sub
