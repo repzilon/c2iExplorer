@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.UserDocument UDAddCode 
    ClientHeight    =   5880
    ClientLeft      =   210
@@ -447,6 +447,7 @@ Private Const conDelprop As String = "delprop"
 Private Const conDelete As String = "delete"
 Private Const conCopie As String = "copie"
 Private Const conNomUD As String = "UDAddCode"
+Private Const conSepNomType As String = "("
 Private strarCatDonnes() As String
 Private strarPrefixes() As String
 
@@ -478,13 +479,13 @@ End Sub
 
 Private Function ExtractName(ByVal sText As String) As String
     Dim lDeb As Long
-    lDeb = InStr(1, sText, "(")
+    lDeb = InStr(1, sText, conSepNomType)
     ExtractName = Trim$(Left$(sText, lDeb - 1))
 End Function
 
 Private Function ExtractType(ByVal sText As String) As String
     Dim lDeb As Long
-    lDeb = InStr(1, sText, "(")
+    lDeb = InStr(1, sText, conSepNomType)
     ExtractType = Mid$(sText, lDeb + 1, Len(sText) - lDeb - 1)
 End Function
 
@@ -494,7 +495,7 @@ End Function
 'Procédure optimisée par René Rhéaume le 5 juillet 2002
 Private Sub AjouteProp()
     Static mlgMsgPropExisteDeja As String
-    If (mlgMsgPropExisteDeja = vbNullString) Then
+    If (LenB(mlgMsgPropExisteDeja) = 0) Then
         mlgMsgPropExisteDeja = LireChaineLocalisee(conNomUD, _
             "Code.AjouteProp.mlgMsgPropExisteDeja", "Cette propriété existe déjà.")
     End If
@@ -512,7 +513,7 @@ Private Sub AjouteProp()
     strNom = txtName.Text
     lngIdxSel = cmbLstType.ListIndex
     ' -------------------------- TRAITEMENT --------------------------
-    If (strNom <> vbNullString) Then
+    If (LenB(strNom) > 0) Then
         If (lngIdxSel > -1) Then
             On Error GoTo GestErr
             sType = strNom & " (" & cmbLstType.List(lngIdxSel) & conPF
@@ -617,9 +618,10 @@ End Sub
 ' Support multilingue
 'Procédure modifiée par René Rhéaume le 22 juillet 2002
 ' Ajout de la tabulation dans le corps des propriétés
+'Procédure optimisée par René Rhéaume le 13 janvier 2003
 Private Sub VoirCode()
     Static mlgGenerePar As String
-    If (mlgGenerePar = vbNullString) Then
+    If (LenB(mlgGenerePar) = 0) Then
         mlgGenerePar = LireChaineLocalisee(conNomUD, "Code.VoirCode.mlgGenerePar", "Généré par")
     End If
 
@@ -630,6 +632,7 @@ Private Sub VoirCode()
     Dim sDeclaration As String, sCode As String
     Dim mN As Node, mNFils As Node
     Dim strTagmN As String
+    Dim strTexte As String
     Dim strNom As String
     Dim strType As String
     Dim strTexteFils As String
@@ -638,13 +641,14 @@ Private Sub VoirCode()
     txtCodeDeclarationView = vbNullString
     txtCodeView = vbNullString
 
-    If tvCode.Nodes.Count = 0 Then Exit Sub
+    If (tvCode.Nodes.Count = 0) Then Exit Sub
 
     Set mN = tvCode.Nodes(1)
     Do Until mN Is Nothing
         strTagmN = mN.Tag
-        strNom = ExtractName(mN.Text)
-        strType = ExtractType(mN.Text)
+        strTexte = mN.Text
+        strNom = ExtractName(strTexte)
+        strType = ExtractType(strTexte)
         'dans la zone déclaration
         sDeclaration = sDeclaration & "Private " & strTagmN & strNom & _
                 conAs & strType & vbCrLf
@@ -666,13 +670,13 @@ Private Sub VoirCode()
             Select Case strTexteFils
                 Case conGet
                     sCode = sCode & "()" & conAs & strType & vbCrLf & vbTab
-                    If (mN.Image = conObjet) Then
+                    If (IsSameString(mN.Image, conObjet)) Then
                         sCode = sCode & conSetEsp
                     End If
                     sCode = sCode & strNom & conEgal & strTagmN & strNom & vbCrLf
                 Case conSet, conLet
                     sCode = sCode & "(ByVal " & strTagmN & strNom & "A As " & strType & conPF & vbCrLf & vbTab
-                    If (strTexteFils = conSet) Then
+                    If (IsSameString(strTexteFils, conSet)) Then
                         sCode = sCode & conSetEsp
                     End If
                     sCode = sCode & strTagmN & strNom & conEgal & strTagmN & strNom & "A" & vbCrLf
@@ -713,24 +717,24 @@ Private Sub MakeToolBar()
     Const conDebL10n As String = "Obj.tbMain.Buttons("
     Dim objButton As Button
 
-    With tbMain
+    With tbMain.Buttons
 '        Set .ImageList = imgTB
 '        Set .HotImageList = imgTB
-        Set objButton = .Buttons.Add(, conAddprop, , , conAddprop)
-        Set objButton = .Buttons.Add(, conDelprop, , , conDelprop)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
-        Set objButton = .Buttons.Add(, conDelete, , , conDelete)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
-        Set objButton = .Buttons.Add(, conCopie, , , conCopie)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Add(, conAddprop, , , conAddprop)
+        Set objButton = .Add(, conDelprop, , , conDelprop)
+        Set objButton = .Add(, , , tbrSeparator)
+        Set objButton = .Add(, conDelete, , , conDelete)
+        Set objButton = .Add(, , , tbrSeparator)
+        Set objButton = .Add(, conCopie, , , conCopie)
+        Set objButton = .Add(, , , tbrSeparator)
         
-        .Buttons(conAddprop).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conAddprop).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conDebL10n & "1-->'addprop').ToolTipText", "Ajouter une propriété")
-        .Buttons(conDelprop).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conDelprop).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conDebL10n & "2-->'delprop').ToolTipText", "Supprimer la propriété")
-        .Buttons(conDelete).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conDelete).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conDebL10n & "4-->'delete').ToolTipText", "Remettre à zéro")
-        .Buttons(conCopie).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conCopie).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conDebL10n & "6-->'copie').ToolTipText", "Copier le code généré")
     End With
 
@@ -797,7 +801,7 @@ End Sub
 ' Support multilingue
 Private Sub ChargerCombos()
     Static mlgMsgErrChargement As String
-    If (mlgMsgErrChargement = vbNullString) Then
+    If (LenB(mlgMsgErrChargement) = 0) Then
         mlgMsgErrChargement = LireChaineLocalisee(conNomUD, _
             "Code.ChargerCombos.mlgMsgErrChargement", "Erreur au chargement de ")
     End If

@@ -25,10 +25,37 @@ Attribute VB_Name = "GestFichier"
 ' ***** END LICENSE BLOCK *****
 
 Option Explicit
+
+Private Type SHFILEOPSTRUCT
+    hWnd As Long
+    wFunc As Long
+    pFrom As String
+    pTo As String
+    fFlags As Integer
+    fAnyOperationsAborted As Long
+    hNameMappings As Long
+    lpszProgressTitle As String            '  titre de la boite si FOF_SIMPLEPROGRESS
+End Type
+
+'constantes comment se fait l'opération
+Public Enum FileOperationFlags
+    FOF_ALLOWUNDO = &H40          '  permet l'annulation de l'opération en cours
+    FOF_FILESONLY = &H80          '  si il y a des *.*, l'opération se fait uniquement sur les fichiers
+    FOF_MULTIDESTFILES = &H1
+    FOF_NOCONFIRMATION = &H10     '  pas de message de confirmation (ex : suppression d'un fichier exe)
+    FOF_NOCONFIRMMKDIR = &H200    '  pas de message si un nouveau répertoire doit être crée
+    FOF_RENAMEONCOLLISION = &H8   '  renomme si le fichier existe (ex : copie de toto.exe)
+    FOF_SILENT = &H4              '  pas de boite de dialogue apparente
+    FOF_SIMPLEPROGRESS = &H100    '  boite de dialogue sans le nom du fichier
+    FOF_WANTMAPPINGHANDLE = &H20  '  renseigne hNameMappings si un 'renommage' a eu lieu
+End Enum
+
 Private Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As Any, ByVal lpDefault As String, ByVal lpReturnedString As String, ByVal nSize As Long, ByVal lpFileName As String) As Long
 Private Declare Function GetPrivateProfileSection Lib "kernel32" Alias "GetPrivateProfileSectionA" (ByVal lpAppName As String, ByVal lpReturnedString As String, ByVal nSize As Long, ByVal lpFileName As String) As Long
 Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
 Declare Function GetPrivateProfileInt Lib "kernel32" Alias "GetPrivateProfileIntA" (ByVal lpApplicationName As String, ByVal lpKeyName As String, ByVal nDefault As Long, ByVal lpFileName As String) As Long
+Private Declare Function SHFileOperation Lib "shell32.dll" Alias "SHFileOperationA" (lpFileOp As SHFILEOPSTRUCT) As Long
+
 
 'Module d'exploitation des fichiers
 
@@ -169,6 +196,24 @@ End Function
 ' Fait partie du système multilingue
 'Modifié par René Rhéaume le 30 juin 2002
 Public Function LireChaineLocalisee(ByVal strModule As String, _
-        ByVal strClef As String, ByVal strValeurDefaut As String) As String
+ByVal strClef As String, ByVal strValeurDefaut As String) As String
     LireChaineLocalisee = LireChaineFichierINI(strModule, strClef, strValeurDefaut, strFichLangueActuel)
+End Function
+
+'Ajouté par René Rhéaume le 17 janvier 2003
+' Pris de MFileOp de Richard Clark
+Public Function Rename(sFileName As String, sDest As String, _
+Optional lngFlags As FileOperationFlags) As Boolean
+    Const FO_RENAME As Long = &H4
+    Dim tSHFileOp As SHFILEOPSTRUCT, lngRep As Long
+    
+    With tSHFileOp
+        .wFunc = FO_RENAME
+        .pFrom = sFileName
+        .pTo = sDest
+        If Not IsMissing(lngFlags) Then .fFlags = lngFlags
+    End With
+    
+    lngRep = SHFileOperation(tSHFileOp)
+    Rename = (lngRep = 0) 'retourne si ca a reussi ou non
 End Function

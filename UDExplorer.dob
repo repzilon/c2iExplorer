@@ -19,6 +19,7 @@ Begin VB.UserDocument UDExplorer
    Icon            =   "UDExplorer.dox":0000
    LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
+   Picture         =   "UDExplorer.dox":00D2
    ScaleHeight     =   4920
    ScaleWidth      =   4230
    ScrollBars      =   0  'None
@@ -54,7 +55,7 @@ Begin VB.UserDocument UDExplorer
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   1
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":00D2
+            Picture         =   "UDExplorer.dox":0414
             Key             =   "ok"
          EndProperty
       EndProperty
@@ -72,75 +73,75 @@ Begin VB.UserDocument UDExplorer
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   18
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":018A
+            Picture         =   "UDExplorer.dox":04CC
             Key             =   "variable"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":02C6
+            Picture         =   "UDExplorer.dox":0608
             Key             =   "constante"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":03FF
+            Picture         =   "UDExplorer.dox":0741
             Key             =   "methode"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0546
+            Picture         =   "UDExplorer.dox":0888
             Key             =   "evenement"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0682
+            Picture         =   "UDExplorer.dox":09C4
             Key             =   "propriete"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":07C0
+            Picture         =   "UDExplorer.dox":0B02
             Key             =   "api"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0906
+            Picture         =   "UDExplorer.dox":0C48
             Key             =   "public"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0A49
+            Picture         =   "UDExplorer.dox":0D8B
             Key             =   "prive"
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0B8B
+            Picture         =   "UDExplorer.dox":0ECD
             Key             =   "friend"
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0CCB
+            Picture         =   "UDExplorer.dox":100D
             Key             =   "n-variable"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0E03
+            Picture         =   "UDExplorer.dox":1145
             Key             =   "n-constante"
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0F3B
+            Picture         =   "UDExplorer.dox":127D
             Key             =   "n-methode"
          EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1085
+            Picture         =   "UDExplorer.dox":13C7
             Key             =   "n-evenement"
          EndProperty
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":11CA
+            Picture         =   "UDExplorer.dox":150C
             Key             =   "n-propriete"
          EndProperty
          BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1307
+            Picture         =   "UDExplorer.dox":1649
             Key             =   "n-api"
          EndProperty
          BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1447
+            Picture         =   "UDExplorer.dox":1789
             Key             =   "n-public"
          EndProperty
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1585
+            Picture         =   "UDExplorer.dox":18C7
             Key             =   "n-prive"
          EndProperty
          BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":16C5
+            Picture         =   "UDExplorer.dox":1A07
             Key             =   "n-friend"
          EndProperty
       EndProperty
@@ -158,55 +159,55 @@ Begin VB.UserDocument UDExplorer
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   13
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1809
+            Picture         =   "UDExplorer.dox":1B4B
             Key             =   "voir"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1949
+            Picture         =   "UDExplorer.dox":1C8B
             Key             =   "propgene"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1A87
+            Picture         =   "UDExplorer.dox":1DC9
             Key             =   "msgboxgene"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1BBC
+            Picture         =   "UDExplorer.dox":1EFE
             Key             =   "delete"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1D02
+            Picture         =   "UDExplorer.dox":2044
             Key             =   "vide"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1D5F
+            Picture         =   "UDExplorer.dox":20A1
             Key             =   "capture"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1E9C
+            Picture         =   "UDExplorer.dox":21DE
             Key             =   "biblio"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1FE6
+            Picture         =   "UDExplorer.dox":2328
             Key             =   "info"
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":21B4
+            Picture         =   "UDExplorer.dox":24F6
             Key             =   "compile"
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":22F5
+            Picture         =   "UDExplorer.dox":2637
             Key             =   "internet"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":24D9
+            Picture         =   "UDExplorer.dox":281B
             Key             =   "actu"
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2578
+            Picture         =   "UDExplorer.dox":28BA
             Key             =   "actuwork"
          EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2617
+            Picture         =   "UDExplorer.dox":2959
             Key             =   "options"
          EndProperty
       EndProperty
@@ -296,198 +297,194 @@ Begin VB.UserDocument UDExplorer
       MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   48
+         NumListImages   =   47
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":28ED
+            Picture         =   "UDExplorer.dox":2C2F
             Key             =   "VBproject"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":299D
+            Picture         =   "UDExplorer.dox":2CDF
             Key             =   "menu"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2A13
+            Picture         =   "UDExplorer.dox":2D55
             Key             =   "Set"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2A89
+            Picture         =   "UDExplorer.dox":2DCB
             Key             =   "Let"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2AFC
+            Picture         =   "UDExplorer.dox":2E3E
             Key             =   "Get"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2B71
+            Picture         =   "UDExplorer.dox":2EB3
             Key             =   "api"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2C0F
+            Picture         =   "UDExplorer.dox":2F51
             Key             =   "composant"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2CB3
+            Picture         =   "UDExplorer.dox":2FF5
             Key             =   "reference"
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2D6B
+            Picture         =   "UDExplorer.dox":30AD
             Key             =   "Inconnu"
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2DCF
+            Picture         =   "UDExplorer.dox":3111
             Key             =   "ActiveXExe"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2E8A
-            Key             =   "dActiveXExe"
-         EndProperty
-         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2F5A
+            Picture         =   "UDExplorer.dox":31CC
             Key             =   "ActiveXControl"
          EndProperty
-         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3001
-            Key             =   "dActiveXControl"
-         EndProperty
-         BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":30CE
+         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3273
             Key             =   "ActiveXDll"
          EndProperty
-         BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":316E
-            Key             =   "dActiveXDll"
-         EndProperty
-         BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":323F
+         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3313
             Key             =   "ClassModule"
          EndProperty
-         BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":32F6
+         BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":33CA
             Key             =   "constante"
          EndProperty
-         BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3376
+         BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":344A
             Key             =   "UserControl"
          EndProperty
-         BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3414
+         BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":34E8
             Key             =   "DocObject"
          EndProperty
-         BeginProperty ListImage20 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":34AD
+         BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3581
             Key             =   "evenement"
          EndProperty
-         BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3539
+         BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":360D
             Key             =   "VBChildForm"
          EndProperty
-         BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":35D0
+         BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":36A4
             Key             =   "VBForm"
          EndProperty
-         BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3659
+         BeginProperty ListImage20 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":372D
             Key             =   "VBMDIForm"
          EndProperty
-         BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":36F0
+         BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":37C4
             Key             =   "methode"
          EndProperty
-         BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3776
+         BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":384A
             Key             =   "PropPage"
          EndProperty
-         BeginProperty ListImage26 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":380E
+         BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":38E2
             Key             =   "propriete"
          EndProperty
-         BeginProperty ListImage27 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":38C1
+         BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3995
             Key             =   "dpropriete"
          EndProperty
-         BeginProperty ListImage28 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3993
+         BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3A67
             Key             =   "variable"
          EndProperty
-         BeginProperty ListImage29 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3A26
+         BeginProperty ListImage26 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3AFA
             Key             =   "StdModule"
          EndProperty
-         BeginProperty ListImage30 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3AD9
+         BeginProperty ListImage27 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3BAD
             Key             =   "ActiveXDesigner"
          EndProperty
-         BeginProperty ListImage31 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3B78
+         BeginProperty ListImage28 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3C4C
             Key             =   "ResFile"
          EndProperty
-         BeginProperty ListImage32 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3C2C
+         BeginProperty ListImage29 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3D00
             Key             =   "dapi"
          EndProperty
-         BeginProperty ListImage33 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3CF7
+         BeginProperty ListImage30 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3DCB
             Key             =   "dResFile"
          EndProperty
-         BeginProperty ListImage34 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3DBF
+         BeginProperty ListImage31 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3E93
             Key             =   "dActiveXDesigner"
          EndProperty
-         BeginProperty ListImage35 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3E85
+         BeginProperty ListImage32 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":3F59
             Key             =   "dvariable"
          EndProperty
-         BeginProperty ListImage36 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3F3D
+         BeginProperty ListImage33 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4011
             Key             =   "dClassModule"
          EndProperty
-         BeginProperty ListImage37 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":400E
+         BeginProperty ListImage34 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":40E2
             Key             =   "dStdModule"
          EndProperty
-         BeginProperty ListImage38 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":40E5
+         BeginProperty ListImage35 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":41B9
             Key             =   "dVBForm"
          EndProperty
-         BeginProperty ListImage39 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":41A5
+         BeginProperty ListImage36 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4279
             Key             =   "dUserControl"
          EndProperty
-         BeginProperty ListImage40 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4273
+         BeginProperty ListImage37 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4347
             Key             =   "dconstante"
          EndProperty
-         BeginProperty ListImage41 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":432B
+         BeginProperty ListImage38 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":43FF
             Key             =   "devenement"
          EndProperty
-         BeginProperty ListImage42 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":43E5
+         BeginProperty ListImage39 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":44B9
             Key             =   "dcomposant"
          EndProperty
-         BeginProperty ListImage43 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":44AF
+         BeginProperty ListImage40 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4583
             Key             =   "dDocObject"
          EndProperty
-         BeginProperty ListImage44 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4570
+         BeginProperty ListImage41 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4644
             Key             =   "dreference"
          EndProperty
-         BeginProperty ListImage45 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4640
+         BeginProperty ListImage42 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4714
             Key             =   "dmethode"
          EndProperty
-         BeginProperty ListImage46 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4701
+         BeginProperty ListImage43 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":47D5
             Key             =   "dcmd"
          EndProperty
-         BeginProperty ListImage47 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":47BC
+         BeginProperty ListImage44 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4890
             Key             =   "dVBChildForm"
          EndProperty
-         BeginProperty ListImage48 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4886
+         BeginProperty ListImage45 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":495A
             Key             =   "dVBMDIForm"
+         EndProperty
+         BeginProperty ListImage46 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4A23
+            Key             =   "RelatedDocument"
+         EndProperty
+         BeginProperty ListImage47 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":4AEC
+            Key             =   "dRelatedDocument"
          EndProperty
       EndProperty
    End
@@ -602,6 +599,11 @@ Private Const conClefDossReference As String = "..reference"
 Private Const conClefDossComposant As String = "..composant"
 Private Const conErrVarObjIndefinie As Long = 91
 Private Const conNomUD As String = "UDExplorer"
+Private Const conExtOca As String = "oca"
+Private Const conCodeBackSlash As Long = 92
+Private Const conCodeSlash As Long = 47
+Private Const conValDescBar As String = "DescriptionBar"
+Private Const conValFltBar As String = "FilterBar"
 
 Private conarClefBtnMenu() As String
 
@@ -610,6 +612,8 @@ Private blnAffFiltres As Boolean
 Public SelectedNode As Node
 Public sSelectedTBButton As String
 
+' Procédure modifiée par René Rhéaume le 12 janvier 2003
+'  Support des documents associés
 Private Sub ActuMembreComponent()
     Dim objVBMember As VBIDE.Member
     Dim objVBPrj As VBIDE.VBProject, objVBCmp As VBIDE.VBComponent
@@ -624,11 +628,13 @@ Private Sub ActuMembreComponent()
     Loop
 
     On Error GoTo GestErr
-    If (objVBCmp.Type <> vbext_ct_ResFile) Then
-        For Each objVBMember In objVBCmp.CodeModule.Members
-            AjouteMembre SelectedNode, objVBMember
-        Next
-    End If
+    Select Case objVBCmp.Type
+        Case vbext_ct_ResFile, vbext_ct_RelatedDocument
+        Case Else
+            For Each objVBMember In objVBCmp.CodeModule.Members
+                AjouteMembre SelectedNode, objVBMember
+            Next
+    End Select
 
     Work conFaux
 
@@ -649,6 +655,8 @@ GestErr:
 End Sub
 
 'Procédure optimisée par René Rhéaume le 5 juillet 2002
+'Procédure modifiée par René Rhéaume le 3 janvier 2002
+' Support des documents associés
 Private Sub AnalyseNode(ByVal Node As Node)
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
@@ -673,9 +681,11 @@ Private Sub AnalyseNode(ByVal Node As Node)
             'le component a été supprimé
             If (objCmp Is Nothing) Then
                 'vérif que ce n'est pas une ressource
-                If (Right$(Node.Key, 9) <> conClefRessource) Then
-                    tv.Nodes.Remove Node.Key
-                End If
+                Select Case Node.Image
+                    Case conarClefTypeModule(5), conarClefTypeModule(6)
+                    Case Else
+                        tv.Nodes.Remove Node.Key
+                End Select
                 GoTo GestErr
             End If
 
@@ -726,6 +736,8 @@ End Sub
 'Procédure modifiée par René Rhéaume le 21 juin 2002
 ' Support multilingue
 'Procédure optimisée par René Rhéaume le 5 juillet 2002
+'Procédure modifiée par René Rhéaume le 13 janvier 2003
+' On peut supprimer les fichiers de ressource et les documents associés
 Private Sub Suppression(ByVal mNode As Node)
     Const conClefL10nSuppr As String = "Code.Suppression."
     Static mlgMsgConfirm As String
@@ -761,9 +773,14 @@ Private Sub Suppression(ByVal mNode As Node)
         Case conAbrTagCom
 '            sc2iMsgBox = MsgBox(strConfirmation, conBoutons)
             If (sc2iMsgBox = vbYes) Then
-                Analyse_Component mNode, objVBPrj, objCmp
+                Select Case mNode.Image
+                    Case conarClefTypeModule(5), conarClefTypeModule(6)
+                        ChercherDocAssocie mNode, objVBPrj, objCmp
+                    Case Else
+                        Analyse_Component mNode, objVBPrj, objCmp
+                End Select
                 objVBPrj.VBComponents.Remove objCmp
-                tv.Nodes.Remove mNode
+'                tv.Nodes.Remove mNode
             End If
         Case conAbrTagMet
             Analyse_Methode mNode, objVBPrj, objCmp, objMember    'par référence
@@ -810,6 +827,9 @@ End Sub
 'Modifié par René Rhéaume le 14 juillet 2002
 ' Correction du bogue «fenêtre de code ne s'affiche pas sur double-clic d'un composant»
 ' Ouvre le concepteur s'il existe pour le composant sélectionné
+'Modifié par René Rhéaume le 3 janvier 2002
+' Ouvre les fichiers de resource et les documents associés
+'Optimisé par René Rhéaume le 12 janvier 2002
 Private Sub ViewNode(ByVal Node As Node)
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
@@ -821,12 +841,19 @@ Private Sub ViewNode(ByVal Node As Node)
     Select Case Left$(Node.Tag, 3)
         Case conAbrTagCom 'on clique sur un component
             Analyse_Component Node, objVBPrj, objCmp
-            On Error Resume Next
-            If (Not objCmp.DesignerWindow Is Nothing) Then
-                objCmp.DesignerWindow.Visible = conVrai
-            Else
-                OuvrirFenetreCode objVBPrj, objCmp
-            End If
+            Select Case Node.Image
+                Case conarClefTypeModule(5), conarClefTypeModule(6)
+                    ShellExecute 0, conOpen, Node.Text, vbNullString, vbNullString, SW_NORMAL
+                Case Else
+                    objCmp.Activate
+'                    Select Case objCmp.Type
+'                        Case vbext_ct_ActiveXDesigner, vbext_ct_ClassModule, vbext_ct_StdModule
+'                            OuvrirFenetreCode objVBPrj, objCmp
+'                        Case vbext_ct_DocObject, vbext_ct_MSForm, vbext_ct_PropPage, _
+'                        vbext_ct_UserControl, vbext_ct_VBForm, vbext_ct_VBMDIForm
+'                            objCmp.DesignerWindow.Visible = conVrai
+'                    End Select
+            End Select
 
         Case conAbrTagMet 'on clique sur une méthode
             Analyse_Methode Node, objVBPrj, objCmp, objMember    'par référence
@@ -875,6 +902,7 @@ End Sub
 ' Met en premier plan la fenêtre de code si elle est
 ' en dessous de la fenêtre de conception correspondante
 'Optimisé par René Rhéaume le 18 décembre 2002
+'Modifié par René Rhéaume le 12 janvier 2003
 Private Sub OuvrirFenetreCode(ByVal vbpProjet As VBIDE.VBProject, _
                                 ByVal vbcComposant As VBIDE.VBComponent)
 '    If (Not vbpProjet Is VBInstance.ActiveVBProject) Then
@@ -883,11 +911,12 @@ Private Sub OuvrirFenetreCode(ByVal vbpProjet As VBIDE.VBProject, _
     'connection pour l'ajout de références
     Set Connection.refEvent = VBInstance.Events.ReferencesEvents(vbpProjet)
     
-    With vbcComposant.CodeModule.CodePane
-        If (Not .Window Is VBInstance.ActiveWindow) Then
-            .Show
-        End If
-    End With
+    vbcComposant.CodeModule.CodePane.Show
+'    With vbcComposant.CodeModule.CodePane
+'        If (Not .Window Is VBInstance.ActiveWindow) Then
+'            .Show
+'        End If
+'    End With
 End Sub
 
 'Ajout par René Rhéaume 2 août 2001
@@ -915,13 +944,14 @@ End Sub
 'Procédure modifiée par René Rhéaume le 16 juillet 2002
 ' Enlève vraiment le texte de description d'un membre
 ' si la zone de texte ne contient rien
+'Procédure modifiée par René Rhéaume le 12 janvier 2002
 Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
     Dim strDescription As String
 
     On Error GoTo Fin
-    If (Button.Key = conOK) Then
+'    If (Button.Key = conOK) Then
         If (Not SelectedNode Is Nothing) Then
             strDescription = txtDescription.Text
             Select Case Left$(SelectedNode.Tag, 3)
@@ -941,7 +971,7 @@ Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
                     End If
             End Select
         End If
-    End If
+'    End If
 
 SortieProc:
     Exit Sub
@@ -952,19 +982,25 @@ End Sub
 
 ' Ajout par René Rhéaume le 2 août 2001
 Private Sub tbDescription_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    If Button = vbRightButton Then
+    If (Button = vbRightButton) Then
         PopupMenu mnuAffichage, , X + tbDescription.Left, Y + tbDescription.Top
     End If
 End Sub
 
+' Optimisation par René Rhéaume le 13 janvier 2003
 Private Sub tbFiltre_ButtonClick(ByVal Button As MSComctlLib.Button)
     Const conDebClefMasquer As String = "n-"
+    Dim strImgBouton As String
+    
+    strImgBouton = Button.Image
     'mise à jour des images
-    If Left$(Button.Image, 2) = conDebClefMasquer Then
-        Button.Image = Right$(Button.Image, Len(Button.Image) - 2)
+    If (IsSameString(Left$(strImgBouton, 2), conDebClefMasquer)) Then
+        strImgBouton = Right$(strImgBouton, Len(strImgBouton) - 2)
     Else
-        Button.Image = conDebClefMasquer & Button.Image
+        strImgBouton = conDebClefMasquer & strImgBouton
     End If
+    Button.Image = strImgBouton
+    
     Select Case Button.Key
         Case conarClefTypeMembre(0)
             bAfficheVariable = Not bAfficheVariable
@@ -989,7 +1025,7 @@ End Sub
 
 ' Ajout par René Rhéaume le 2 août 2001
 Private Sub tbFiltre_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
-    If Button = vbRightButton Then
+    If (Button = vbRightButton) Then
         PopupMenu mnuAffichage, , X + tbFiltre.Left, Y + tbFiltre.Top
     End If
 End Sub
@@ -1102,11 +1138,17 @@ SortieProc:
 '    Set nodSelection = Nothing
 End Sub
 
+'Procéduere optimisée par René Rhéaume le 13 janvier 2003
 Private Sub tbGene_ButtonMenuClick(ByVal ButtonMenu As MSComctlLib.ButtonMenu)
-    tbGene.Buttons(conProp).Image = ButtonMenu.Key
+    Dim btnProp As MSComctlLib.Button
     sSelectedTBButton = ButtonMenu.Key
-    tbGene.Buttons(conProp).ToolTipText = ButtonMenu.Text
-    tbGene_ButtonClick tbGene.Buttons(conProp)
+    Set btnProp = tbGene.Buttons(conProp)
+    With btnProp
+        .Image = sSelectedTBButton
+        .ToolTipText = ButtonMenu.Text
+    End With
+    tbGene_ButtonClick btnProp
+    Set btnProp = Nothing
 End Sub
 
 ' Ajout par René Rhéaume le 2 août 2001
@@ -1132,6 +1174,10 @@ End Sub
 ' Modification par René Rhéaume le 1er août 2002
 '   Correction du bogue «la liste des méthodes, variables, constantes, etc.
 '   se rétractait après avoir cliqué sur le + pour la dérouler».
+' Modification par René Rhéaume le 3 janvier 2003
+'  Correction de l'erreur 91 avec les fichiers de ressources
+'  et les documents associés
+' Optimisation par René Rhéaume le 12 janvier 2003
 Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 #If (JGuelluyRightMenu = 1) Then
     #If (VersionVB = 6) Then
@@ -1147,12 +1193,13 @@ Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Si
 
     Dim objPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim strTag As String
+    Dim strImage As String
     Dim nodActif As Node
     
 #If (JGuelluyRightMenu = 1) Then
     Dim strComponentName As String
     Dim lngTypeComponent As VBIDE.vbext_ComponentType
-    Dim strClefNoeud As String
+'    Dim strClefNoeud As String
 #End If
 
     On Error Resume Next
@@ -1164,8 +1211,11 @@ Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Si
         strTag = nodActif.Tag
         Select Case Button
             Case vbLeftButton
+                strImage = nodActif.Image
                 Select Case conFaux
-                    Case Shift = vbCtrlMask, strTag = conTagComponent
+                    Case Shift = vbCtrlMask, strTag = conTagComponent, _
+                        Not IsSameString(strImage, conarClefTypeModule(5)), _
+                        Not IsSameString(strImage, conarClefTypeModule(6))
                     Case Else
                         Analyse_Component nodActif, objPrj, objCmp
                         On Error Resume Next
@@ -1177,9 +1227,10 @@ Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Si
 '                On Error GoTo Fin
                 Select Case strTag
                     Case conTagComponent
-                        strClefNoeud = nodActif.Key
-                        strComponentName = Mid$(strClefNoeud, InStr(1, strClefNoeud, conBS, _
-                                            vbBinaryCompare) + 1)
+'                        strClefNoeud = nodActif.Key
+'                        strComponentName = Mid$(strClefNoeud, InStr(1, strClefNoeud, conBS, _
+'                                            vbBinaryCompare) + 1)
+                        strComponentName = nodActif.Text
                         Set objCmp = VBInstance.ActiveVBProject.VBComponents(strComponentName)
                         lngTypeComponent = objCmp.Type
                         Select Case lngTypeComponent
@@ -1208,6 +1259,7 @@ Fin:
     Set nodActif = Nothing
 End Sub
 
+#If (JGuelluyRightMenu = 1) Then
 'Procédure ajoutée par René Rhéaume le 16 juillet 2002
 ' Affiche le menu contextuel de VB du composant
 ' Problème : je ne suis pas capable de fermer le composant
@@ -1223,36 +1275,46 @@ End Sub
 ' d'afficher la fenêtre alors qu'une fenêtre est dans
 ' l'espace de travail ne fonctionne pas car le «focus» est sur
 ' une autre fenêtre.
+'Procédure modifiée par René Rhéaume le 12 janvier 2003
 Private Sub AfficherMenuComposant(ByVal vbcComposant As VBIDE.VBComponent, ByVal lngIndiceMenu As Long)
-    Dim blnDejaVisible As Boolean
     Dim strTitreFenetre As String
     Dim blnTrouve As Boolean
-    Dim I As Long, lngNbFenetres As Long
+'    Dim I As Long, lngNbFenetres As Long
+    Dim wndFenetre As VBIDE.Window
 
     ' Est-ce que la fenêtre de code était déjà visible ?
     strTitreFenetre = vbcComposant.Name & " (Code)"
-    I = 1
-    With VBInstance.Windows
-        lngNbFenetres = .Count
+'    I = 1
+'    With VBInstance.Windows
+'        lngNbFenetres = .Count
+'
+'        Do Until ((blnTrouve) Or (I > lngNbFenetres))
+'            If (InStr(.Item(I).Caption, strTitreFenetre) > 0) Then
+'                blnTrouve = conVrai
+'            Else
+'                I = I + 1
+'            End If
+'        Loop
+'    End With
+    
+    For Each wndFenetre In VBInstance.Windows
+        If (InStr(wndFenetre.Caption, strTitreFenetre) > 0) Then
+            blnTrouve = conVrai
+            Exit For
+        End If
+    Next
 
-        Do Until ((blnTrouve) Or (I > lngNbFenetres))
-            If (InStr(.Item(I).Caption, strTitreFenetre) > 0) Then
-                blnTrouve = conVrai
-            Else
-                I = I + 1
-            End If
-        Loop
-        If (blnTrouve) Then
-            blnDejaVisible = .Item(I).Visible
+    With vbcComposant.CodeModule.CodePane
+        .Show
+        VBInstance.CommandBars(lngIndiceMenu).ShowPopup
+        If (Not blnTrouve) Then
+            .Window.Close
         End If
     End With
-
-    OuvrirFenetreCode vbcComposant.Collection.Parent, vbcComposant
-    VBInstance.CommandBars(lngIndiceMenu).ShowPopup
-    If (Not blnDejaVisible) Then
-        vbcComposant.CodeModule.CodePane.Window.Close
-    End If
+    
+    Set wndFenetre = Nothing
 End Sub
+#End If
 
 Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     Set SelectedNode = Node
@@ -1268,6 +1330,8 @@ End Sub
 'Modifié par René Rhéaume le 25 août 2002
 ' Corrigé les libellés du menu contextuel d'affichage
 ' si le support multilingue est désactivé
+'Modifié par René Rhéaume le 22 janvier 2003
+' Les préférences d'affichage sont maintenant sauvegardées
 Private Sub UserDocument_Initialize()
 '    Set tv.ImageList = ImgLSttv
     'par défaut, on affiche tout
@@ -1281,10 +1345,10 @@ Private Sub UserDocument_Initialize()
     bAffichePrive = conVrai
     bAffichePublic = conVrai
 
-    blnAffDesc = conVrai
-    blnAffFiltres = conVrai
+    blnAffDesc = CBool(GetPrivateProfileInt(conSecGen, conValDescBar, 1, c2iINIFile))
+    blnAffFiltres = CBool(GetPrivateProfileInt(conSecGen, conValFltBar, 1, c2iINIFile))
 
-    Set Explorer = New cExplorer
+    Set ElementsBiblio = New cElements
     InitToolbar
     
     If (blnMultilingueActive) Then
@@ -1408,11 +1472,14 @@ Public Sub RetireProjet(ByVal objVBPrj As VBIDE.VBProject)
 End Sub
 
 'Optimisé par René Rhéaume le 18 mai 2002
+'Modifié par René Rhéaume le 3 janvier 2003
+' Support des documents associés
 Public Sub AjouteComponent(ByVal objVBCmp As VBIDE.VBComponent)
     Dim mNodePrj As Node, mNodeCmp As Node
     Dim sKey As String
     Dim sImageKey As String
     Dim strNomProjet As String
+    Dim strLibelle As String
 
     On Error GoTo GestErr
 
@@ -1425,16 +1492,27 @@ Public Sub AjouteComponent(ByVal objVBCmp As VBIDE.VBComponent)
     strNomProjet = objVBCmp.Collection.Parent.Name
     Set mNodePrj = tv.Nodes(strNomProjet)
     sImageKey = ExtraitIconeComponent(objVBCmp)
-    If (objVBCmp.Type = vbext_ct_ResFile) Then
-        sKey = strNomProjet & conBS & conClefRessource
-        Set mNodeCmp = tv.Nodes.Add(NodeTypeFeuille(strNomProjet, sImageKey), tvwChild, sKey, _
-            objVBCmp.FileNames(1), sImageKey)
-    Else
-        sKey = strNomProjet & conBS & objVBCmp.Name
-        Set mNodeCmp = tv.Nodes.Add(NodeTypeFeuille(strNomProjet, sImageKey), tvwChild, sKey, _
-            objVBCmp.Name, sImageKey)
-        mNodeCmp.EnsureVisible
-    End If
+    Select Case objVBCmp.Type
+        Case vbext_ct_ResFile
+            sKey = strNomProjet & conBS & conClefRessource
+            strLibelle = objVBCmp.FileNames(1)
+        Case vbext_ct_RelatedDocument
+            ' Remplacer «\» par «/» pour la dernière partie de la clé
+            sKey = strNomProjet & conBS & ChangerCaractere(objVBCmp.FileNames(1), _
+                conCodeBackSlash, conCodeSlash)
+            strLibelle = objVBCmp.FileNames(1)
+        Case Else
+            sKey = strNomProjet & conBS & objVBCmp.Name
+            strLibelle = objVBCmp.Name
+    End Select
+    
+    Set mNodeCmp = tv.Nodes.Add(NodeTypeFeuille(strNomProjet, sImageKey), tvwChild, sKey, _
+        strLibelle, sImageKey)
+    Select Case objVBCmp.Type
+        Case vbext_ct_ResFile, vbext_ct_RelatedDocument
+        Case Else
+            mNodeCmp.EnsureVisible
+    End Select
     mNodeCmp.Tag = conTagComponent
     mNodeCmp.Sorted = conVrai
 
@@ -1443,32 +1521,60 @@ GestErr:
     Set mNodeCmp = Nothing
 End Sub
 
+Private Function ChangerCaractere(ByVal strChaine As String, ByVal lngCarAv As Long, lngCarAp As Long) As String
+    Dim strCarAv As String, strCarAp As String
+    Dim lngPos As Long
+    
+    If (LenB(strChaine) > 0) Then
+        ChangerCaractere = strChaine
+        strCarAv = Chr$(lngCarAv)
+        strCarAp = Chr$(lngCarAp)
+        lngPos = InStr(1, strChaine, strCarAv, vbBinaryCompare)
+        Do Until (lngPos = 0)
+            Mid$(ChangerCaractere, lngPos, 1) = strCarAp
+            lngPos = InStr(lngPos + 1, strChaine, strCarAv, vbBinaryCompare)
+        Loop
+    End If
+End Function
+
 'Procédure modifiée par René Rhéaume le 21 juin 2002
 ' Support multilingue
-Public Sub RetireComposant(ByVal objVBCmp As VBIDE.VBComponent, Optional ByVal sOldName As String)
+'Procédure modifiée par René Rhéaume le 14 janvier 2003
+' On peut maintenant supprimer des documents associés
+' et des fichiers de ressources.
+' Le message d'erreur s'affichera plus rarement.
+Public Sub RetireComposant(objVBCmp As VBIDE.VBComponent, Optional ByVal sOldName As String)
     Static mlgMsgActualiser As String
-    If (mlgMsgActualiser = vbNullString) Then
+    If (LenB(mlgMsgActualiser) = 0) Then
         mlgMsgActualiser = LireChaineLocalisee(conNomUD, _
             "Code.RetireComposant.mlgMsgActualiser", "Cliquez sur le bouton Actualiser")
     End If
     
     Dim sKeyParent As String, sName As String, strClef As String
 
-    If (sOldName = vbNullString) Then
-        sName = objVBCmp.Name
+    If (LenB(sOldName) = 0) Then
+        Select Case objVBCmp.Type
+            Case vbext_ct_RelatedDocument, vbext_ct_ResFile
+                sName = ChangerCaractere(objVBCmp.FileNames(1), conCodeBackSlash, conCodeSlash)
+            Case Else
+                sName = objVBCmp.Name
+        End Select
     Else
         sName = sOldName
     End If
+
     On Error GoTo GestErr
     strClef = objVBCmp.Collection.Parent.Name & conBS & sName
-    sKeyParent = tv.Nodes(strClef).Parent.Key
-    tv.Nodes.Remove strClef
-
-    If (tv.Nodes(sKeyParent).Children = 0) Then
-        tv.Nodes.Remove sKeyParent
-    End If
+    With tv.Nodes
+        sKeyParent = .Item(strClef).Parent.Key
+        .Remove strClef
+    
+        If (.Item(sKeyParent).Children = 0) Then
+            .Remove sKeyParent
+        End If
+    End With
+    
     Exit Sub
-
 GestErr:
     MsgBox mlgMsgActualiser, vbInformation
 End Sub
@@ -1653,7 +1759,7 @@ Public Sub AjouteReference(ByRef objVBPrj As VBIDE.VBProject, ByRef objRef As VB
     Err.Clear
     On Error Resume Next
     Select Case conVrai
-        Case (Right$(objRef.FullPath, 3) = "oca"), Err
+        Case (Right$(objRef.FullPath, 3) = conExtOca), Err
             Err.Clear
             Set nodParent = tv.Nodes(objVBPrj.Name & conClefDossComposant)
             strTag = conTagOcx
@@ -1680,6 +1786,36 @@ Public Sub AjouteReference(ByRef objVBPrj As VBIDE.VBProject, ByRef objRef As VB
 
     Set nodAjout = Nothing
     Set nodParent = Nothing
+End Sub
+
+' Procédure ajoutée par René Rhéaume le 11 janvier 2003
+Public Sub RetireReference(objRef As VBIDE.Reference)
+    Dim strClefParent As String
+    Dim strClef As String
+    
+    strClefParent = objRef.Collection.Parent.Name
+    On Error Resume Next
+    Select Case conVrai
+        Case IsSameString(Right$(objRef.FullPath, 3), conExtOca), Err
+            Err.Clear
+            strClefParent = strClefParent & conClefDossComposant
+        Case Else
+            strClefParent = strClefParent & conClefDossReference
+    End Select
+    
+    On Error GoTo Fin
+    strClef = strClefParent & objRef.Name
+    
+    With tv.Nodes
+        .Remove strClef
+    
+        If (.Item(strClefParent).Children = 0) Then
+            .Remove strClefParent
+        End If
+    End With
+    
+Fin:
+
 End Sub
 
 'Fonction optimisée par René Rhéaume le 19 juin 2002
@@ -1761,6 +1897,8 @@ End Function
 
 'Procédure modifiée par René Rhéaume le 15 juillet 2002
 ' Corrigé l'erreur 9 lorsqu'on clique sur un fichier .res
+'Procédure modifiée par René Rhéaume le 3 janvier 2002
+' Support des documents associés
 Private Sub Analyse_Component(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProject, _
                                 ByRef objCmp As VBIDE.VBComponent)
     Dim sKey As String, strClefPrj As String
@@ -1769,9 +1907,11 @@ Private Sub Analyse_Component(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProje
     strClefPrj = mNode.Parent.Parent.Key
     Set objPrj = VBInstance.VBProjects(strClefPrj) 'on recherche le projet
     sKey = Right$(mNode.Key, Len(mNode.Key) - Len(strClefPrj) - 1)    'clé du component
-    If (mNode.Image <> conarClefTypeModule(6)) Then ' "ResFile"
-        Set objCmp = objPrj.VBComponents(sKey)
-    End If
+    Select Case mNode.Image
+        Case conarClefTypeModule(5), conarClefTypeModule(6)
+        Case Else
+            Set objCmp = objPrj.VBComponents(sKey)
+    End Select
     
 '    Exit Sub
 'GestErr:
@@ -1890,12 +2030,15 @@ Private Sub InitialiserTbDescription()
     Set objButton = Nothing
 End Sub
 
+'Procédure modiifée par René Rhéaume le 12 janvier 2003
 Public Sub Work(Optional ByVal bWork As Boolean = conVrai)
-    If (bWork) Then
-        tbGene.Buttons(conActu).Image = "actuwork"
-    Else
-        tbGene.Buttons(conActu).Image = conActu
-    End If
+    With tbGene.Buttons(conActu)
+        If (bWork) Then
+            .Image = "actuwork"
+        Else
+            .Image = conActu
+        End If
+    End With
     DoEvents
 End Sub
 
@@ -1903,8 +2046,36 @@ Private Sub UserDocument_Terminate()
     'Modifié par René Rhéaume, 3 août 2001
     sSelectedTBButton = vbNullString
     Set SelectedNode = Nothing
-    Set Explorer = Nothing
+    Set ElementsBiblio = Nothing
 
     'Modifié par René Rhéaume 29 juillet 2001
     WritePrivateProfileString conSecGen, conValData, c2iCurrentDataFileName, c2iINIFile
+    
+    'Modifié par René Rhéaume le 22 janvier 2003
+    'Les préférences d'affichage sont maintenant sauvegardées
+    WritePrivateProfileString conSecGen, conValDescBar, CStr(Abs(blnAffDesc)), c2iINIFile
+    WritePrivateProfileString conSecGen, conValFltBar, CStr(Abs(blnAffFiltres)), c2iINIFile
+End Sub
+
+' Procédure ajoutée par René Rhéaume le 13 janvier 2003
+Private Sub ChercherDocAssocie(nodDocAssocie As Node, ByRef vbpProjet As VBIDE.VBProject, _
+ByRef vbcDocAssocie As VBIDE.VBComponent)
+    Dim I As Long
+    Dim lngNbComposants As Long
+    Dim blnTrouve As Boolean
+    Set vbpProjet = VBInstance.VBProjects(nodDocAssocie.Parent.Parent.Key)
+    I = 1
+    
+    With vbpProjet.VBComponents
+        lngNbComposants = .Count
+        
+        Do Until ((blnTrouve) Or (I > lngNbComposants))
+            If (IsSameString(.Item(I).FileNames(1), nodDocAssocie.Text)) Then
+                blnTrouve = conVrai
+                Set vbcDocAssocie = .Item(I)
+            Else
+                I = I + 1
+            End If
+        Loop
+    End With
 End Sub

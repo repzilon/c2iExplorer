@@ -32,7 +32,7 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 149
+!define Revision 154
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
@@ -58,7 +58,7 @@ LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
 ComponentText "Select c2iExplorer components you want to install."
 DirText "Specify the folder where Visual Basic ${VersionVB}.0 is installed on your computer."
 UninstallText "This will delete c2iExplorer from tour computer. Click on 'Uninstall' to uninstall or on 'Cancel' to exit."
-OutFile "${CheminBase}\SourceForge\Fichiers\c2iexplorer-VB${VersionVB}-${Revision}.exe"
+OutFile "${CheminBase}\SourceForge\Fichiers\c2iExplorer-1.60.${Revision}-vb${VersionVB}.i586.exe"
 Icon "${CheminBase}\Source\c2iExplorer.ico"
 EnabledBitmap "${CheminBase}\Source\checked16.bmp"
 DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"

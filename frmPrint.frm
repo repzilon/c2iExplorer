@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmPrint 
    BorderStyle     =   4  'Fixed ToolWindow
    ClientHeight    =   4830
@@ -196,7 +196,7 @@ Private Sub OK(Optional ByVal blnTous As Boolean = conFaux)
     strFichierModele = File1.Filename
     strCheminModele = File1.Path & conBS & strFichierModele
 
-    If (strFichierModele <> vbNullString) Then
+    If (LenB(strFichierModele) > 0) Then
         If (FichierExiste(strCheminModele)) Then
             blnPrjPresent = Not objVBPrjPrint Is Nothing
             blnCmpPresent = Not objVBCmpPrint Is Nothing
@@ -269,10 +269,10 @@ Public Sub ObjetSelectionnés(ByVal objVBPrj As VBIDE.VBProject, objVBCmp As VBID
     Set objVBPrjPrint = objVBPrj
     Set objVBCmpPrint = objVBCmp
     lblSelectedElement = vbNullString
-    If Not objVBCmpPrint Is Nothing Then
+    If (Not objVBCmpPrint Is Nothing) Then
         lblSelectedElement = objVBCmpPrint.Name
     End If
-    If Not objVBPrjPrint Is Nothing Then
+    If (Not objVBPrjPrint Is Nothing) Then
         lblSelectedElement = objVBPrjPrint.Name
     End If
 End Sub
@@ -285,7 +285,9 @@ End Sub
 '//-------------------------------------------------------------//
 
 ' Procédure modifiée par René Rhéaume le 3 mai 2002
-' Arrimage du correctif de Pascal Martin
+'  Arrimage du correctif de Pascal Martin
+' Procédure modifiée par René Rhéaume le 3 janvier 2003
+'  Support des documents associés
 Private Sub AnalyseHTMLCmp(ByVal objVBCmp As VBIDE.VBComponent, ByRef sM As String)
     Const conComponentName As String = "Component-Name"
     Const conComponentDescription As String = "Component-Description"
@@ -294,18 +296,19 @@ Private Sub AnalyseHTMLCmp(ByVal objVBCmp As VBIDE.VBComponent, ByRef sM As Stri
     
     Call RemplaceString(sM, "Component-Img", conBaliseImg & ExtraitIconeComponent(objVBCmp) & conAttribImg)
     Call RemplaceString(sM, conDate, Format$(VBA.Date$, conFormatDate))
-    If (objVBCmp.Type = vbext_ct_ResFile) Then
-        'Les fichiers de ressource ne possédent pas toutes les propriétés des autres composants
-        Call RemplaceString(sM, conComponentName, objVBCmp.FileNames(1))
-        Call RemplaceString(sM, conComponentDescription, vbNullString)
-        Call RemplaceString(sM, conComponentNbrMember, conAZero)
-        Call RemplaceString(sM, conComponentNbrLines, conAZero)
-    Else
-        Call RemplaceString(sM, conComponentName, objVBCmp.Name)
-        Call RemplaceString(sM, conComponentDescription, objVBCmp.Description)
-        Call RemplaceString(sM, conComponentNbrMember, CStr(objVBCmp.CodeModule.Members.Count))
-        Call RemplaceString(sM, conComponentNbrLines, CStr(objVBCmp.CodeModule.CountOfLines))
-    End If
+    Select Case objVBCmp.Type
+        Case vbext_ct_ResFile, vbext_ct_RelatedDocument
+            'Les fichiers de ressource ne possédent pas toutes les propriétés des autres composants
+            Call RemplaceString(sM, conComponentName, objVBCmp.FileNames(1))
+            Call RemplaceString(sM, conComponentDescription, vbNullString)
+            Call RemplaceString(sM, conComponentNbrMember, conAZero)
+            Call RemplaceString(sM, conComponentNbrLines, conAZero)
+        Case Else
+            Call RemplaceString(sM, conComponentName, objVBCmp.Name)
+            Call RemplaceString(sM, conComponentDescription, objVBCmp.Description)
+            Call RemplaceString(sM, conComponentNbrMember, CStr(objVBCmp.CodeModule.Members.Count))
+            Call RemplaceString(sM, conComponentNbrLines, CStr(objVBCmp.CodeModule.CountOfLines))
+    End Select
 End Sub
 
 ' Procédure modifiée par René Rhéaume le 4 mai 2002
@@ -353,7 +356,8 @@ AffichErr:
 End Sub
 
 'Procédure optimisée par René Rhéaume le 30 juin 2002
-Public Sub ExportHTML(ByVal sHTMLFileName As String)
+'Procédure optimisée par René Rhéaume le 12 janvier 2003
+Private Sub ExportHTML(ByVal sHTMLFileName As String)
     Dim objVBPrj As VBIDE.VBProject
     Dim sTete As String, sFin As String, sMiddle As String
     Dim strDate As String
@@ -393,7 +397,8 @@ GestErr:
 End Sub
 
 'Procédure optimisée par René Rhéaume le 30 juin 2002
-Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VBIDE.VBProject)
+'Procédure optimisée par René Rhéaume le 12 janvier 2003
+Private Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VBIDE.VBProject)
     Dim objVBCmp As VBIDE.VBComponent
     Dim sTete As String, sFin As String, sMiddle As String
 
@@ -440,7 +445,8 @@ GestErr:
 End Sub
 
 'Procédure optimisée par René Rhéaume le 30 juin 2002
-Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As VBIDE.VBComponent)
+'Procédure optimisée par René Rhéaume le 12 janvier 2003
+Private Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As VBIDE.VBComponent)
     Dim objVBMember As VBIDE.Member
     Dim sTete As String, sFin As String, sMiddle As String
 
@@ -522,9 +528,11 @@ Private Sub AddProject(ByVal objVBPrj As VBIDE.VBProject, ByVal sMiddle As Strin
 End Sub
 
 ' Modifié par René Rhéaume 1er août 2001
-' Retrait du paramètre TextStream et nouvel appel pour écriture de fichier
+'  Retrait du paramètre TextStream et nouvel appel pour écriture de fichier
 ' Procédure modifiée par René Rhéaume le 3 mai 2002
-' Arrimage du correctif de Pascal Martin
+'  Arrimage du correctif de Pascal Martin
+' Procédure modifiée par René Rhéaume le 3 janvier 2003
+'  Support des documents associés
 Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As String)
     Dim objVBMember As VBIDE.Member
     Dim sTete As String, sFin As String
@@ -533,11 +541,14 @@ Private Sub AddComponent(ByVal objVBCmp As VBIDE.VBComponent, ByVal sMiddle As S
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sTete
         AnalyseHTMLCmp objVBCmp, sTete
         EcrireFichier sTete, intNoFichier
-        If (objVBCmp.Type <> vbext_ct_ResFile) Then 'les fichiers de ressource ne peuvent pas contenir de code
-            For Each objVBMember In objVBCmp.CodeModule.Members
-                AddMember objVBMember, sMiddle
-            Next
-        End If
+        Select Case objVBCmp.Type
+            Case vbext_ct_ResFile, vbext_ct_RelatedDocument
+                'les fichiers de ressource ne peuvent pas contenir de code
+            Case Else
+                For Each objVBMember In objVBCmp.CodeModule.Members
+                    AddMember objVBMember, sMiddle
+                Next
+        End Select
         AnalyseHTMLPrj objVBCmp.Collection.Parent, sFin
         AnalyseHTMLCmp objVBCmp, sFin
         EcrireFichier sFin, intNoFichier
@@ -563,7 +574,7 @@ End Sub
 ' Support multilingue
 Private Function ExtraitHTML(sTete As String, sFin As String, sMiddle As String, ByVal sSearch As String) As Boolean
     Static mlgMsgFmtNonValable As String
-    If (mlgMsgFmtNonValable = vbNullString) Then
+    If (LenB(mlgMsgFmtNonValable) = 0) Then
         mlgMsgFmtNonValable = LireChaineLocalisee(conNomForm, _
             "Code.ExtraitHTML.mlgMsgFmtNonValable", "Format non valable")
     End If
@@ -703,7 +714,7 @@ End Function
 'Procédure ajoutée par René Rhéaume le 30 juin 2002
 Private Sub GererErrFichier(ByVal intNoFich As Integer, ByVal strSource As String)
     Static mlgMsgVerrouille As String
-    If (mlgMsgVerrouille = vbNullString) Then
+    If (LenB(mlgMsgVerrouille) = 0) Then
         mlgMsgVerrouille = LireChaineLocalisee(conNomForm, _
             "Code.GererErrFichier.mlgMsgVerrouille", _
             "» est verrouillé par une autre application ou est en lecture seule.")

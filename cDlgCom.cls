@@ -153,7 +153,7 @@ End Function
 'Fonction optimisée par René Rhéaume le 5 juillet 2002
 Private Function ShowOpenSave(bOpen As Boolean) As Boolean
     Static mlgDebutDefaultFilter As String
-    If (mlgDebutDefaultFilter = vbNullString) Then
+    If (LenB(mlgDebutDefaultFilter) = 0) Then
         mlgDebutDefaultFilter = LireChaineLocalisee("cDlgCom", _
             "Code.ShowOpenSave.mlgDebutDefaultFilter", "Tous")
     End If
@@ -164,13 +164,13 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
 
     With tOpFile
         .lStructSize = Len(tOpFile)
-        If sFileTitle = vbNullString Then sFileTitle = vbNullChar
-        If sFilter = vbNullString Then sFilter = mlgDebutDefaultFilter & " (*.*)|*.*"
-        If lngFilterIndex = 0 Then lngFilterIndex = 1
+        If (LenB(sFileTitle) = 0) Then sFileTitle = vbNullChar
+        If (LenB(sFilter) = 0) Then sFilter = mlgDebutDefaultFilter & " (*.*)|*.*"
+        If (lngFilterIndex = 0) Then lngFilterIndex = 1
         .hwndOwner = lnghdcOwner
         .lpstrInitialDir = sInitDir
         .lpstrDefExt = sDefaultEx
-        If sDialogTitle <> vbNullString Then .lpstrTitle = sDialogTitle
+        If (LenB(sDialogTitle) > 0) Then .lpstrTitle = sDialogTitle
 
         ' Pour faire un style type Windows, remplacer les | par des nuls
         Dim I As Long
@@ -188,10 +188,10 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
         .nFilterIndex = lngFilterIndex
 
         ' Bourrer les tampons fichier et "title" fichier jusqu'à la longueur maximum du chemin
-        s = sFileName & String$(conLongMaxNomFich - Len(sFileName), 0)
+        s = sFileName & String$(conLongMaxNomFich - Len(sFileName), vbNullChar)
         .lpstrFile = s
         .nMaxFile = conLongMaxNomFich
-        s = sFileTitle & String$(conLongMaxNomFich - Len(sFileTitle), 0)
+        s = sFileTitle & String$(conLongMaxNomFich - Len(sFileTitle), vbNullChar)
         .lpstrFileTitle = s
         .nMaxFileTitle = conLongMaxNomFich
 

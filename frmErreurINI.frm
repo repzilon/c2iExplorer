@@ -96,7 +96,7 @@ Attribute VB_Exposed = False
 ' ***** END LICENSE BLOCK *****
 
 Option Explicit
-Private intRetourMessage As Integer
+Private lngRetourMessage As Integer
 Private strCheminData As String
 
 Private Sub cmdAbandonner_Click()
@@ -120,11 +120,11 @@ Private Sub cmdChercher_Click()
         .Flags = conFanionsOuvrir
         .InitDir = strCheminApp & conDossierData
         .ShowOpen
-        If (.Filename <> vbNullString) Then
+        If (LenB(.Filename) > 0) Then
             ' Copier le fichier vers le bon endroit
             MkDir strCheminData
             FileCopy .Filename, strCheminApp & conCheminRelatifINI
-            intRetourMessage = 1
+            lngRetourMessage = 1
             Unload Me
         End If
     End With
@@ -163,23 +163,25 @@ Private Sub cmdRegenerer_Click()
     Print #1, vbNullString
     Print #1, "[Durees]"
     Close #1
-    intRetourMessage = 2
+    lngRetourMessage = 2
     Unload Me
 End Sub
 
+'Procédure optimisée par René Rhéaume le 13 janvier 2003
 Private Sub Form_Load()
     Const conMessage_0 As String = "c2iExplorer n'a pas trouvé le fichier «c2iExplorer.ini» dans le dossier «"
-    Const conMessage_1 As String = "»."
-    Const conMessage_2 As String = "- Si vous avez une copie de ce fichier sur votre système, cliquez sur «Chercher» afin de la localiser et de la copier au bon endroit."
-    Const conMessage_3 As String = "- Vous pouvez également regénérer le fichier INI par défaut en cliquant sur «Recréer»."
-    Const conMessage_4 As String = "- Finalement, cliquez sur «Abandonner» si vous ne souhaitez pas démarrer c2iExplorer. Une fois sorti de Visual Basic, vous pourrez réinstaller le complément."
-    intRetourMessage = 0
+    Const conMessage_1 As String = "»." & vbCrLf & vbCrLf & _
+        "- Si vous avez une copie de ce fichier sur votre système, cliquez sur «Chercher» afin de la localiser et de la copier au bon endroit." & vbCrLf & _
+        "- Vous pouvez également regénérer le fichier INI par défaut en cliquant sur «Recréer»." & vbCrLf & _
+        "- Finalement, cliquez sur «Abandonner» si vous ne souhaitez pas démarrer c2iExplorer. Une fois sorti de Visual Basic, vous pourrez réinstaller le complément."
+    lngRetourMessage = 0
     strCheminData = strCheminApp & conDossierData
-    lblMessage.Caption = conMessage_0 & strCheminData & conMessage_1 & (vbCrLf & vbCrLf) & _
-                            conMessage_2 & vbCrLf & conMessage_3 & vbCrLf & conMessage_4
+    lblMessage.Caption = conMessage_0 & strCheminData & conMessage_1
 End Sub
 
-Public Function ObtenirActionINIAbsent() As Integer
+' Fonction modifiée par René Rhéaume le 12 janvier 2003
+Public Function ObtenirActionINIAbsent() As Long
+    Beep
     Me.Show vbModal
-    ObtenirActionINIAbsent = intRetourMessage
+    ObtenirActionINIAbsent = lngRetourMessage
 End Function

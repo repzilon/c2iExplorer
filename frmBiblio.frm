@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmBiblio 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Détails"
@@ -309,28 +309,31 @@ End Sub
 ' Modifié par René Rhéaume le 1 septembre 2002
 '  Correction d'un plantage
 ' Modifié par René Rhéaume le 19 octobre 2002
+' Optimisé par René Rhéaume le 13 janvier 2003
 Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
-
+    Dim strNom As String
+    
+    strNom = Trim$(txtName)
     On Error Resume Next
     Set mNodeParent = objUDBiblio.TVEx.SelectedItem
     Select Case conVrai
-        Case mNodeParent Is Nothing, Trim$(txtName) = vbNullString
+        Case mNodeParent Is Nothing, LenB(strNom) = 0
 '            Exit Sub
         Case Else
             On Error GoTo GestErr
-            If (mNodeParent.Image = conElement) Then
+            If (IsSameString(mNodeParent.Image, conElement)) Then
                 Set mNodeParent = mNodeParent.Parent
             End If
 
-            sKey = mNodeParent.FullPath & conSepChemBiblio & Trim$(txtName)
+            sKey = mNodeParent.FullPath & conSepChemBiblio & strNom
             On Error Resume Next
-            Set objE = Explorer.Elements(sKey)
+            Set objE = ElementsBiblio(sKey)
             On Error GoTo GestErr
             If (objE Is Nothing) Then
                 'on ajoute un nouvel élément
-                Set objE = Explorer.Elements.Add(Trim$(txtDeclaration), _
+                Set objE = ElementsBiblio.Add(Trim$(txtDeclaration), _
                         Trim$(txtHead), Trim$(txtInline), Trim$(txtEnd), _
                         Trim$(txtDescription), sKey, sKey)
                 objUDBiblio.AddElement objE
@@ -374,20 +377,20 @@ Private Sub txtName_Change()
     End If
     
     Dim strNom As String
-    Dim intPosSep As Integer
-    Dim intPosPrec As Integer
+    Dim lngPosSep As Long
+    Dim lngPosPrec As Long
     
     strNom = txtName.Text
-    intPosSep = InStr(1, strNom, conSepChemBiblio, vbBinaryCompare)
-    If (intPosSep <> 0) Then
+    lngPosSep = InStr(1, strNom, conSepChemBiblio, vbBinaryCompare)
+    If (lngPosSep <> 0) Then
         ' On remplace la barre oblique par le mot «ou» de la langue choisie
-        Do Until (intPosSep = 0)
-            strNom = Left$(strNom, intPosSep - 1) & conEsp & mlgAlternative & _
-                conEsp & Mid$(strNom, intPosSep + 1)
-            intPosPrec = intPosSep
-            intPosSep = InStr(1, strNom, conSepChemBiblio, vbBinaryCompare)
+        Do Until (lngPosSep = 0)
+            strNom = Left$(strNom, lngPosSep - 1) & conEsp & mlgAlternative & _
+                conEsp & Mid$(strNom, lngPosSep + 1)
+            lngPosPrec = lngPosSep
+            lngPosSep = InStr(1, strNom, conSepChemBiblio, vbBinaryCompare)
         Loop
         txtName.Text = strNom
-        txtName.SelStart = intPosPrec + Len(mlgAlternative) + 1
+        txtName.SelStart = lngPosPrec + Len(mlgAlternative) + 1
     End If
 End Sub

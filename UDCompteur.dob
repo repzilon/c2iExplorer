@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.UserDocument UDCompteur 
    ClientHeight    =   3600
    ClientLeft      =   0
@@ -403,14 +403,14 @@ Public Sub ActuCompteur()
 
     On Error GoTo Fin
 
-    #If VersionVB = 6 Then
-        ' Importe les durées et
-        ' Vérifie si la conversion Base de registres -> c2iExplorer.ini
-        ' a été réussie. Si oui, supprime la clé de registre devenue obsolète.
-        If (ImporterDurees = 0) Then
-            DeleteSetting App.EXEName
-        End If
-    #End If
+#If VersionVB = 6 Then
+    ' Importe les durées et
+    ' Vérifie si la conversion Base de registres -> c2iExplorer.ini
+    ' a été réussie. Si oui, supprime la clé de registre devenue obsolète.
+    If (ImporterDurees = 0) Then
+        DeleteSetting App.EXEName
+    End If
+#End If
 
     chnContenuSectionDurees = LireSectionFichierINI(conSecDurees, c2iINIFile)
     SplitB chnContenuSectionDurees, tblSectionDurees(), vbNullChar
@@ -521,7 +521,7 @@ Public Function ImporterDurees() As Byte
     On Error GoTo GestErr
     tbSettings = GetAllSettings(conNomApp, conSecDurees)
 
-    If (IsEmpty(tbSettings) = conFaux) Then
+    If (Not IsEmpty(tbSettings)) Then
         lngFinTab = UBound(tbSettings)
         For I = 0 To lngFinTab
             sFileName = tbSettings(I, 0)
@@ -549,14 +549,14 @@ Public Function GetDuree(ByVal sFileName As String) As Long
 
     iNumPrj = -1
 
-    If (sFileName = vbNullString) Then
+    If (LenB(sFileName) = 0) Then
         GetDuree = -1
         Exit Function
     End If
 
     On Error GoTo Suivant
     For I = 0 To UBound(DuréePrj)
-        If (DuréePrj(I).Filename = sFileName) Then
+        If (IsSameString(DuréePrj(I).Filename, sFileName)) Then
             iNumPrj = I
             Exit For
         End If
@@ -568,7 +568,7 @@ Suivant:
     ' Modification par René Rhéaume 2 août 2001
     '    sM = GetSetting(App.EXEName, conSecDurees, sFileName, vbNullString)
     sM = LireChaineFichierINI(conSecDurees, sFileName, vbNullString, c2iINIFile)
-    If (sM <> vbNullString) Then                           'on la trouvé dans le fichier INI
+    If (LenB(sM) > 0) Then                           'on la trouvé dans le fichier INI
         If (iNumPrj = -1) Then
             GetDuree = CLng(sM)
         Else

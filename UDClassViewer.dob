@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.UserDocument UDClassViewer 
    BackColor       =   &H00FFFFFF&
    ClientHeight    =   6255
@@ -304,7 +304,7 @@ Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
             On Error Resume Next
             strDescription = Trim$(objMember.Description)
             On Error GoTo GestErr
-            If (strDescription <> vbNullString) Then
+            If (LenB(strDescription) > 0) Then
                 sTexte = sTexte & " (" & strDescription & conPF
             End If
         End If

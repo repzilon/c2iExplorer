@@ -183,7 +183,7 @@ End Sub
 
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
 Private Sub chkUseLangPack_Click()
-    cboLangPack.Enabled = CBool(Me.chkUseLangPack.Value)
+    cboLangPack.Enabled = CBool(chkUseLangPack.Value)
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
@@ -222,7 +222,7 @@ Private Sub txtSaveInterval_KeyPress(KeyAscii As Integer)
 ' 27    Echap
     Dim blnCarControle As Boolean
     blnCarControle = (KeyAscii = 27) + (KeyAscii = 13) + (KeyAscii = 8) + (KeyAscii = 9)
-    If blnCarControle = False Then
+    If (Not blnCarControle) Then
         Select Case KeyAscii
             Case Is < 48, Is > 57
                 KeyAscii = 0
@@ -273,13 +273,15 @@ Private Sub ChargerChainesLocales()
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 21 juin 2002
+'Procédure modifiée par René Rhéaume le 3 janvier 2003
+' Les changements au niveau de la langue persistent à chaque affichage
 Private Sub SelectionnerCombo()
     Dim strFichierLangue As String
     Dim lngNbElem As String
     Dim lngIdx As Long
     Dim blnTrouve As Boolean
     
-    If (blnMultilingueActive) Then
+'    If (blnMultilingueActive) Then
         strFichierLangue = LireChaineFichierINI(conSecGen, conValLang, vbNullString, c2iINIFile)
         lngNbElem = cboLangPack.ListCount
         
@@ -292,5 +294,5 @@ Private Sub SelectionnerCombo()
                 lngIdx = lngIdx + 1
             End If
         Loop
-    End If
+'    End If
 End Sub

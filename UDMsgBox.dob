@@ -962,7 +962,7 @@ Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String
 
     lngPos = InStr(1, sMessage, vbCrLf)
     Do Until (lngPos = 0)
-        sMessage = Left$(sMessage, lngPos - 1) & (conGlmt & " & vbCrLf & " & conGlmt) & Right$(sMessage, Len(sMessage) - lngPos - 1)
+        sMessage = Left$(sMessage, lngPos - 1) & (conGlmt & " & vbNewLine & " & conGlmt) & Right$(sMessage, Len(sMessage) - lngPos - 1)
         lngPos = InStr(lngPos + 2, sMessage, vbCrLf)
     Loop
 
@@ -1027,7 +1027,7 @@ Private Sub cmdParcoursFile_Click()
     Dim strFiltreAide As String
     Dim strFiltreTout As String
     Static strFiltre As String
-    If (strFiltre = vbNullString) Then
+    If (LenB(strFiltre) = 0) Then
         strFiltreAide = LireChaineLocalisee(conNomUD, _
             "Code.cmdParcoursFile_Click.strFiltreAide", "Fichiers d'aide")
         strFiltreTout = LireChaineLocalisee(conNomUD, _
@@ -1060,9 +1060,10 @@ End Sub
 'Procédure modifiée par René Rhéaume le 21 juin 2002
 ' Support multilingue
 'Procédure optimisée par René Rhéaume le 5 juillet 2002
+'Procédure optimisée par René Rhéaume le 13 janvier 2003
 Private Sub ShowMsgBox()
     Static mlgMsgErrCode As String
-    If (mlgMsgErrCode = vbNullString) Then
+    If (LenB(mlgMsgErrCode) = 0) Then
         mlgMsgErrCode = LireChaineLocalisee(conNomUD, _
             "Code.ShowMsgBox.mlgMsgErrCode", "Erreur dans le code")
     End If
@@ -1087,14 +1088,14 @@ Private Sub ShowMsgBox()
     ' fin des options
     
     On Error GoTo Fin
-    If (sTitre <> vbNullString) Then
-        If (txtHelpFile <> vbNullString) Then
+    If (LenB(sTitre) > 0) Then
+        If (LenB(txtHelpFile) > 0) Then
             MsgBox sMessage, lngButtonsDef, sTitre, txtHelpFile, txtContext
         Else
             MsgBox sMessage, lngButtonsDef, sTitre
         End If
     Else
-        If (txtHelpFile <> vbNullString) Then
+        If (LenB(txtHelpFile) > 0) Then
             MsgBox sMessage, lngButtonsDef, , txtHelpFile, txtContext
         Else
             MsgBox sMessage, lngButtonsDef
@@ -1150,6 +1151,7 @@ End Sub
 ' Appels à ConcatenerOptionMsgBox
 ' Procédure modifiée par René Rhéaume le 28 avril 2002
 ' Nouvel algorithme implanté (voir MiseAJourCode.doc)
+' Procédure optimisée par René Rhéaume le 13 janvier 2003
 Private Sub MiseAJourCode()
     Const conVbOK As String = "vbOK"
     Const conVbCancel As String = "vbCancel"
@@ -1190,7 +1192,7 @@ Private Sub MiseAJourCode()
     If (Not IsNumeric(strContexte)) Then
         strContexte = vbNullString
     End If
-    blnBoutonsPresents = (strBoutons <> vbNullString)
+    blnBoutonsPresents = (LenB(strBoutons) > 0)
     
     If (blnBoutonsPresents) Then
         strCode = "Dim " & conVarResultat & " As VbMsgBoxResult" & (vbCrLf & vbCrLf) & conVarResultat & " = MsgBox(" & strMessage
@@ -1207,7 +1209,7 @@ Private Sub MiseAJourCode()
     ConcatenerOptionMsgBox strToutesOptions, "vbMsgBoxRight", intADroite
     
     ' Attention, la concaténation se fait à l'envers pour simplifier la gestion de la virgule
-    If (strContexte <> vbNullString) Then
+    If (LenB(strContexte) > 0) Then
         strCodeParametres = conV & strContexte
     End If
     ConcatenerParamMsgBox strCodeParametres, strFichierAide, conGlmt
@@ -1216,7 +1218,7 @@ Private Sub MiseAJourCode()
     ' Retour à la normale
     strCode = strCode & strCodeParametres
     If (blnBoutonsPresents) Then
-        strCode = strCode & ")" & vbCrLf & "Select Case " & conVarResultat & vbCrLf
+        strCode = strCode & conPF & vbCrLf & "Select Case " & conVarResultat & vbCrLf
         Select Case (strBoutons)
             Case conVbOKCancel
                 ConcatenerCas strCode, conVbOK
@@ -1270,7 +1272,7 @@ Private Sub ConcatenerOptionMsgBox(ByRef strDestination As String, ByVal strOpti
                                    ByVal blnCondition As Boolean)
     Const conPlus As String = " + "
     If (blnCondition) Then
-        If (strDestination <> vbNullString) Then
+        If (LenB(strDestination) > 0) Then
             strDestination = strDestination & (conPlus & strOptionAjout)
         Else
             strDestination = strOptionAjout
@@ -1281,10 +1283,10 @@ End Sub
 ' Procédure ajoutée par René Rhéaume le 28 avril 2002
 Private Sub ConcatenerParamMsgBox(ByRef strDestination As String, ByVal strParamAjout As String, _
                                     Optional ByVal strEncadreur As String = vbNullString)
-    If (strParamAjout <> vbNullString) Then
+    If (LenB(strParamAjout) > 0) Then
         strDestination = ((conV & strEncadreur) & (strParamAjout & strEncadreur)) & strDestination
     Else
-        If (strDestination <> vbNullString) Then
+        If (LenB(strDestination) > 0) Then
             strDestination = conV & strDestination
         End If
     End If
@@ -1336,12 +1338,12 @@ Private Sub ChargerChainesLocales()
         For I = 0 To 3
             strIdTexte = CStr(I + 1)
             strarRangs(I) = LireChaineLocalisee(conNomUD, _
-                    conClefL10nProc & "strarRangs(" & strIdTexte & ")", strarRangs(I))
+                    conClefL10nProc & "strarRangs(" & strIdTexte & conPF, strarRangs(I))
             lblDefaultButton(I).Caption = strIdTexte & strarRangs(I) & conEsp & strBouton
         Next I
         For I = 0 To 1
             strarModality(I) = LireChaineLocalisee(conNomUD, _
-                    conClefL10nProc & "strarModality(" & I & ")", strarRangs(I))
+                    conClefL10nProc & "strarModality(" & I & conPF, strarRangs(I))
             lblModal(I).Caption = strModal & " / " & strarModality(I)
         Next I
     End If

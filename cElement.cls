@@ -33,6 +33,7 @@ Attribute VB_Ext_KEY = "Top_Level" ,"Yes"
 ' René Rhéaume (rener@mediom.qc.ca)
 '
 ' ***** END LICENSE BLOCK *****
+
 Option Explicit
 '//************Généré par c2iExplorer*******************
 Private sNom As String
@@ -44,7 +45,7 @@ Private sDeclareProc As String
 
 Public Property Let Nom(ByVal sNomA As String)
     Const conLongueurMax As Long = 255
-    If Len(sNomA) > conLongueurMax Then
+    If (Len(sNomA) > conLongueurMax) Then
         sNom = Left$(sNomA, conLongueurMax)
     Else
         sNom = sNomA
@@ -60,12 +61,11 @@ Public Property Get Titre() As String
 
     iDeb = 1
     iPos = InStr(iDeb, sNom, conSepChemBiblio)
-    Do Until iPos = 0
+    Do Until (iPos = 0)
         iDeb = iPos
         iPos = InStr(iPos + 1, sNom, conSepChemBiblio)
     Loop
     Titre = Right$(sNom, Len(sNom) - iDeb)
-
 End Property
 
 Public Property Let Description(ByVal sDescriptionA As String)
@@ -128,11 +128,10 @@ Public Property Get Ident() As Long
     iPos = InStr(iPos, sNom, conSepChemBiblio)
 
     On Error Resume Next
-    Do Until iPos = 0
+    Do Until (iPos = 0)
         Ident = Ident + 1
         iPos = InStr(iPos + 1, sNom, conSepChemBiblio)
     Loop
-
 End Property
 
 'Modification par René Rhéaume le 9 mars 2002

@@ -201,14 +201,14 @@ Private bBorder As Boolean
 Private bUserControlCaptured As Boolean
 
 Private Declare Function ReleaseCapture Lib "user32" () As Long
-Private Declare Function SetCapture Lib "user32" (ByVal hwnd As Long) As Long
+Private Declare Function SetCapture Lib "user32" (ByVal hWnd As Long) As Long
 
 Private Sub Dessine()
     PicTitre.Height = ImgFermée(0).Height
 
     If (bOuvert) Then                                      'il est fermé, on l'ouvre
         Height = sngHauteur
-        PicTitre.Picture = ImgOuvert(0).Picture
+        PicTitre.Picture = imgOuvert(0).Picture
     Else                                                   'il est ouvert, on le ferme
         Height = ImgFermée(0).Height
         PicTitre.Picture = ImgFermée(0).Picture
@@ -228,33 +228,43 @@ Private Sub Dessine()
     DessineTitre
 End Sub
 
+'Procédure optimisée par René Rhéaume le 17 janvier 2003
+' Mise en cache des dimensions et vérification contre les
+' divisions par zéro.
 Private Sub DessineFond(Optional ByVal blnTitreSeul As Boolean = conFaux)
     Dim iX As Long, iY As Long, iIncreX As Long, iIncreY As Long
+    Dim sngLarg As Single, sngHaut As Single, sngLargImgFerme As Single
     'dessin du container
     If (blnTitreSeul = conFaux) Then
         If (picFond.Picture <> 0) Then
-            iX = CInt(ScaleWidth / picFond.Width)
-            iY = CInt(ScaleHeight / picFond.Height)
+            sngLarg = picFond.Width
+            sngHaut = picFond.Height
+            If (sngLarg) Then iX = CInt(ScaleWidth / sngLarg)
+            If (sngHaut) Then iY = CInt(ScaleHeight / sngHaut)
             For iIncreX = 0 To iX
                 For iIncreY = 0 To iY
-                    PaintPicture picFond.Picture, picFond.Width * iIncreX, picFond.Height * iIncreY
+                    PaintPicture picFond.Picture, sngLarg * iIncreX, sngHaut * iIncreY
                 Next
             Next
         End If
     End If
     If (picTitleFond.Picture <> 0) Then
-        iX = CInt((ScaleWidth - ImgFermée(0).Width) / picTitleFond.Width)
-        iY = CInt(ScaleHeight / picTitleFond.Height)
+        sngLarg = picTitleFond.Width
+        sngHaut = picTitleFond.Height
+        sngLargImgFerme = ImgFermée(0).Width
+        If (sngLarg) Then iX = CInt((ScaleWidth - sngLargImgFerme) / sngLarg) Else: iX = 0
+        If (sngHaut) Then iY = CInt(ScaleHeight / sngHaut) Else: iY = 0
         For iIncreX = 0 To iX
             For iIncreY = 0 To iY
-                PicTitre.PaintPicture picTitleFond.Picture, picTitleFond.Width * iIncreX + ImgFermée(0).Width, picTitleFond.Height * iIncreY
+                PicTitre.PaintPicture picTitleFond.Picture, _
+                    sngLarg * iIncreX + sngLargImgFerme, sngHaut * iIncreY
             Next
         Next
     End If
 End Sub
 
-Public Property Get hwnd() As Long
-    hwnd = UserControl.hwnd
+Public Property Get hWnd() As Long
+    hWnd = UserControl.hWnd
 End Property
 
 Property Get Ouvert() As Boolean
@@ -347,10 +357,10 @@ End Sub
 
 Private Sub PicTitre_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     RaiseEvent MouseTitleDown(Button, Shift, X, Y)
-    If (X < ImgOuvert(0).Width) Then
+    If (X < imgOuvert(0).Width) Then
         RaiseEvent MouseTitleDown(Button, Shift, X, Y)
         If (bOuvert) Then
-            PicTitre.Picture = ImgOuvert(1).Picture
+            PicTitre.Picture = imgOuvert(1).Picture
         Else
             PicTitre.Picture = ImgFermée(1).Picture
         End If
@@ -420,9 +430,9 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Sing
     RaiseEvent MouseContainerMove(Button, Shift, X, Y)
 
     If (bFermetureAutomatique) Then
-        If Not bUserControlCaptured Then
+        If (Not bUserControlCaptured) Then
             bUserControlCaptured = conVrai
-            lngRep = SetCapture(hwnd)                      'on capture le curseur
+            lngRep = SetCapture(hWnd)                      'on capture le curseur
         End If
         'Équivalent à If X < 0 Or Y < 0 Or X > Width Or Y > Height Then
         Select Case conVrai
@@ -449,8 +459,8 @@ Private Sub UserControl_ReadProperties(PropBag As PropertyBag)
     Ouvert = PropBag.ReadProperty(conOuvert, conVrai)
     sngHauteur = PropBag.ReadProperty(conHauteur)
 
-    Set ImgOuvert(0).Picture = PropBag.ReadProperty(conImgOuvert0)
-    Set ImgOuvert(1).Picture = PropBag.ReadProperty(conImgOuvert1)
+    Set imgOuvert(0).Picture = PropBag.ReadProperty(conImgOuvert0)
+    Set imgOuvert(1).Picture = PropBag.ReadProperty(conImgOuvert1)
     Set ImgFermée(0).Picture = PropBag.ReadProperty(conImgFermée0)
     Set ImgFermée(1).Picture = PropBag.ReadProperty(conImgFermée1)
 
@@ -488,8 +498,8 @@ Private Sub UserControl_WriteProperties(PropBag As PropertyBag)
     PropBag.WriteProperty conOuvert, bOuvert, conVrai
     PropBag.WriteProperty conHauteur, sngHauteur
 
-    PropBag.WriteProperty conImgOuvert0, ImgOuvert(0).Picture
-    PropBag.WriteProperty conImgOuvert1, ImgOuvert(1).Picture
+    PropBag.WriteProperty conImgOuvert0, imgOuvert(0).Picture
+    PropBag.WriteProperty conImgOuvert1, imgOuvert(1).Picture
     PropBag.WriteProperty conImgFermée0, ImgFermée(0).Picture
     PropBag.WriteProperty conImgFermée1, ImgFermée(1).Picture
     PropBag.WriteProperty conCouleurFond, BackColor
@@ -527,24 +537,24 @@ End Property
 
 Public Property Set PictureOuvertUp(ByVal picPictureOuvertUpA As Picture)
 Attribute PictureOuvertUp.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
-    Set ImgOuvert(0).Picture = picPictureOuvertUpA
+    Set imgOuvert(0).Picture = picPictureOuvertUpA
     PropertyChanged conImgOuvert0
     Dessine
 End Property
 
 Public Property Get PictureOuvertUp() As Picture
-    Set PictureOuvertUp = ImgOuvert(0).Picture
+    Set PictureOuvertUp = imgOuvert(0).Picture
 End Property
 
 Public Property Set PictureOuvertDown(ByVal picPictureOuvertDownA As Picture)
 Attribute PictureOuvertDown.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
-    Set ImgOuvert(1).Picture = picPictureOuvertDownA
+    Set imgOuvert(1).Picture = picPictureOuvertDownA
     PropertyChanged conImgOuvert1
     Dessine
 End Property
 
 Public Property Get PictureOuvertDown() As Picture
-    Set PictureOuvertDown = ImgOuvert(1).Picture
+    Set PictureOuvertDown = imgOuvert(1).Picture
 End Property
 
 Public Property Let CouleurFond(ByVal lngBackColorA As OLE_COLOR)

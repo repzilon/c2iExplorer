@@ -147,7 +147,7 @@ Private Sub cmdAppliquer_Click()
     lngFinDureePrj = UBound(DuréePrj)
 
     Do Until ((bTrouve) Or (iNumPrj > lngFinDureePrj))
-        If (DuréePrj(iNumPrj).Filename = strNomProjet) Then
+        If (IsSameString(DuréePrj(iNumPrj).Filename, strNomProjet)) Then
             bTrouve = conVrai
         Else
             iNumPrj = iNumPrj + 1
@@ -222,9 +222,9 @@ Private Sub GestionLostFocus(ByRef txtTemps As TextBox, Optional ByVal lngMax As
     ' ENTRÉE FAITE PAR LES PARAMÈTRES DE LA PROCÉDURE
     ' --------------------- TRAITEMENT ET SORTIE ---------------------
     ' Vérification de l'argument lngMax
-    If (lngMax < 0) Then
-        Err.Raise 6
-    End If
+'    If (lngMax < 0) Then
+'        Err.Raise 6
+'    End If
     ' Vérification générale
     strTemps = txtTemps.Text
     If (IsNumeric(strTemps)) Then

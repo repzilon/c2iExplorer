@@ -67,12 +67,13 @@ End Sub
 ' Meilleure conditions et vérification de l'existence
 ' de c2iExplorer.ini
 
+'Procédure optimisée par René Rhéaume le 12 janvier 2003
 Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectMode As vbext_ConnectMode, ByVal AddInInst As VBIDE.AddIn, custom() As Variant)
     '=================================================
     'connection du complément
     'on crée l'objet window et usrcomm
     '=================================================
-    Const conErrFichIntrouvable As Long = 53
+'    Const conErrFichIntrouvable As Long = 53
     Const conNomMeth As String = "Connectc2iExplorer.IDTExtensibility_OnConnection"
     Dim strFichierLangue As String
     On Error GoTo GestErr
@@ -83,7 +84,8 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
         Show ' En cours d'exécution, affiche seulement
         If (ConnectMode = vbext_cm_AfterStartup) Then
             ' Démarre à partir du Gestionaire de Compléments
-            AddToAddInCommandBar
+            TerminerChargement
+            AfficherExplorateur
         End If
     Else
         strCheminApp = App.Path
@@ -93,7 +95,6 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
             Case FichierExiste(c2iINIFile), frmErreurINI.ObtenirActionINIAbsent
                 ' Initialisation des variables globales
                 c2iHTMLFile = strCheminApp & "\html\prev.htm"
-                c2iDataFileNameOrigine = strCheminApp & "\data\base.c2i"
                 strFichierLangue = strCheminApp & "\Lang\" & _
                         LireChaineFichierINI(conSecGen, conValLang, vbNullString, c2iINIFile)
                 If (ValiderFichierLangue(strFichierLangue)) Then
@@ -117,11 +118,11 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
                     Set objWindowCompteur = .CreateToolWindow(AddInInst, "c2iExplorer.UDCompteur", conNomApp, sGuidCompteur, objUDCompteur)
                 End With
                 Set Connection = Me
-                AddToAddInCommandBar
+                TerminerChargement
             Case Else ' Abandon
                 Set Connection = Nothing
                 'Optimisé par René Rhéaume le 5 juillet 2002
-                Err.Raise conErrFichIntrouvable ', conNomApp & "." & conNomMeth, _
+'                Err.Raise conErrFichIntrouvable ', conNomApp & "." & conNomMeth, _
                             "c2iExplorer.ini est introuvable malgré l'intervention de l'utilsateur."
         End Select
     End If
@@ -129,9 +130,9 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
     Exit Sub
 
 GestErr:
-    If (Err.Number <> conErrFichIntrouvable) Then
+'    If (Err.Number <> conErrFichIntrouvable) Then
         GererErrInattendue , conNomMeth
-    End If
+'    End If
 End Sub
 
 ' Procédure modifiée par René Rhéaume le 29 avril 2002
@@ -152,7 +153,7 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
         Else
             WritePrivateProfileString conSecGen, conClefVisible, conAZero, c2iINIFile
         End If
-
+        
         objBouton.Delete
         'objBoutonPropriété.Delete
     
@@ -173,7 +174,7 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
         Set VBPrjSelected = Nothing
         Set VBInstance = Nothing
     End If
-    On Error GoTo GestErr
+
     Exit Sub
     
 GestErr:
@@ -181,8 +182,15 @@ GestErr:
     Resume Next
 End Sub
 
-Private Function AddToAddInCommandBar() As Office.CommandBarControl
-    Dim lngAfficherExplorer As Long
+'Procédure modifiée par René Rhéaume le 22 janvier 2003
+' On peut maintenant ancrer une fois la fenêtre de c2iExplorer et
+' ne plus se soucier de la replacer à chaque démarrage de l'IDE.
+Private Sub IDTExtensibility_OnStartupComplete(custom() As Variant)
+    AfficherExplorateur
+End Sub
+
+' Procédure renommée par René Rhéaume le 12 janvier 2003
+Private Sub TerminerChargement()
     '=================================================
     'On ajoute un bouton dans le menu Compléments
     '=================================================
@@ -215,21 +223,12 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
         Set Me.CmpEvent = .VBComponentsEvents(Nothing)
         Set Me.prjEvent = .VBProjectsEvents
     End With
-
-    lngAfficherExplorer = GetPrivateProfileInt(conSecGen, conClefVisible, 0, strCheminApp & conCheminRelatifINI)
-    Select Case lngAfficherExplorer
-        Case 1
-            Show
-            objUD.Init
-        Case Else
-            WritePrivateProfileString conSecGen, conClefVisible, conAZero, strCheminApp & conCheminRelatifINI
-    End Select
-
-    Exit Function
+    
+    Exit Sub
 
 GestErr:
-    GererErrInattendue , "Connectc2iExplorer.AddToAddInCommandBar"
-End Function
+    GererErrInattendue , "Connectc2iExplorer.TerminerChargement"
+End Sub
 
 Private Sub Show()
     '=================================================
@@ -242,6 +241,19 @@ Private Sub Show()
 
 GestErr:
     GererErrInattendue , "Connectc2iExplorer.Show"
+End Sub
+
+'Procédure ajoutée par René Rhéaume le 22 janvier 2003
+Private Sub AfficherExplorateur()
+    Dim lngAfficherExplorer As Long
+    lngAfficherExplorer = GetPrivateProfileInt(conSecGen, conClefVisible, 0, strCheminApp & conCheminRelatifINI)
+    Select Case lngAfficherExplorer
+        Case 1
+            Show
+            objUD.Init
+        Case Else
+            WritePrivateProfileString conSecGen, conClefVisible, conAZero, strCheminApp & conCheminRelatifINI
+    End Select
 End Sub
 
 Private Sub BoutonBar_Click(ByVal CommandBarControl As Object, handled As Boolean, CancelDefault As Boolean)
@@ -264,10 +276,6 @@ End Sub
 'Private Sub CmpEvent_ItemSelected(ByVal VBComponent As VBIDE.VBComponent)
 '    Debug.Print VBComponent.Name
 'End Sub
-
-Private Sub IDTExtensibility_OnStartupComplete(custom() As Variant)
-    '    AddToAddInCommandBar
-End Sub
 
 Private Sub prjEvent_ItemActivated(ByVal VBProject As VBIDE.VBProject)
     Set refEvent = VBInstance.Events.ReferencesEvents(VBProject)
@@ -320,6 +328,11 @@ End Sub
 
 Private Sub refEvent_ItemAdded(ByVal Reference As VBIDE.Reference)
     objUD.AjouteReference VBInstance.ActiveVBProject, Reference
+End Sub
+
+' Procédure ajoutée par René Rhéaume le 11 janvier 2003
+Private Sub refEvent_ItemRemoved(ByVal Reference As VBIDE.Reference)
+    objUD.RetireReference Reference
 End Sub
 
 'Sub AddToINI()

@@ -206,6 +206,8 @@ Private Const conEndProc As String = "EndProc"
 Private Const conWeb As String = "web"
 Private Const conMail As String = "mail"
 Private Const conBiblio As String = "biblio"
+Private Const conWebTitre As String = "[Web Site]"
+Private Const conMailTitre As String = "[Mail]"
 Private Const conNewdata As String = "newdata"
 Private Const conSave As String = "save"
 Private Const conNewbiblio As String = "newbiblio"
@@ -238,23 +240,20 @@ Public TVEx As TreeView
 ' Vérification de l'existence de base.c2i
 'Procédure modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Procédure modifiée par René Rhéaume le 17 janvier 2003
+' Plus besoin de base.c2i et optimisé l'écriture dans la
+' base de données en énumérant directement les objets cElement
 Private Sub Enregistrement(ByVal sFile As String)
     Const conClefL10nEnr As String = "Code.Enregistrement."
-    Static mlgarMsgBaseC2iAbsent() As String
     Static mlgarMsgErrSauvegarde() As String
     Static blnLangEnrOK As Boolean
     Dim I As Long
     If (Not blnLangEnrOK) Then
-        StrArray mlgarMsgBaseC2iAbsent, "Ce fichier est le modèle de structure de bibliothèque de code.", _
-            "Veuillez réinstaller l'application."
         StrArray mlgarMsgErrSauvegarde, _
             "Il y a eu une erreur lors de l'initialisation de la sauvegarde.", _
             "a peut-être créé un fichier de sauvegarde sous le nom de"
             If (blnMultilingueActive) Then
                 For I = 0 To 1
-                    mlgarMsgBaseC2iAbsent(I) = LireChaineLocalisee(conNomUD, _
-                            conClefL10nEnr & "mlgarMsgBaseC2iAbsent(" & I & conPF, _
-                            mlgarMsgBaseC2iAbsent(I))
                     mlgarMsgErrSauvegarde(I) = LireChaineLocalisee(conNomUD, _
                             conClefL10nEnr & "mlgarMsgErrSauvegarde(" & I & conPF, _
                             mlgarMsgErrSauvegarde(I))
@@ -263,82 +262,77 @@ Private Sub Enregistrement(ByVal sFile As String)
         blnLangEnrOK = conVrai
     End If
 
-    Const conExtBak As String = ".bak"
-    Const conNomMeth As String = "UDBiblio.Enregistrement"
+    Const conSQLCreation As String = "CREATE TABLE Elements ([IDElement] COUNTER, [Nom] TEXT NOT NULL, [Description] TEXT, [DeclareProc] MEMO, [HeadProc] MEMO, [InLineProc] MEMO, [EndProc] MEMO, CONSTRAINT [PrimaryKey] PRIMARY KEY ([IDElement]));"
     Dim db As Database, rs As Recordset
-    Dim mNode As Node, objE As cElement
+    Dim objE As cElement
+    Dim strNomFichBak As String
+    Dim blnProceder As Boolean
 
-    If (FichierExiste(c2iDataFileNameOrigine)) Then
-        On Error GoTo RestaurerSauvegarde
-        'Modifié par René Rhéaume, 29 juillet 2001
-        If (FichierExiste(sFile)) Then
-            'Copie de sauvegarde du fichier
-            FileCopy sFile, sFile & conExtBak
-            'destruction du fichier
-            Kill sFile
+    strNomFichBak = sFile & ".bak"
+    blnProceder = conVrai
+    If (FichierExiste(sFile)) Then
+        If (Not Rename(sFile, strNomFichBak, FOF_NOCONFIRMATION + FOF_SILENT)) Then
+            MsgBox mlgarMsgErrSauvegarde(0) & vbCrLf & _
+                conNomApp & mlgarMsgErrSauvegarde(1) & vbCrLf & _
+                strNomFichBak & " .", vbExclamation
+            blnProceder = conFaux
         End If
-        'copie du fichier de base
-        FileCopy c2iDataFileNameOrigine, sFile
-    
+    End If
+    If (blnProceder) Then
         On Error GoTo Fin
-        Set db = OpenDatabase(sFile)
+        Set db = DBEngine.CreateDatabase(sFile, dbLangGeneral, dbEncrypt + dbVersion30)
+        db.Execute conSQLCreation
         Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
-        For Each mNode In tv.Nodes
-            Select Case mNode.Image
-                Case conElement, conWeb, conMail
-                    rs.AddNew
-                    Set objE = Explorer.Elements(mNode.FullPath)
-                    rs.Fields(conNom) = objE.Nom
-                    rs.Fields(conDescription) = objE.Description
-                    If (mNode.Image = conElement) Then
-                        rs.Fields(conDeclareProc) = objE.DeclareProc
-                        rs.Fields(conHeadProc) = objE.HeadProc
-                        rs.Fields(conInLineProc) = objE.InLineProc
-                        rs.Fields(conEndProc) = objE.EndProc
-                    End If
-                    rs.Update
+        
+        For Each objE In ElementsBiblio
+            rs.AddNew
+            rs.Fields(conNom) = objE.Nom
+            rs.Fields(conDescription) = objE.Description
+            Select Case objE.Titre
+                Case conWebTitre, conMail
+                Case Else
+                    rs.Fields(conDeclareProc) = objE.DeclareProc
+                    rs.Fields(conHeadProc) = objE.HeadProc
+                    rs.Fields(conInLineProc) = objE.InLineProc
+                    rs.Fields(conEndProc) = objE.EndProc
             End Select
+            rs.Update
         Next
-        If FichierExiste(sFile & conExtBak) Then
-            Kill sFile & conExtBak
+        If FichierExiste(strNomFichBak) Then
+            Kill strNomFichBak
         End If
-    Else
-        MsgBox mlgarFichExistePas(0) & c2iDataFileNameOrigine & mlgarFichExistePas(1) & vbNewLine & _
-                mlgarMsgBaseC2iAbsent(0) & vbNewLine & mlgarMsgBaseC2iAbsent(1), vbCritical
     End If
 
 SortieFunc:
-    'On Error Resume Next
     rs.Close
     db.Close
     Set rs = Nothing
     Set db = Nothing
+    Set objE = Nothing
     Exit Sub
-RestaurerSauvegarde:
-    GererErrInattendue mlgarMsgErrSauvegarde(0) & vbCrLf & _
-            conNomApp & mlgarMsgErrSauvegarde(1) & vbCrLf & _
-            sFile & conExtBak & " .", conNomMeth
-    Resume SortieFunc
 Fin:
-    GererErrInattendue , conNomMeth
+    GererErrInattendue , "UDBiblio.Enregistrement"
     Resume SortieFunc
 End Sub
 
+' Procédure optimisée par René Rhéaume le 13 janvier 2003
 Private Sub ValideInsertion(ByVal objE As cElement)
     Dim sDP As String, sH As String, sI As String, sE As String
 
-    If (tbMain.Buttons(conDeclareProc).Value = tbrPressed) Then
-        sDP = objE.DeclareProc
-    End If
-    If (tbMain.Buttons(conHeadProc).Value = tbrPressed) Then
-        sH = objE.HeadProc
-    End If
-    If (tbMain.Buttons(conInLineProc).Value = tbrPressed) Then
-        sI = objE.InLineProc
-    End If
-    If (tbMain.Buttons(conEndProc).Value = tbrPressed) Then
-        sE = objE.EndProc
-    End If
+    With tbMain.Buttons
+        If (.Item(conDeclareProc).Value = tbrPressed) Then
+            sDP = objE.DeclareProc
+        End If
+        If (.Item(conHeadProc).Value = tbrPressed) Then
+            sH = objE.HeadProc
+        End If
+        If (.Item(conInLineProc).Value = tbrPressed) Then
+            sI = objE.InLineProc
+        End If
+        If (.Item(conEndProc).Value = tbrPressed) Then
+            sE = objE.EndProc
+        End If
+    End With
 
     InsertCode sDP, sH, sI, sE
 End Sub
@@ -353,7 +347,7 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
     On Error Resume Next
     Select Case Node.Image
         Case conElement
-            Set objE = Explorer.Elements(Node.FullPath)
+            Set objE = ElementsBiblio(Node.FullPath)
             'Optimisation par René Rhéaume 2 septembre 2001
             'Ne fonctionnerait pas sous .net car True = 1 sur .net
             'alors que dans VB 5/6, True = -1
@@ -384,12 +378,6 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
                 .Buttons(conEndProc).Value = tbrUnpressed
             End With
     End Select
-End Sub
-
-'Procédure ajoutée par René Rhéaume le 19 décembre 2002.
-' Sauvegarde lors d'un masquage
-Private Sub UserDocument_Hide()
-    Sauvegarder conFaux
 End Sub
 
 'Procédure modifiée par René Rhéaume le 29 juillet 2001
@@ -423,7 +411,7 @@ End Sub
 Private Sub RempliTV()
     Dim objElement As cElement
 
-    For Each objElement In Explorer.Elements
+    For Each objElement In ElementsBiblio
         AddElement objElement
     Next
     Set objElement = Nothing
@@ -455,9 +443,9 @@ Public Sub AddElement(ByVal objElement As cElement)
     'Optimisation par René Rhéaume 5 juillet 2002
     'Modification par René Rhéaume 1er août 2002
     Select Case objElement.Titre
-        Case "[Web Site]"
+        Case conWebTitre
             strClefImg = conWeb
-        Case "[Mail]"
+        Case conMailTitre
             strClefImg = conMail
         Case Else
             strClefImg = conElement
@@ -626,69 +614,70 @@ End Function
 
 'Procédure modifiée par René Rhéaume le 19 juin 2002
 ' Support multilingue
+'Procédure optimisée par René Rhéaume le 14 janvier 2003
 Private Sub MakeToolBar()
     Const conL10nTbMain As String = "Obj.tbMain.Buttons("
     Dim objButton As Button
 
-    With tbMain
+    With tbMain.Buttons
 '        Set .ImageList = imgTB
 '        Set .HotImageList = imgTB
 
-        Set objButton = .Buttons.Add(, conNewdata, , , conNewdata)
-        Set objButton = .Buttons.Add(, conBiblio, , , conBiblio)
-        Set objButton = .Buttons.Add(, conSave, , , conSave)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Add(, conNewdata, , , conNewdata)
+        Set objButton = .Add(, conBiblio, , , conBiblio)
+        Set objButton = .Add(, conSave, , , conSave)
+        Set objButton = .Add(, , , tbrSeparator)
 
-        Set objButton = .Buttons.Add(, conNewbiblio, , , conNewbiblio)
-        Set objButton = .Buttons.Add(, conNewcategorie, , , conNewcategorie)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Add(, conNewbiblio, , , conNewbiblio)
+        Set objButton = .Add(, conNewcategorie, , , conNewcategorie)
+        Set objButton = .Add(, , , tbrSeparator)
 
-        Set objButton = .Buttons.Add(, conDelete, , , conDelete)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Add(, conDelete, , , conDelete)
+        Set objButton = .Add(, , , tbrSeparator)
 
-        Set objButton = .Buttons.Add(, conVoir, , , conVoir)
-        Set objButton = .Buttons.Add(, conCopie, , , conCopie)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Add(, conVoir, , , conVoir)
+        Set objButton = .Add(, conCopie, , , conCopie)
+        Set objButton = .Add(, , , tbrSeparator)
 
-        Set objButton = .Buttons.Add(, conDeclareProc, , tbrCheck, conDeclareProc)
-        Set objButton = .Buttons.Add(, conHeadProc, , tbrCheck, conHeadProc)
-        Set objButton = .Buttons.Add(, conInLineProc, , tbrCheck, conInLineProc)
-        Set objButton = .Buttons.Add(, conEndProc, , tbrCheck, conEndProc)
-        Set objButton = .Buttons.Add(, , , tbrSeparator)
+        Set objButton = .Add(, conDeclareProc, , tbrCheck, conDeclareProc)
+        Set objButton = .Add(, conHeadProc, , tbrCheck, conHeadProc)
+        Set objButton = .Add(, conInLineProc, , tbrCheck, conInLineProc)
+        Set objButton = .Add(, conEndProc, , tbrCheck, conEndProc)
+        Set objButton = .Add(, , , tbrSeparator)
 
-        'Set objButton = .Buttons.Add(, , , tbrSeparator)
-        'Set objButton = .Buttons.Add(, "export", , , "export")
-        'Set objButton = .Buttons.Add(, "import", , , "import")
-        'Set objButton = .Buttons.Add(, , , tbrSeparator)
+        'Set objButton = .Add(, , , tbrSeparator)
+        'Set objButton = .Add(, "export", , , "export")
+        'Set objButton = .Add(, "import", , , "import")
+        'Set objButton = .Add(, , , tbrSeparator)
 
-        .Buttons(conNewdata).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conNewdata).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "1-->'newdata').ToolTipText", "Nouvelle base de données")
-        .Buttons(conBiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conBiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "2-->'biblio').ToolTipText", "Charger une base de données")
-        .Buttons(conSave).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conSave).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "3-->'save').ToolTipText", "Sauvegarder la base de données")
-        .Buttons(conNewbiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conNewbiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "5-->'newbiblio').ToolTipText", "Créer une bibliothèque")
-        .Buttons(conNewcategorie).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conNewcategorie).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "6-->'newcategorie').ToolTipText", "Créer une catégorie")
-        .Buttons(conDelete).ToolTipText = mlgLibelDelete
-        .Buttons(conVoir).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conDelete).ToolTipText = mlgLibelDelete
+        .Item(conVoir).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "10-->'voir').ToolTipText", "Voir/ajouter un élément")
-        .Buttons(conCopie).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conCopie).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "11-->'copie').ToolTipText", "Insérer le code")
-        .Buttons(conDeclareProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conDeclareProc).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "13-->'DeclareProc').ToolTipText", _
                 "Insérer le code des déclarations")
-        .Buttons(conHeadProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conHeadProc).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "14-->'HeadProc').ToolTipText", _
                 "Insérer le code de début de procédure")
-        .Buttons(conInLineProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conInLineProc).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "15-->'InLineProc').ToolTipText", "Insérer le code interne")
-        .Buttons(conEndProc).ToolTipText = LireChaineLocalisee(conNomUD, _
+        .Item(conEndProc).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "16-->'EndProc').ToolTipText", _
                 "Insérer le code de fin de procédure")
-        '.Buttons("export").ToolTipText = "Exporter"
-        '.Buttons("import").ToolTipText = "Importer"
+        '.Item("export").ToolTipText = "Exporter"
+        '.Item("import").ToolTipText = "Importer"
     End With
 
     Set objButton = Nothing
@@ -731,6 +720,7 @@ End Sub
 Private Function SaveLibrary() As Byte
     On Error GoTo Fin
     Dim cCommonDialog As cDlgCom
+    Dim strNomFich As String
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = conExtBD
@@ -740,11 +730,12 @@ Private Function SaveLibrary() As Byte
         .Flags = OFN_HIDEREADONLY + OFN_NOREADONLYRETURN
         .InitDir = strCheminApp & conDossierData
         .ShowSave
-        If .Filename = vbNullString Then
+        strNomFich = .Filename
+        If (LenB(strNomFich) = 0) Then
             SaveLibrary = 1
         Else
-            Enregistrement .Filename
-            c2iCurrentDataFileName = .Filename
+            Enregistrement strNomFich
+            c2iCurrentDataFileName = strNomFich
             SaveLibrary = 0
         End If
     End With
@@ -764,7 +755,7 @@ Private Sub DeleteNode()
     With tv.SelectedItem
         Select Case .Image
             Case conElement, conWeb, conMail
-                Explorer.Elements.Remove .Key
+                ElementsBiblio.Remove .Key
         End Select
         tv.Nodes.Remove .Key
     End With
@@ -777,6 +768,7 @@ End Sub
 Private Function OpenBiblio() As Byte
     On Error GoTo Fin
     Dim cCommonDialog As cDlgCom
+    Dim strNomFich As String
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = conExtBD
@@ -786,12 +778,13 @@ Private Function OpenBiblio() As Byte
         .Flags = conFanionsOuvrir
         .InitDir = strCheminApp & conDossierData
         .ShowOpen
-        If .Filename = vbNullString Then
+        strNomFich = .Filename
+        If (LenB(strNomFich) = 0) Then
             OpenBiblio = 1
         Else
             OpenBiblio = 0
-            ChargeBase .Filename
-            c2iCurrentDataFileName = .Filename
+            ChargeBase strNomFich
+            c2iCurrentDataFileName = strNomFich
         End If
     End With
     Set cCommonDialog = Nothing
@@ -808,7 +801,7 @@ End Function
 'Procédure optimisée par René Rhéaume le 5 juillet 2002
 Private Sub ChargeBase(ByVal sFileName As String)
     Static mlgMsgErrChargeBase As String
-    If (mlgMsgErrChargeBase = vbNullString) Then
+    If (LenB(mlgMsgErrChargeBase) = 0) Then
         mlgMsgErrChargeBase = LireChaineLocalisee(conNomUD, _
             "Code.ChargeBase.mlgMsgErrChargeBase", "Erreur lors du chargement de la base")
     End If
@@ -817,8 +810,8 @@ Private Sub ChargeBase(ByVal sFileName As String)
 
     On Error GoTo GestErr
     'destruction de la hiérarchie
-    Set Explorer = Nothing
-    Set Explorer = New cExplorer
+    Set ElementsBiblio = Nothing
+    Set ElementsBiblio = New cElements
 
     Dim db As DAO.Database
     Dim rs As DAO.Recordset
@@ -826,7 +819,7 @@ Private Sub ChargeBase(ByVal sFileName As String)
     Set db = OpenDatabase(sFileName)
     Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
     Do Until rs.EOF
-        Explorer.Elements.Add AnnuleNull(rs, conDeclareProc), AnnuleNull(rs, conHeadProc), _
+        ElementsBiblio.Add AnnuleNull(rs, conDeclareProc), AnnuleNull(rs, conHeadProc), _
                 AnnuleNull(rs, conInLineProc), AnnuleNull(rs, conEndProc), _
                 AnnuleNull(rs, conDescription), AnnuleNull(rs, conNom), AnnuleNull(rs, conNom)
         rs.MoveNext
@@ -846,8 +839,8 @@ SortieProc:
 GestErr:
     GererErrInattendue mlgMsgErrChargeBase, "UDBiblio.ChargeBase"
     'destruction de la hiérarchie
-    Set Explorer = Nothing
-    Set Explorer = New cExplorer
+    Set ElementsBiblio = Nothing
+    Set ElementsBiblio = New cElements
     Resume SortieProc
 End Sub
 
@@ -886,7 +879,7 @@ Private Sub AddBiblio()
     On Error Resume Next
     Set mNode = tv.Nodes(sResult)
     If (mNode Is Nothing) Then
-        If (sResult <> vbNullString) Then
+        If (LenB(sResult) > 0) Then
             On Error GoTo GestErr
             tv.Nodes.Add , , sResult, sResult, conBiblio
         End If
@@ -931,7 +924,7 @@ Private Sub AddCategorie()
     If (Not tv.SelectedItem Is Nothing) Then
         If (tv.SelectedItem.Image <> conElement) Then
             sResult = Trim$(InputBox(mlgarMsgCat(0)))
-            If (sResult <> vbNullString) Then
+            If (LenB(sResult) > 0) Then
                 On Error Resume Next
                 strClef = tv.SelectedItem.Key & conSepChemBiblio & sResult
                 Set mNode = tv.Nodes(strClef)
@@ -976,34 +969,45 @@ End Sub
 
 'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
+'Procédure optimisée par René Rhéaume le 17 janvier 2003
 Private Sub GererBoutonCopie()
     Dim objE As cElement
-    Dim strImage As String
-    strImage = tv.SelectedItem.Image
+    Dim strImage As String, strChemin As String
+    
+    With tv.SelectedItem
+        strImage = .Image
+        strChemin = .FullPath
+    End With
+    
     Select Case (strImage)
         Case conElement
-            Set objE = Explorer.Elements(tv.SelectedItem.FullPath)
+            Set objE = ElementsBiblio(strChemin)
             ValideInsertion objE
             Set objE = Nothing
         Case conWeb, conMail
-            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, _
-                (strImage = conMail)
+            ConnectionInternet ElementsBiblio(strChemin).Description, _
+                IsSameString(strImage, conMail)
     End Select
 End Sub
 
 'Procédure ajoutée par René Rhéaume le 24 avril 2002
 ' Pour alléger UDBiblio.tbMain_ButtonClick
+'Procédure optimisée par René Rhéaume le 13 janvier 2003
 Private Sub GererBoutonVoir()
     Dim strImage As String
-    strImage = tv.SelectedItem.Image
+    Dim strChemin As String
+    With tv.SelectedItem
+        strImage = .Image
+        strChemin = .FullPath
+    End With
     Select Case (strImage)
         Case conWeb, conMail
-            ConnectionInternet Explorer.Elements(tv.SelectedItem.FullPath).Description, _
-                (strImage = conMail)
+            ConnectionInternet ElementsBiblio(strChemin).Description, _
+                IsSameString(strImage, conMail)
         Case Else
             Load frmBiblio
-            If (strImage = conElement) Then
-                Set frmBiblio.Element = Explorer.Elements(tv.SelectedItem.FullPath)
+            If (IsSameString(strImage, conElement)) Then
+                Set frmBiblio.Element = ElementsBiblio(strChemin)
             Else
                 Set frmBiblio.Element = Nothing
             End If

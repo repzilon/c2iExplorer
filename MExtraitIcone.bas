@@ -105,7 +105,6 @@ Public DuréePrj() As InfoProjet
 Public strCheminApp As String
 Public c2iHTMLFile As String
 Public c2iINIFile As String                                'Ajout par René Rhéaume, 28 juillet 2001
-Public c2iDataFileNameOrigine As String
 Public c2iCurrentDataFileName As String
 Public strFichLangueActuel As String
 Public blnMultilingueActive As Boolean
@@ -123,7 +122,7 @@ Public bAffichePublic As Boolean
 Public bAffichePrive As Boolean
 Public bAfficheFriend As Boolean
 
-Public Explorer As cExplorer
+Public ElementsBiblio As cElements
 
 ' ************* Chaînes localisées *************
 Public mlgLibelDescrpt As String
@@ -137,13 +136,13 @@ Public mlgarUniteTemps() As String
 Public mlgarFichExistePas() As String
 ' *********** Fin Chaînes localisées ***********
 
-Public Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
-Public Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
+Public Declare Function GetDC Lib "user32" (ByVal hWnd As Long) As Long
+Public Declare Function ReleaseDC Lib "user32" (ByVal hWnd As Long, ByVal hdc As Long) As Long
 Public Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 
 Public Declare Function timeGetTime Lib "winmm.dll" () As Long
 
-Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
+Public Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 Public Const SW_NORMAL = 1
 
 Public Declare Function GetInputState Lib "user32" () As Long
@@ -169,7 +168,7 @@ Public Function ExtraitIconeProjet(ByVal objVBPrj As VBIDE.VBProject) As String
     Dim lngTypePrj As vbext_ProjectType
     lngTypePrj = objVBPrj.Type
     
-    Select Case (conFaux)
+    Select Case conFaux
         Case (lngTypePrj >= vbext_pt_StandardExe), (lngTypePrj <= vbext_pt_ActiveXControl)
             ExtraitIconeProjet = conInconnu
         Case Else
@@ -208,7 +207,7 @@ Public Function ExtraireNoIconeMembre(ByVal objMember As VBIDE.Member) As Long
             ExtraireNoIconeMembre = 3
         Case vbext_mt_Method
             'extraction de la ligne de code
-            If objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1 Then
+            If (objMember.Collection.Parent.ProcBodyLine(objMember.Name, vbext_pk_Proc) <> 1) Then
                 ExtraireNoIconeMembre = 2
             Else
                 ExtraireNoIconeMembre = 5
@@ -264,7 +263,7 @@ End Function
 Public Sub ConnectionInternet(ByVal strAdresse As String, _
                                 Optional ByVal blnCourriel As Boolean = conFaux)
     Static mlgMsgPasConnInternet As String
-    If (mlgMsgPasConnInternet = vbNullString) Then
+    If (LenB(mlgMsgPasConnInternet) = 0) Then
         mlgMsgPasConnInternet = LireChaineLocalisee(conModGlob, conDecl & "mlgMsgPasConnInternet", _
             "Impossible de se connecter à Internet")
     End If
