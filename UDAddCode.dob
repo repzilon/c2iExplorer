@@ -1,11 +1,12 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDAddCode 
    ClientHeight    =   5880
    ClientLeft      =   210
    ClientTop       =   495
    ClientWidth     =   8565
    HScrollSmallChange=   225
+   Icon            =   "UDAddCode.dox":0000
    LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   5880
@@ -20,51 +21,44 @@ Begin VB.UserDocument UDAddCode
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   6
+         NumListImages   =   4
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":0000
+            Picture         =   "UDAddCode.dox":00D2
             Key             =   "copie"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":055E
+            Picture         =   "UDAddCode.dox":020A
             Key             =   "addprop"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":0ABC
+            Picture         =   "UDAddCode.dox":0340
             Key             =   "delprop"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":101A
+            Picture         =   "UDAddCode.dox":047D
             Key             =   "delete"
-         EndProperty
-         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":1578
-            Key             =   "voir"
-         EndProperty
-         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":1AD6
-            Key             =   "quit"
          EndProperty
       EndProperty
    End
    Begin MSComctlLib.Toolbar tbMain 
       Align           =   1  'Align Top
-      Height          =   360
+      Height          =   375
       Left            =   0
       TabIndex        =   13
       Top             =   0
       Width           =   8565
       _ExtentX        =   15108
-      _ExtentY        =   635
-      ButtonWidth     =   609
-      ButtonHeight    =   582
+      _ExtentY        =   661
+      ButtonWidth     =   847
+      ButtonHeight    =   609
       AllowCustomize  =   0   'False
       Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
+      ImageList       =   "imgTB"
       _Version        =   393216
       BorderStyle     =   1
    End
@@ -228,28 +222,26 @@ Begin VB.UserDocument UDAddCode
          Appearance      =   1
          Style           =   1
          ImageList       =   "imgPortée"
-         DisabledImageList=   "imgPortée"
-         HotImageList    =   "imgPortée"
          _Version        =   393216
          BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
             NumButtons      =   7
             BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "pub"
                Object.ToolTipText     =   "Public"
-               ImageKey        =   "pub"
+               ImageIndex      =   1
                Style           =   2
                Value           =   1
             EndProperty
             BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "priv"
                Object.ToolTipText     =   "Private"
-               ImageKey        =   "priv"
+               ImageIndex      =   2
                Style           =   2
             EndProperty
             BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "frie"
                Object.ToolTipText     =   "Friend"
-               ImageKey        =   "frie"
+               ImageIndex      =   3
                Style           =   2
             EndProperty
             BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
@@ -259,19 +251,19 @@ Begin VB.UserDocument UDAddCode
             BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "ecriture"
                Object.ToolTipText     =   "Let/Set"
-               ImageKey        =   "ecriture"
+               ImageIndex      =   4
                Style           =   2
             EndProperty
             BeginProperty Button6 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "lecture"
                Object.ToolTipText     =   "Get"
-               ImageKey        =   "lecture"
+               ImageIndex      =   5
                Style           =   2
             EndProperty
             BeginProperty Button7 {66833FEA-8583-11D1-B16A-00C0F0283628} 
                Key             =   "lectureecriture"
                Object.ToolTipText     =   "Let (Set) & Get"
-               ImageKey        =   "lectureecriture"
+               ImageIndex      =   6
                Style           =   2
                Value           =   1
             EndProperty
@@ -336,33 +328,33 @@ Begin VB.UserDocument UDAddCode
       BackColor       =   -2147483643
       ImageWidth      =   24
       ImageHeight     =   20
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   6
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":2034
+            Picture         =   "UDAddCode.dox":05C3
             Key             =   "pub"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":2626
+            Picture         =   "UDAddCode.dox":06E7
             Key             =   "priv"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":2C18
+            Picture         =   "UDAddCode.dox":080C
             Key             =   "frie"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":320A
+            Picture         =   "UDAddCode.dox":092D
             Key             =   "ecriture"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":37FC
-            Key             =   "lectureecriture"
+            Picture         =   "UDAddCode.dox":0A41
+            Key             =   "lecture"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":3DEE
-            Key             =   "lecture"
+            Picture         =   "UDAddCode.dox":0B52
+            Key             =   "lectureecriture"
          EndProperty
       EndProperty
    End
@@ -374,28 +366,28 @@ Begin VB.UserDocument UDAddCode
       BackColor       =   -2147483643
       ImageWidth      =   21
       ImageHeight     =   21
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   5
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":43E0
+            Picture         =   "UDAddCode.dox":0C67
             Key             =   "prop"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":4972
+            Picture         =   "UDAddCode.dox":0D23
             Key             =   "objet"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":4F04
+            Picture         =   "UDAddCode.dox":0DEA
             Key             =   "Let"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":5092
+            Picture         =   "UDAddCode.dox":0E66
             Key             =   "Get"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDAddCode.dox":5220
+            Picture         =   "UDAddCode.dox":0EE3
             Key             =   "Set"
          EndProperty
       EndProperty
@@ -446,6 +438,7 @@ Private strarPrefixes() As String
 'Optimisé par René Rhéaume le 6 janvier 2002
 'Utilise un fichier INI et des fonctions API
 Private Sub UserDocument_Initialize()
+    Const conNomMeth As String = "UDAddCode.UserDocument_Initialize"
     '    'Ancienne version
     '    Dim fso As FileSystemObject, txtFile As TextStream
     '    Dim c2iTypeFile As String
@@ -504,26 +497,25 @@ Private Sub UserDocument_Initialize()
         FrameProp.Caption = "Property :"
         lblNom = "Name :"
         frameLstProp.Caption = "Properties list"
-        FrameCode.Caption = "Generated code"
+        Framecode.Caption = "Generated code"
     Else
         FrameProp.Caption = "Propriété :"
         lblNom = "Nom :"
         frameLstProp.Caption = "Liste des propriétés"
-        FrameCode.Caption = "Code généré"
+        Framecode.Caption = "Code généré"
     End If
     UserDocument_Resize
+    
+'    ExtraireImageList ImgLst, "UDAddCode.ImgLst"
+'    ExtraireImageList imgPortée, "UDAddCode.imgPortée"
+'    ExtraireImageList imgTB, "UDAddCode.imgTB"
+    
     Exit Sub
 Fin:
     If (lngLanguage = c2i_Langue_Anglais) Then
-        MsgBox "Error when loading file" & c2iINIFile & vbCrLf & _
-                "Error number : " & Err.Number & vbCrLf & _
-                "Description : " & Err.Description & vbCrLf & _
-                "Source : " & Err.Source, vbExclamation
+        GererErrInattendue "Error when loading file " & c2iINIFile, conNomMeth
     Else
-        MsgBox "Erreur au chargement de " & c2iINIFile & vbCrLf & _
-                "Numéro d'erreur : " & Err.Number & vbCrLf & _
-                "Description : " & Err.Description & vbCrLf & _
-                "Source : " & Err.Source, vbExclamation
+        GererErrInattendue "Erreur au chargement de " & c2iINIFile, conNomMeth
     End If
     '    'Ancienne version
     '    Set txtFile = Nothing
@@ -615,10 +607,10 @@ Private Sub AjouteProp()
 GestErr:
     Set mNFils = Nothing
     Set mN = Nothing
-    If (Err.Number) = 35602 Then
+    If (Err.Number = ccNonUniqueKey) Then
         MsgBox "Cette propriété existe déjà", vbInformation
     Else
-        MsgBox "Erreur inconnue : " & CStr(Err.Description), vbCritical
+        GererErrInattendue , "UDAddCode.AjouteProp"
     End If
 End Sub
 
@@ -747,8 +739,8 @@ Private Sub MakeToolBar()
     Dim objButton As Button
 
     With tbMain
-        Set .ImageList = imgTB
-        Set .HotImageList = imgTB
+'        Set .ImageList = imgTB
+'        Set .HotImageList = imgTB
         Set objButton = .Buttons.Add(, conAddprop, , , conAddprop)
         Set objButton = .Buttons.Add(, conDelprop, , , conDelprop)
         Set objButton = .Buttons.Add(, , , tbrSeparator)
@@ -814,15 +806,15 @@ Private Sub UserDocument_Resize()
 
     sngHauteurEchelle = ScaleHeight
     sngHauteurLstProp = sngHauteurEchelle - frameLstProp.Top - conEspaceLibre
-    sngLargeurFraCode = ScaleWidth - FrameCode.Left - conEspaceLibre
-    sngHauteurFraCode = sngHauteurEchelle - FrameCode.Top - conEspaceLibre
+    sngLargeurFraCode = ScaleWidth - Framecode.Left - conEspaceLibre
+    sngHauteurFraCode = sngHauteurEchelle - Framecode.Top - conEspaceLibre
     sngLargeurZoneCode = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
 
     On Error Resume Next
     frameLstProp.Height = sngHauteurLstProp
     tvCode.Height = sngHauteurLstProp - tvCode.Top - conEspaceLibre
-    FrameCode.Height = sngHauteurFraCode
-    FrameCode.Width = sngLargeurFraCode
+    Framecode.Height = sngHauteurFraCode
+    Framecode.Width = sngLargeurFraCode
     txtCodeDeclarationView.Width = sngLargeurFraCode - txtCodeDeclarationView.Left - conEspaceLibre
     txtCodeView.Width = sngLargeurZoneCode
     txtCodeView.Height = sngHauteurFraCode - txtCodeView.Top - conEspaceLibre

@@ -32,7 +32,7 @@
 !ifndef VersionVB
 !define VersionVB 5
 !endif
-!define Revision 134
+!define Revision 137
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
 
@@ -46,7 +46,7 @@ DirText "Indiquez dans quel dossier est installé Visual Basic ${VersionVB}.0 sur
 UninstallText "Ceci supprimera c2iExplorer de votre ordinateur. Cliquez sur «Désinstaller» pour désinstaller ou sur «Annuler» pour quitter."
 !packhdr "temp.dat" "E:\progra~1\console\bin\upx.exe -q --best --compress-icons=1 temp.dat"
 ;UninstallExeName uninst-c2iexplorer.exe
-OutFile "${CheminBase}\c2iexplorer-VB${VersionVB}.exe"
+OutFile "${CheminBase}\SourceForge\Fichiers\c2iexplorer-VB${VersionVB}-${Revision}.exe"
 Icon "${CheminBase}\Source\c2iExplorer.ico"
 EnabledBitmap "${CheminBase}\Source\checked16.bmp"
 DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
@@ -148,6 +148,7 @@ Section Uninstall
 	Delete "$INSTDIR\Wizards\DATA\BASE.C2I"
 	Delete "$INSTDIR\Wizards\DATA\C2I.MDB"
 	Delete "$INSTDIR\Wizards\DATA\c2ifr.mdb"
+	Delete "$INSTDIR\Wizards\DATA\codelib.dtd"
 	Delete "$INSTDIR\Wizards\HTML\c2i Description complète.htm"
 	Delete "$INSTDIR\Wizards\HTML\c2i Liste des components avec descriptions.htm"
 	Delete "$INSTDIR\Wizards\HTML\c2i Liste des components avec nbr lignes de code.htm"

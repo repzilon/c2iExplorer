@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDClassViewer 
    BackColor       =   &H00FFFFFF&
    ClientHeight    =   6255
@@ -7,6 +7,7 @@ Begin VB.UserDocument UDClassViewer
    ClientTop       =   345
    ClientWidth     =   7335
    HScrollSmallChange=   15
+   Icon            =   "UDClassViewer.dox":0000
    LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   417
@@ -54,6 +55,7 @@ Begin VB.UserDocument UDClassViewer
       Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
+      ImageList       =   "ImgTBGene"
       _Version        =   393216
    End
    Begin MSComctlLib.ImageList imgListView 
@@ -64,28 +66,28 @@ Begin VB.UserDocument UDClassViewer
       BackColor       =   16777215
       ImageWidth      =   100
       ImageHeight     =   14
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   5
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0000
+            Picture         =   "UDClassViewer.dox":00D2
             Key             =   "methode"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0170
+            Picture         =   "UDClassViewer.dox":01CE
             Key             =   "propgetlet"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0304
+            Picture         =   "UDClassViewer.dox":02E0
             Key             =   "propget"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":04A0
+            Picture         =   "UDClassViewer.dox":0400
             Key             =   "proplet"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0638
+            Picture         =   "UDClassViewer.dox":051F
             Key             =   "proppublic"
          EndProperty
       EndProperty
@@ -134,20 +136,20 @@ Begin VB.UserDocument UDClassViewer
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   3
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":082C
+            Picture         =   "UDClassViewer.dox":0667
             Key             =   "print"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0D8A
+            Picture         =   "UDClassViewer.dox":07A4
             Key             =   "actu"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDClassViewer.dox":0F2C
+            Picture         =   "UDClassViewer.dox":0843
             Key             =   "descro"
          EndProperty
       EndProperty
@@ -228,14 +230,16 @@ Private Const conPrint As String = "print"
 Private mobjCmp As VBIDE.VBComponent
 
 Private Sub UserDocument_Initialize()
-    Set lvProp.SmallIcons = imgListView
+'    Set lvProp.SmallIcons = imgListView
     lvProp.View = lvwReport
 
-    Set tbMain.ImageList = ImgTBGene
-    Set tbMain.HotImageList = ImgTBGene
+'    Set tbMain.ImageList = ImgTBGene
+'    Set tbMain.HotImageList = ImgTBGene
     MakeToolBar
 
     UserDocument_Resize
+'    ExtraireImageList imgListView, "UDClassViewer.imgListView"
+'    ExtraireImageList ImgTBGene, "UDClassViewer.ImgTBGene"
 End Sub
 
 Private Sub MakeToolBar()
@@ -246,7 +250,6 @@ Private Sub MakeToolBar()
         Set objButton = .Add(, conDescro, , tbrPressed, conDescro)
         Set objButton = .Add(, , , tbrSeparator)
         Set objButton = .Add(, conPrint, , , conPrint)
-
 
         Select Case lngLanguage
             Case c2i_Langue_Anglais
@@ -393,7 +396,7 @@ Private Sub Imprime()
 SortieProc:
     Exit Sub
 GestErr:
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    GererErrInattendue , "UDClassViewer.Imprime"
     Resume SortieProc
 End Sub
 

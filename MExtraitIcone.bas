@@ -50,13 +50,12 @@ Public Const Mem_Friend As Long = vbRed
 
 Public Const conFaux As Boolean = False
 Public Const conVrai As Boolean = True
-Public Const conCheminRelatifINI  As String = "\DATA\c2iExplorer.ini"
+Public Const conCheminRelatifINI As String = "\DATA\c2iExplorer.ini"
 Public Const conDossierData As String = "\DATA"
 Public Const conSecGen As String = "General"
 Public Const conSecDurees As String = "Durees"
 Public Const conValData As String = "Data"
 Public Const conNomApp As String = "c2iExplorer"
-Public Const conErrNo As String = "Erreur no "
 Public Const conBS As String = "\"
 Public Const conElement As String = "element"
 Public Const conInconnu As String = "Inconnu"
@@ -321,16 +320,35 @@ Public Sub SplitB(Expression$, ResultSplit$(), Optional Delimiter$ = " ")
     End If
 End Sub
 
-'Public Sub LogMsg(ByVal strMessage As String)
-'    Const conCheminRelatifLog As String = "\c2iExplorer.log"
-'    Dim strCheminLog As String
-'
-'    strCheminLog = strCheminApp & conCheminRelatifLog
-'    With App
-'        .StartLogging strCheminLog, 2 'vbLogToFile
-'        .LogEvent strMessage, vbLogEventTypeInformation
-'    End With
-'End Sub
+'Procédure ajoutée par René Rhéaume le 8 juin 2002
+' Gestionnaire centralisé des erreurs inattendues
+Public Sub GererErrInattendue(Optional ByVal strMessage As String, _
+                                Optional ByVal strSource As String)
+    Const conCheminRelatifLog As String = "\DATA\c2iExplorer.log"
+    Dim strCheminLog As String
+    Dim strVersion As String
+    
+    strCheminLog = strCheminApp & conCheminRelatifLog
+    If (LenB(strSource) = 0) Then
+        strSource = Err.Source
+    Else
+        strSource = "c2iExplorer." & strSource
+    End If
+    If (LenB(strMessage) > 0) Then
+        strMessage = "  " & strMessage & vbCrLf
+    End If
+    strMessage = strMessage & "  Erreur no " & Err.Number & vbCrLf & _
+                    "  Description : " & Err.Description & vbCrLf & _
+                    "  Source : " & strSource
+    strVersion = App.Major & "." & App.Minor & "." & App.Revision
+    
+    With App
+        .StartLogging strCheminLog, 2 'vbLogToFile
+        .LogEvent vbCrLf & strMessage & vbCrLf & "  Version : " & strVersion & vbCrLf & _
+                    "  Date/Heure : " & Now
+    End With
+    MsgBox strMessage, vbCritical
+End Sub
 
 Public Function AfficheMembre(ByVal objMember As VBIDE.Member) As Boolean
     '=========================================
@@ -369,3 +387,12 @@ Public Function AfficheMembre(ByVal objMember As VBIDE.Member) As Boolean
     End Select
 
 End Function
+
+'Public Sub ExtraireImageList(ByVal imlAExtraire As ImageList, ByVal strDebutNomFich As String)
+'    Dim lsiExtract As ListImage
+'    For Each lsiExtract In imlAExtraire.ListImages
+'        SavePicture lsiExtract.Picture, App.Path & conDossierData & _
+'                    "\" & strDebutNomFich & "(" & lsiExtract.Key & ")[" & lsiExtract.Index & "].bmp"
+'    Next
+'    Set lsiExtract = Nothing
+'End Sub

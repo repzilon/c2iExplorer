@@ -120,7 +120,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
 
 GestErr:
     If (Err.Number <> conErrFichIntrouvable) Then
-        MsgBox "IDTExtensibility_OnConnection : " & Err.Description & " (" & Err.Number & ") " & vbNewLine & Err.Source, vbCritical     '& vbCrLf & CStr(lngLigneOK)
+        GererErrInattendue , "Connectc2iExplorer.IDTExtensibility_OnConnection"
     End If
 End Sub
 
@@ -167,7 +167,7 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
     Exit Sub
     
 GestErr:
-    MsgBox "IDTExtensibility_OnDisconnection : " & Err.Description & " (" & Err.Number & ") " & vbNewLine & Err.Source, vbExclamation
+    GererErrInattendue , "Connectc2iExplorer.IDTExtensibility_OnDisconnection"
     Resume Next
 End Sub
 
@@ -183,7 +183,7 @@ Private Function AddToAddInCommandBar() As Office.CommandBarControl
     #ElseIf VersionVB = 6 Then
         Set objBouton = VBInstance.CommandBars(1).Controls(11).Controls.Add
     #End If
-    objBouton.Caption = "c2i Explorer"
+    objBouton.Caption = conNomApp '"c2i Explorer"
     objBouton.Visible = conVrai
     'pour l'icone, on est obligé de passer par le presse papier
     Clipboard.SetData LoadResPicture(101, vbResBitmap)
@@ -315,5 +315,5 @@ End Sub
 'Sub AddToINI()
 '  ' Ce code ajoute une entrée au fichier VbAddin.ini.
 '  ' Ceci doit être exécuté depuis la fenêtre Exécution.
-'  Debug.Print WritePrivateProfileString("Add-Ins32", "c2iexplorer.Connectc2iExplorer", conAZero, "vbaddin.ini")
+'  Debug.Print WritePrivateProfileString("Add-Ins32", "c2iExplorer.Connectc2iExplorer", conAZero, "vbaddin.ini")
 'End Sub

@@ -15,6 +15,7 @@ Begin VB.UserDocument UDMsgBox
       Strikethrough   =   0   'False
    EndProperty
    HScrollSmallChange=   225
+   Icon            =   "UDMsgBox.dox":0000
    LockControls    =   -1  'True
    ScaleHeight     =   5130
    ScaleWidth      =   7470
@@ -28,17 +29,17 @@ Begin VB.UserDocument UDMsgBox
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   2
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDMsgBox.dox":0000
-            Key             =   "voir"
+            Picture         =   "UDMsgBox.dox":00D2
+            Key             =   "copie"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDMsgBox.dox":055E
-            Key             =   "copie"
+            Picture         =   "UDMsgBox.dox":020A
+            Key             =   "voir"
          EndProperty
       EndProperty
    End
@@ -58,18 +59,17 @@ Begin VB.UserDocument UDMsgBox
       Appearance      =   1
       Style           =   1
       ImageList       =   "ImageList1"
-      HotImageList    =   "ImageList1"
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
          NumButtons      =   3
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            ImageKey        =   "copie"
+            ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
-            ImageKey        =   "voir"
+            ImageIndex      =   2
          EndProperty
       EndProperty
    End
@@ -96,17 +96,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   ""
          Ouvert          =   0   'False
          Hauteur         =   2295
-         ImgOuvert0      =   "UDMsgBox.dox":0ABC
-         ImgOuvert1      =   "UDMsgBox.dox":0AD8
-         ImgFermée0      =   "UDMsgBox.dox":0AF4
-         ImgFermée1      =   "UDMsgBox.dox":0B10
+         ImgOuvert0      =   "UDMsgBox.dox":034A
+         ImgOuvert1      =   "UDMsgBox.dox":0366
+         ImgFermée0      =   "UDMsgBox.dox":0382
+         ImgFermée1      =   "UDMsgBox.dox":039E
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":0B2C
-         PictureTitleFond=   "UDMsgBox.dox":0B48
+         PicFond         =   "UDMsgBox.dox":03BA
+         PictureTitleFond=   "UDMsgBox.dox":03D6
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -124,7 +124,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   4
             Left            =   360
-            Picture         =   "UDMsgBox.dox":0B64
+            Picture         =   "UDMsgBox.dox":03F2
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   44
@@ -139,7 +139,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   3
             Left            =   360
-            Picture         =   "UDMsgBox.dox":0DDC
+            Picture         =   "UDMsgBox.dox":066A
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   43
@@ -154,7 +154,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   2
             Left            =   360
-            Picture         =   "UDMsgBox.dox":1039
+            Picture         =   "UDMsgBox.dox":08C7
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   42
@@ -169,7 +169,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   240
             Index           =   1
             Left            =   360
-            Picture         =   "UDMsgBox.dox":12AC
+            Picture         =   "UDMsgBox.dox":0B3A
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   41
@@ -183,7 +183,7 @@ Begin VB.UserDocument UDMsgBox
             Height          =   270
             Index           =   0
             Left            =   360
-            Picture         =   "UDMsgBox.dox":153F
+            Picture         =   "UDMsgBox.dox":0DCD
             ScaleHeight     =   240
             ScaleWidth      =   240
             TabIndex        =   40
@@ -277,17 +277,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   ""
          Ouvert          =   0   'False
          Hauteur         =   2415
-         ImgOuvert0      =   "UDMsgBox.dox":15D8
-         ImgOuvert1      =   "UDMsgBox.dox":15F4
-         ImgFermée0      =   "UDMsgBox.dox":1610
-         ImgFermée1      =   "UDMsgBox.dox":162C
+         ImgOuvert0      =   "UDMsgBox.dox":0E66
+         ImgOuvert1      =   "UDMsgBox.dox":0E82
+         ImgFermée0      =   "UDMsgBox.dox":0E9E
+         ImgFermée1      =   "UDMsgBox.dox":0EBA
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483625
          CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1648
-         PictureTitleFond=   "UDMsgBox.dox":1664
+         PicFond         =   "UDMsgBox.dox":0ED6
+         PictureTitleFond=   "UDMsgBox.dox":0EF2
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -404,17 +404,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   ""
          Ouvert          =   0   'False
          Hauteur         =   1815
-         ImgOuvert0      =   "UDMsgBox.dox":1680
-         ImgOuvert1      =   "UDMsgBox.dox":169C
-         ImgFermée0      =   "UDMsgBox.dox":16B8
-         ImgFermée1      =   "UDMsgBox.dox":16D4
+         ImgOuvert0      =   "UDMsgBox.dox":0F0E
+         ImgOuvert1      =   "UDMsgBox.dox":0F2A
+         ImgFermée0      =   "UDMsgBox.dox":0F46
+         ImgFermée1      =   "UDMsgBox.dox":0F62
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":16F0
-         PictureTitleFond=   "UDMsgBox.dox":170C
+         PicFond         =   "UDMsgBox.dox":0F7E
+         PictureTitleFond=   "UDMsgBox.dox":0F9A
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -499,17 +499,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   ""
          Ouvert          =   0   'False
          Hauteur         =   1095
-         ImgOuvert0      =   "UDMsgBox.dox":1728
-         ImgOuvert1      =   "UDMsgBox.dox":1744
-         ImgFermée0      =   "UDMsgBox.dox":1760
-         ImgFermée1      =   "UDMsgBox.dox":177C
+         ImgOuvert0      =   "UDMsgBox.dox":0FB6
+         ImgOuvert1      =   "UDMsgBox.dox":0FD2
+         ImgFermée0      =   "UDMsgBox.dox":0FEE
+         ImgFermée1      =   "UDMsgBox.dox":100A
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483625
          CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1798
-         PictureTitleFond=   "UDMsgBox.dox":17B4
+         PicFond         =   "UDMsgBox.dox":1026
+         PictureTitleFond=   "UDMsgBox.dox":1042
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -568,17 +568,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   ""
          Ouvert          =   0   'False
          Hauteur         =   1455
-         ImgOuvert0      =   "UDMsgBox.dox":17D0
-         ImgOuvert1      =   "UDMsgBox.dox":17EC
-         ImgFermée0      =   "UDMsgBox.dox":1808
-         ImgFermée1      =   "UDMsgBox.dox":1824
+         ImgOuvert0      =   "UDMsgBox.dox":105E
+         ImgOuvert1      =   "UDMsgBox.dox":107A
+         ImgFermée0      =   "UDMsgBox.dox":1096
+         ImgFermée1      =   "UDMsgBox.dox":10B2
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1840
-         PictureTitleFond=   "UDMsgBox.dox":185C
+         PicFond         =   "UDMsgBox.dox":10CE
+         PictureTitleFond=   "UDMsgBox.dox":10EA
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -653,17 +653,17 @@ Begin VB.UserDocument UDMsgBox
          Caption         =   ""
          Ouvert          =   0   'False
          Hauteur         =   1455
-         ImgOuvert0      =   "UDMsgBox.dox":1878
-         ImgOuvert1      =   "UDMsgBox.dox":1894
-         ImgFermée0      =   "UDMsgBox.dox":18B0
-         ImgFermée1      =   "UDMsgBox.dox":18CC
+         ImgOuvert0      =   "UDMsgBox.dox":1106
+         ImgOuvert1      =   "UDMsgBox.dox":1122
+         ImgFermée0      =   "UDMsgBox.dox":113E
+         ImgFermée1      =   "UDMsgBox.dox":115A
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483625
          CouleurFondTitre=   -2147483624
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":18E8
-         PictureTitleFond=   "UDMsgBox.dox":1904
+         PicFond         =   "UDMsgBox.dox":1176
+         PictureTitleFond=   "UDMsgBox.dox":1192
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -710,17 +710,17 @@ Begin VB.UserDocument UDMsgBox
          Alignement      =   2
          Caption         =   ""
          Hauteur         =   3015
-         ImgOuvert0      =   "UDMsgBox.dox":1920
-         ImgOuvert1      =   "UDMsgBox.dox":193C
-         ImgFermée0      =   "UDMsgBox.dox":1958
-         ImgFermée1      =   "UDMsgBox.dox":1974
+         ImgOuvert0      =   "UDMsgBox.dox":11AE
+         ImgOuvert1      =   "UDMsgBox.dox":11CA
+         ImgFermée0      =   "UDMsgBox.dox":11E6
+         ImgFermée1      =   "UDMsgBox.dox":1202
          CouleurFond     =   -2147483633
          CouleurTexteTitre=   -2147483639
          CouleurFondTitre=   -2147483645
          Automatique     =   0   'False
          Border          =   0   'False
-         PicFond         =   "UDMsgBox.dox":1990
-         PictureTitleFond=   "UDMsgBox.dox":19AC
+         PicFond         =   "UDMsgBox.dox":121E
+         PictureTitleFond=   "UDMsgBox.dox":123A
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Tahoma"
             Size            =   8.25
@@ -779,7 +779,7 @@ Begin VB.UserDocument UDMsgBox
    Begin VB.Image imgOuvert 
       Height          =   240
       Left            =   5100
-      Picture         =   "UDMsgBox.dox":19C8
+      Picture         =   "UDMsgBox.dox":1256
       Top             =   480
       Visible         =   0   'False
       Width           =   240
@@ -787,7 +787,7 @@ Begin VB.UserDocument UDMsgBox
    Begin VB.Image imgFermee 
       Height          =   240
       Left            =   4740
-      Picture         =   "UDMsgBox.dox":1AA5
+      Picture         =   "UDMsgBox.dox":1333
       Top             =   480
       Visible         =   0   'False
       Width           =   240
@@ -918,7 +918,7 @@ Private Sub UserDocument_Initialize()
     Dim oleFermee As IPictureDisp, oleOuvert As IPictureDisp
     lngCompte = c2iContainerIntMsg.UBound
     Set oleFermee = imgFermee.Picture
-    Set oleOuvert = imgOuvert.Picture
+    Set oleOuvert = ImgOuvert.Picture
     For iNum = 0 To lngCompte
         With c2iContainerIntMsg(iNum)
             Set .PictureFerméeDown = oleFermee
@@ -957,6 +957,7 @@ Private Sub UserDocument_Initialize()
     lblButtons_Click 0
     lblDefaultButton_Click 0
     lblModal_Click 0
+'    ExtraireImageList ImageList1, "UDMsgBox.ImageList1"
 End Sub
 
 Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String

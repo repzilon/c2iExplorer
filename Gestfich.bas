@@ -31,38 +31,21 @@ Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivatePro
 Declare Function GetPrivateProfileInt Lib "kernel32" Alias "GetPrivateProfileIntA" (ByVal lpApplicationName As String, ByVal lpKeyName As String, ByVal nDefault As Long, ByVal lpFileName As String) As Long
 
 'Module d'exploitation des fichiers
+
 'Fonction modifiée par René Rhéaume
+'Nouvelle version le 2 juin 2002
+' Inspiré de la fonction de Richard Clark dans MFileOp sur c2i.fr
 Public Function FichierExiste(ByVal sNom As String) As Boolean
-    Const conErrInserDisquette As String = "Insérer une disquette dans le lecteur."
-    Const conErrReperoireInexistant As String = "Ce lecteur ou ce chemin n'existe pas: "
-    Const conErrInattendue As String = "Une erreur inattendue s'est produite : #"
-    Const mnErrDeviceUnavailable As Long = 68
-    Const mnErrDiskNotReady As Long = 71
-    On Error GoTo CheckError
-    If (sNom <> vbNullString) Then
-        FichierExiste = (Dir(sNom) <> vbNullString)
-    End If
-    ' Évite l'exécution de la gestion d'erreurs si aucune erreur ne se produit.
+    On Error GoTo GestErr
+    Select Case conFaux
+        Case (LenB(sNom)), (LenB(Dir(sNom))), Not (GetAttr(sNom) And vbDirectory)
+        Case Else
+            FichierExiste = conVrai
+    End Select
     Exit Function
 
-CheckError:                                                ' Se positionne ici, si une erreur se produit.
-    Select Case Err.Number
-        Case mnErrDiskNotReady
-            ' Affiche la boîte de message avec une icône exclamation et les boutons OK et Annuler.
-            If (MsgBox(conErrInserDisquette, vbExclamation & vbOKCancel) = vbOK) Then
-                Resume
-            Else
-                Resume Next
-            End If
-        Case mnErrDeviceUnavailable
-            MsgBox conErrReperoireInexistant & sNom, vbExclamation
-            FichierExiste = conFaux
-        Case Else
-            ' Affiche le message d'erreur avec une icône Stop et un bouton OK.
-            MsgBox conErrInattendue & CStr(Err.Number) & ", " & Err.Description, vbExclamation
-            FichierExiste = conFaux
-    End Select
-    Resume
+GestErr:
+'   FichierExiste = conFaux
 End Function
 
 'Mise en commentaire par René Rhéaume le 26 juillet 2001

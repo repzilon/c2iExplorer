@@ -6,6 +6,15 @@ Begin VB.Form frmDuree
    ClientLeft      =   45
    ClientTop       =   285
    ClientWidth     =   3765
+   BeginProperty Font 
+      Name            =   "Tahoma"
+      Size            =   8.25
+      Charset         =   0
+      Weight          =   400
+      Underline       =   0   'False
+      Italic          =   0   'False
+      Strikethrough   =   0   'False
+   EndProperty
    Icon            =   "frmDuree.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
@@ -16,15 +25,6 @@ Begin VB.Form frmDuree
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton cmdQuit 
       Caption         =   "&Fermer"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   375
       Left            =   2520
       TabIndex        =   8
@@ -33,15 +33,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.CommandButton cmdAppliquer 
       Caption         =   "&Appliquer"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   375
       Left            =   1320
       TabIndex        =   7
@@ -50,15 +41,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.TextBox txtS 
       Alignment       =   1  'Right Justify
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   285
       Left            =   2400
       TabIndex        =   5
@@ -67,15 +49,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.TextBox txtMn 
       Alignment       =   1  'Right Justify
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   285
       Left            =   1200
       TabIndex        =   3
@@ -84,15 +57,6 @@ Begin VB.Form frmDuree
    End
    Begin VB.TextBox txtH 
       Alignment       =   1  'Right Justify
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   285
       Left            =   120
       TabIndex        =   1
@@ -102,15 +66,6 @@ Begin VB.Form frmDuree
    Begin VB.Label lblProjectName 
       BackStyle       =   0  'Transparent
       Caption         =   "NomProjet"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   375
       Left            =   120
       TabIndex        =   6
@@ -120,15 +75,6 @@ Begin VB.Form frmDuree
    Begin VB.Label lblTemps 
       BackStyle       =   0  'Transparent
       Caption         =   "s"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Index           =   2
       Left            =   3240
@@ -139,15 +85,6 @@ Begin VB.Form frmDuree
    Begin VB.Label lblTemps 
       BackStyle       =   0  'Transparent
       Caption         =   "mn"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Index           =   1
       Left            =   2040
@@ -158,15 +95,6 @@ Begin VB.Form frmDuree
    Begin VB.Label lblTemps 
       BackStyle       =   0  'Transparent
       Caption         =   "h"
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Index           =   0
       Left            =   960
@@ -282,8 +210,6 @@ End Sub
 '     Afficher temps
 ' ============================ PROCÉDURE ============================
 Private Sub GestionLostFocus(ByRef txtTemps As TextBox, Optional ByVal lngMax As Long = 60)
-    ' -------------------- DÉCLARATION CONSTANTES --------------------
-    Const conZeroANum As String = conAZero
     ' -------------------- DÉCLARATION VARIABLES ---------------------
     Dim lngVal As Long
     Dim strTemps As String
@@ -299,12 +225,12 @@ Private Sub GestionLostFocus(ByRef txtTemps As TextBox, Optional ByVal lngMax As
         lngVal = CLng(Int(Val(strTemps)))
         Select Case conVrai
             Case (lngVal < 0), lngVal > lngMax
-                strTemps = conZeroANum
+                strTemps = conAZero
             Case Else
                 strTemps = CStr(lngVal)
         End Select
     Else
-        strTemps = conZeroANum
+        strTemps = conAZero
     End If
     txtTemps.Text = strTemps
 End Sub

@@ -16,6 +16,7 @@ Begin VB.UserDocument UDExplorer
       Strikethrough   =   0   'False
    EndProperty
    HScrollSmallChange=   225
+   Icon            =   "UDExplorer.dox":0000
    LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   4920
@@ -24,18 +25,19 @@ Begin VB.UserDocument UDExplorer
    VScrollSmallChange=   225
    Begin MSComctlLib.Toolbar tbGene 
       Align           =   1  'Align Top
-      Height          =   360
+      Height          =   375
       Left            =   0
       TabIndex        =   2
       Top             =   0
       Width           =   4230
       _ExtentX        =   7461
-      _ExtentY        =   635
-      ButtonWidth     =   609
-      ButtonHeight    =   582
+      _ExtentY        =   661
+      ButtonWidth     =   847
+      ButtonHeight    =   609
       AllowCustomize  =   0   'False
       Appearance      =   1
       Style           =   1
+      ImageList       =   "ImgTBGene"
       _Version        =   393216
       BorderStyle     =   1
    End
@@ -52,7 +54,7 @@ Begin VB.UserDocument UDExplorer
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   1
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0000
+            Picture         =   "UDExplorer.dox":00D2
             Key             =   "ok"
          EndProperty
       EndProperty
@@ -65,81 +67,81 @@ Begin VB.UserDocument UDExplorer
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   18
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":00B8
+            Picture         =   "UDExplorer.dox":018A
             Key             =   "variable"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0616
-            Key             =   "n-friend"
+            Picture         =   "UDExplorer.dox":02C6
+            Key             =   "constante"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":0B74
-            Key             =   "friend"
-         EndProperty
-         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":10D2
-            Key             =   "api"
-         EndProperty
-         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1630
-            Key             =   "n-prive"
-         EndProperty
-         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1B8E
-            Key             =   "prive"
-         EndProperty
-         BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":20EC
-            Key             =   "n-public"
-         EndProperty
-         BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":264A
-            Key             =   "public"
-         EndProperty
-         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":2BA8
-            Key             =   "n-api"
-         EndProperty
-         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3106
-            Key             =   "evenement"
-         EndProperty
-         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3664
+            Picture         =   "UDExplorer.dox":03FF
             Key             =   "methode"
          EndProperty
-         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":3BC2
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0546
+            Key             =   "evenement"
+         EndProperty
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0682
+            Key             =   "propriete"
+         EndProperty
+         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":07C0
+            Key             =   "api"
+         EndProperty
+         BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0906
+            Key             =   "public"
+         EndProperty
+         BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0A49
+            Key             =   "prive"
+         EndProperty
+         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0B8B
+            Key             =   "friend"
+         EndProperty
+         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0CCB
+            Key             =   "n-variable"
+         EndProperty
+         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0E03
             Key             =   "n-constante"
          EndProperty
+         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":0F3B
+            Key             =   "n-methode"
+         EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4120
+            Picture         =   "UDExplorer.dox":1085
             Key             =   "n-evenement"
          EndProperty
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":467E
-            Key             =   "n-methode"
-         EndProperty
-         BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":4BDC
+            Picture         =   "UDExplorer.dox":11CA
             Key             =   "n-propriete"
          EndProperty
+         BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":1307
+            Key             =   "n-api"
+         EndProperty
          BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":513A
-            Key             =   "n-variable"
+            Picture         =   "UDExplorer.dox":1447
+            Key             =   "n-public"
          EndProperty
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":5698
-            Key             =   "propriete"
+            Picture         =   "UDExplorer.dox":1585
+            Key             =   "n-prive"
          EndProperty
          BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":5BF6
-            Key             =   "constante"
+            Picture         =   "UDExplorer.dox":16C5
+            Key             =   "n-friend"
          EndProperty
       EndProperty
    End
@@ -151,79 +153,76 @@ Begin VB.UserDocument UDExplorer
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   13
+         NumListImages   =   12
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":6154
+            Picture         =   "UDExplorer.dox":1809
             Key             =   "voir"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":66B2
+            Picture         =   "UDExplorer.dox":1949
             Key             =   "propgene"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":6C12
+            Picture         =   "UDExplorer.dox":1A87
             Key             =   "msgboxgene"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":7172
+            Picture         =   "UDExplorer.dox":1BBC
             Key             =   "delete"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":76D2
+            Picture         =   "UDExplorer.dox":1D02
             Key             =   "vide"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":7C30
+            Picture         =   "UDExplorer.dox":1D5F
             Key             =   "capture"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":818E
+            Picture         =   "UDExplorer.dox":1E9C
             Key             =   "biblio"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":86EC
-            Key             =   "prop"
-         EndProperty
-         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":8C4A
+            Picture         =   "UDExplorer.dox":1FE6
             Key             =   "info"
          EndProperty
-         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":91AA
+         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":21B4
             Key             =   "compile"
          EndProperty
-         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":9708
+         BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":22F5
             Key             =   "internet"
          EndProperty
-         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":9C66
+         BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":24D9
             Key             =   "actu"
          EndProperty
-         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":9E08
+         BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDExplorer.dox":2578
             Key             =   "actuwork"
          EndProperty
       EndProperty
    End
    Begin MSComctlLib.Toolbar tbFiltre 
       Align           =   2  'Align Bottom
-      Height          =   360
+      Height          =   375
       Left            =   0
       TabIndex        =   0
-      Top             =   4560
+      Top             =   4545
       Width           =   4230
       _ExtentX        =   7461
-      _ExtentY        =   635
-      ButtonWidth     =   609
-      ButtonHeight    =   582
+      _ExtentY        =   661
+      ButtonWidth     =   847
+      ButtonHeight    =   609
       AllowCustomize  =   0   'False
       Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
+      ImageList       =   "ImgLstFilter"
       _Version        =   393216
       BorderStyle     =   1
    End
@@ -243,6 +242,7 @@ Begin VB.UserDocument UDExplorer
       Sorted          =   -1  'True
       Style           =   7
       HotTracking     =   -1  'True
+      ImageList       =   "ImgLSttv"
       Appearance      =   0
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Tahoma"
@@ -259,7 +259,7 @@ Begin VB.UserDocument UDExplorer
       Height          =   570
       Left            =   0
       TabIndex        =   3
-      Top             =   3990
+      Top             =   3975
       Width           =   4230
       _ExtentX        =   7461
       _ExtentY        =   1005
@@ -269,6 +269,7 @@ Begin VB.UserDocument UDExplorer
       Wrappable       =   0   'False
       Appearance      =   1
       Style           =   1
+      ImageList       =   "ImgTbDescription"
       _Version        =   393216
       Begin VB.TextBox txtDescription 
          Appearance      =   0  'Flat
@@ -288,200 +289,200 @@ Begin VB.UserDocument UDExplorer
       BackColor       =   -2147483643
       ImageWidth      =   16
       ImageHeight     =   16
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   48
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":9FAC
+            Picture         =   "UDExplorer.dox":2617
             Key             =   "VBproject"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":A0BE
+            Picture         =   "UDExplorer.dox":26C7
             Key             =   "menu"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":A410
+            Picture         =   "UDExplorer.dox":273D
             Key             =   "Set"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":A522
+            Picture         =   "UDExplorer.dox":27B3
             Key             =   "Let"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":A634
+            Picture         =   "UDExplorer.dox":2826
             Key             =   "Get"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":A746
+            Picture         =   "UDExplorer.dox":289B
             Key             =   "api"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":A858
+            Picture         =   "UDExplorer.dox":2939
             Key             =   "composant"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":ABAA
+            Picture         =   "UDExplorer.dox":29DD
             Key             =   "reference"
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":AEFC
+            Picture         =   "UDExplorer.dox":2A95
             Key             =   "Inconnu"
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":B00E
+            Picture         =   "UDExplorer.dox":2AF9
             Key             =   "ActiveXExe"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":B120
+            Picture         =   "UDExplorer.dox":2BB4
             Key             =   "dActiveXExe"
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":B672
+            Picture         =   "UDExplorer.dox":2C84
             Key             =   "ActiveXControl"
          EndProperty
          BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":B9C4
+            Picture         =   "UDExplorer.dox":2D2B
             Key             =   "dActiveXControl"
          EndProperty
          BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":BF16
+            Picture         =   "UDExplorer.dox":2DF8
             Key             =   "ActiveXDll"
          EndProperty
          BeginProperty ListImage15 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":C028
+            Picture         =   "UDExplorer.dox":2E98
             Key             =   "dActiveXDll"
          EndProperty
          BeginProperty ListImage16 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":C57A
+            Picture         =   "UDExplorer.dox":2F69
             Key             =   "ClassModule"
          EndProperty
          BeginProperty ListImage17 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":C68C
+            Picture         =   "UDExplorer.dox":3020
             Key             =   "constante"
          EndProperty
          BeginProperty ListImage18 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":C79E
+            Picture         =   "UDExplorer.dox":30A0
             Key             =   "UserControl"
          EndProperty
          BeginProperty ListImage19 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":C8B0
+            Picture         =   "UDExplorer.dox":313E
             Key             =   "DocObject"
          EndProperty
          BeginProperty ListImage20 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":C9C2
+            Picture         =   "UDExplorer.dox":31D7
             Key             =   "evenement"
          EndProperty
          BeginProperty ListImage21 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":CAD4
+            Picture         =   "UDExplorer.dox":3263
             Key             =   "VBChildForm"
          EndProperty
          BeginProperty ListImage22 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":CBE6
+            Picture         =   "UDExplorer.dox":32FA
             Key             =   "VBForm"
          EndProperty
          BeginProperty ListImage23 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":CCF8
+            Picture         =   "UDExplorer.dox":3383
             Key             =   "VBMDIForm"
          EndProperty
          BeginProperty ListImage24 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":CE0A
+            Picture         =   "UDExplorer.dox":341A
             Key             =   "methode"
          EndProperty
          BeginProperty ListImage25 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":D15C
+            Picture         =   "UDExplorer.dox":34A0
             Key             =   "PropPage"
          EndProperty
          BeginProperty ListImage26 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":D26E
+            Picture         =   "UDExplorer.dox":3538
             Key             =   "propriete"
          EndProperty
          BeginProperty ListImage27 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":D5C0
+            Picture         =   "UDExplorer.dox":35EB
             Key             =   "dpropriete"
          EndProperty
          BeginProperty ListImage28 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":DB12
+            Picture         =   "UDExplorer.dox":36BD
             Key             =   "variable"
          EndProperty
          BeginProperty ListImage29 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":DC24
+            Picture         =   "UDExplorer.dox":3750
             Key             =   "StdModule"
          EndProperty
          BeginProperty ListImage30 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":DD36
+            Picture         =   "UDExplorer.dox":3803
             Key             =   "ActiveXDesigner"
          EndProperty
          BeginProperty ListImage31 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":DE48
+            Picture         =   "UDExplorer.dox":38A2
             Key             =   "ResFile"
          EndProperty
          BeginProperty ListImage32 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":DF5A
+            Picture         =   "UDExplorer.dox":3956
             Key             =   "dapi"
          EndProperty
          BeginProperty ListImage33 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":E4AC
+            Picture         =   "UDExplorer.dox":3A21
             Key             =   "dResFile"
          EndProperty
          BeginProperty ListImage34 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":E9FE
+            Picture         =   "UDExplorer.dox":3AE9
             Key             =   "dActiveXDesigner"
          EndProperty
          BeginProperty ListImage35 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":EF50
+            Picture         =   "UDExplorer.dox":3BAF
             Key             =   "dvariable"
          EndProperty
          BeginProperty ListImage36 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":F4A2
+            Picture         =   "UDExplorer.dox":3C67
             Key             =   "dClassModule"
          EndProperty
          BeginProperty ListImage37 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":F9F4
+            Picture         =   "UDExplorer.dox":3D38
             Key             =   "dStdModule"
          EndProperty
          BeginProperty ListImage38 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":FF46
+            Picture         =   "UDExplorer.dox":3E0F
             Key             =   "dVBForm"
          EndProperty
          BeginProperty ListImage39 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":10498
+            Picture         =   "UDExplorer.dox":3ECF
             Key             =   "dUserControl"
          EndProperty
          BeginProperty ListImage40 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":109EA
+            Picture         =   "UDExplorer.dox":3F9D
             Key             =   "dconstante"
          EndProperty
          BeginProperty ListImage41 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":10F3C
+            Picture         =   "UDExplorer.dox":4055
             Key             =   "devenement"
          EndProperty
          BeginProperty ListImage42 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1148E
+            Picture         =   "UDExplorer.dox":410F
             Key             =   "dcomposant"
          EndProperty
          BeginProperty ListImage43 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":119E0
+            Picture         =   "UDExplorer.dox":41D9
             Key             =   "dDocObject"
          EndProperty
          BeginProperty ListImage44 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":11F32
+            Picture         =   "UDExplorer.dox":429A
             Key             =   "dreference"
          EndProperty
          BeginProperty ListImage45 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":12484
+            Picture         =   "UDExplorer.dox":436A
             Key             =   "dmethode"
          EndProperty
          BeginProperty ListImage46 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":129D6
+            Picture         =   "UDExplorer.dox":442B
             Key             =   "dcmd"
          EndProperty
          BeginProperty ListImage47 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":12F28
+            Picture         =   "UDExplorer.dox":44E6
             Key             =   "dVBChildForm"
          EndProperty
          BeginProperty ListImage48 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDExplorer.dox":1347A
+            Picture         =   "UDExplorer.dox":45B0
             Key             =   "dVBMDIForm"
          EndProperty
       EndProperty
@@ -605,6 +606,8 @@ Private Const conBtnSelInternet As String = "internet"
 Private Const conBtnSelCapture As String = "capture"
 Private Const conClefDossReference As String = "..reference"
 Private Const conClefDossComposant As String = "..composant"
+Private Const conErrVarObjIndefinie As Long = 91
+
 Private blnAffDesc As Boolean
 Private blnAffFiltres As Boolean
 Public SelectedNode As Node
@@ -626,8 +629,8 @@ Private Sub ActuMembreComponent()
         tv.Nodes.Remove nodSelection.Child.Key
     Loop
 
-    On Error Resume Next
-    If (objVBCmp.Type <> vbext_ct_ResFile) Then            'on n'analyse pas les ressources files
+    On Error GoTo GestErr
+    If (objVBCmp.Type <> vbext_ct_ResFile) Then
         For Each objVBMember In objVBCmp.CodeModule.Members
             AjouteMembre nodSelection, objVBMember
         Next
@@ -635,10 +638,20 @@ Private Sub ActuMembreComponent()
 
     Work conFaux
 
+SortieProc:
     Set objVBPrj = Nothing
     Set objVBCmp = Nothing
     Set objVBMember = Nothing
     Set nodSelection = Nothing
+    Exit Sub
+GestErr:
+    Select Case Err.Number
+        Case conErrVarObjIndefinie, 92
+            Resume Next
+        Case Else
+            GererErrInattendue , "UDExplorer.ActuMembreComponent"
+            Resume SortieProc
+    End Select
 End Sub
 
 Private Sub AnalyseNode(ByVal Node As Node)
@@ -703,10 +716,10 @@ Private Sub AnalyseNode(ByVal Node As Node)
 
 GestErr:
     Select Case Err.Number
-        Case 35601, 35602, 91
+        Case ccElemNotFound, ccNonUniqueKey, conErrVarObjIndefinie
             Err.Clear
         Case Is <> 0
-            MsgBox conErrNo & Err.Number & vbNewLine & Err.Description, vbExclamation, "c2iExplorer.UDExplorer.AnalyseNode"
+            GererErrInattendue , "UDExplorer.AnalyseNode"
     End Select
     Set objMember = Nothing
     Set objCmp = Nothing
@@ -883,8 +896,7 @@ Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
         Set nodSelection = tv.SelectedItem
         If (Not nodSelection Is Nothing) Then
             Select Case Left$(nodSelection.Tag, 3)
-                    'on clique sur un component
-                Case conAbrTagCom
+                Case conAbrTagCom 'on clique sur un component
                     Analyse_Component nodSelection, objVBPrj, objCmp
                     If (Not objCmp Is Nothing) Then
                         objCmp.Description = txtDescription
@@ -902,7 +914,7 @@ SortieProc:
     Set nodSelection = Nothing
     Exit Sub
 Fin:
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    GererErrInattendue , "UDExplorer.tbDescription_ButtonClick"
     '    Debug.Assert conFaux
     Resume SortieProc
 End Sub
@@ -1155,7 +1167,7 @@ Fin:
     Select Case Err.Number
         Case 0, 9
         Case Else
-            MsgBox conErrNo & Err.Number, vbExclamation, "c2iExplorer.UDExplorer.tv_MouseUp"
+            GererErrInattendue , "UDExplorer.tv_MouseUp"
     End Select
     Set objCmp = Nothing
     Set objPrj = Nothing
@@ -1171,7 +1183,7 @@ End Sub
 ' en forçant l'affichage des 2 barres d'outils du bas
 ' (les deux variables commençant par «blnAff»)
 Private Sub UserDocument_Initialize()
-    Set tv.ImageList = ImgLSttv
+'    Set tv.ImageList = ImgLSttv
     'par défaut, on affiche tout
     bAfficheConstante = conVrai
     bAfficheVariable = conVrai
@@ -1188,6 +1200,10 @@ Private Sub UserDocument_Initialize()
 
     Set Explorer = New cExplorer
     InitToolbar
+'    ExtraireImageList ImgLstFilter, "UDExplorer.ImgLstFilter"
+'    ExtraireImageList ImgLSttv, "UDExplorer.ImgLSttv"
+'    ExtraireImageList ImgTbDescription, "UDExplorer.ImgTbDescription"
+'    ExtraireImageList ImgTBGene, "UDExplorer.ImgTBGene"
 End Sub
 
 Private Sub UserDocument_Resize()
@@ -1469,7 +1485,7 @@ SortieProc:
     Exit Sub
 
 GestErr:
-    MsgBox "Erreur dans la lecture des Références no " & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbInformation
+    GererErrInattendue , "UDExplorer.InitReferences"
     Resume SortieProc
 End Sub
 
@@ -1678,7 +1694,7 @@ Private Sub InitToolbar()
 
     intIdxRes = conIdxResFlt * lngLanguage
     With tbFiltre
-        .ImageList = ImgLstFilter
+'        .ImageList = ImgLstFilter
 
         Set objButton = .Buttons.Add(, conVariable, , , conVariable)
         objButton.ToolTipText = LoadResString(intIdxRes)
@@ -1710,8 +1726,8 @@ Private Sub InitToolbar()
     
     intIdxRes = conIdxResGen * lngLanguage
     With tbGene
-        Set .ImageList = ImgTBGene
-        Set .HotImageList = ImgTBGene
+'        Set .ImageList = ImgTBGene
+'        Set .HotImageList = ImgTBGene
 
         Set objButton = .Buttons.Add(, conActu, , , conActu)
         objButton.ToolTipText = LoadResString(intIdxRes)
@@ -1739,8 +1755,8 @@ Private Sub InitToolbar()
     End With
 
     With tbDescription
-        Set .ImageList = ImgTbDescription
-        Set .HotImageList = ImgTbDescription
+'        Set .ImageList = ImgTbDescription
+'        Set .HotImageList = ImgTbDescription
         Set objButton = .Buttons.Add(, conOK, , , conOK)
         If lngLanguage = c2i_Langue_Anglais Then
             objButton.ToolTipText = "Apply description"

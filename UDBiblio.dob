@@ -15,6 +15,7 @@ Begin VB.UserDocument UDBiblio
       Strikethrough   =   0   'False
    EndProperty
    HScrollSmallChange=   225
+   Icon            =   "UDBiblio.dox":0000
    LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   5310
@@ -29,64 +30,56 @@ Begin VB.UserDocument UDBiblio
       BackColor       =   -2147483643
       ImageWidth      =   20
       ImageHeight     =   20
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   14
+         NumListImages   =   12
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0000
+            Picture         =   "UDBiblio.dox":00D2
             Key             =   "save"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0502
+            Picture         =   "UDBiblio.dox":01A5
             Key             =   "copie"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0A04
+            Picture         =   "UDBiblio.dox":02E1
             Key             =   "DeclareProc"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":0F06
-            Key             =   "delete"
-         EndProperty
-         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":1408
-            Key             =   "EndProc"
-         EndProperty
-         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":190A
-            Key             =   "export"
-         EndProperty
-         BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":1E0C
+            Picture         =   "UDBiblio.dox":03A7
             Key             =   "HeadProc"
          EndProperty
-         BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":230E
-            Key             =   "import"
-         EndProperty
-         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":2810
+         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":046E
             Key             =   "InLineProc"
          EndProperty
+         BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":0534
+            Key             =   "EndProc"
+         EndProperty
+         BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":05FA
+            Key             =   "delete"
+         EndProperty
+         BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":06E4
+            Key             =   "biblio"
+         EndProperty
+         BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDBiblio.dox":082A
+            Key             =   "voir"
+         EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":2D12
+            Picture         =   "UDBiblio.dox":0952
             Key             =   "newbiblio"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":3214
+            Picture         =   "UDBiblio.dox":0A8C
             Key             =   "newcategorie"
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":3716
-            Key             =   "biblio"
-         EndProperty
-         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":3C18
-            Key             =   "voir"
-         EndProperty
-         BeginProperty ListImage14 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":411A
+            Picture         =   "UDBiblio.dox":0B60
             Key             =   "newdata"
          EndProperty
       EndProperty
@@ -100,11 +93,12 @@ Begin VB.UserDocument UDBiblio
       Width           =   420
       _ExtentX        =   741
       _ExtentY        =   9366
-      ButtonWidth     =   609
-      ButtonHeight    =   582
+      ButtonWidth     =   714
+      ButtonHeight    =   688
       AllowCustomize  =   0   'False
       Appearance      =   1
       Style           =   1
+      ImageList       =   "imgTB"
       _Version        =   393216
    End
    Begin MSComctlLib.ImageList imgTV 
@@ -120,23 +114,23 @@ Begin VB.UserDocument UDBiblio
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   5
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":46FE
+            Picture         =   "UDBiblio.dox":0E34
             Key             =   "biblio"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":481A
+            Picture         =   "UDBiblio.dox":0F50
             Key             =   "web"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":4D6E
+            Picture         =   "UDBiblio.dox":14A4
             Key             =   "mail"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":4E8A
+            Picture         =   "UDBiblio.dox":15C0
             Key             =   "categorie"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDBiblio.dox":4FA6
+            Picture         =   "UDBiblio.dox":16DC
             Key             =   "element"
          EndProperty
       EndProperty
@@ -243,6 +237,7 @@ Public TVEx As TreeView
 ' Vérification de l'existence de base.c2i
 Private Sub Enregistrement(ByVal sFile As String)
     Const conExtBak As String = ".bak"
+    Const conNomMeth As String = "UDBiblio.Enregistrement"
     Dim db As Database, rs As Recordset
     Dim mNode As Node, objE As cElement
 
@@ -292,13 +287,12 @@ SortieFunc:
     Set db = Nothing
     Exit Sub
 RestaurerSauvegarde:
-    MsgBox "Il y a eu une erreur lors de l'initialisation de la sauvegarde." & vbCrLf & _
+    GererErrInattendue "Il y a eu une erreur lors de l'initialisation de la sauvegarde." & vbCrLf & _
             "c2iExplorer a cependant peut-être créé un fichier de sauvegarde sous le nom de" & vbCrLf & _
-            sFile & conExtBak & " ." & vbCrLf & _
-            conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+            sFile & conExtBak & " .", conNomMeth
     Resume SortieFunc
 Fin:
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbCritical
+    GererErrInattendue , conNomMeth
     Resume SortieFunc
 End Sub
 
@@ -381,6 +375,8 @@ Private Sub UserDocument_Initialize()
 
     UserDocument_Resize
     Set TVEx = tv
+'    ExtraireImageList imgTB, "UDBiblio.imgTB"
+'    ExtraireImageList imgTV, "UDBiblio.imgTV"
 End Sub
 
 Private Sub RempliTV()
@@ -586,8 +582,8 @@ Private Sub MakeToolBar()
     Dim objButton As Button
 
     With tbMain
-        Set .ImageList = imgTB
-        Set .HotImageList = imgTB
+'        Set .ImageList = imgTB
+'        Set .HotImageList = imgTB
 
         Set objButton = .Buttons.Add(, conNewdata, , , conNewdata)
         Set objButton = .Buttons.Add(, conBiblio, , , conBiblio)
@@ -800,7 +796,7 @@ GestErr:
     Else
         MsgBox "Erreur dans le chargement de la base", vbExclamation, "c2iExplorer : Bibliothèque"
     End If
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    GererErrInattendue , "UDBiblio.ChargeBase"
     'destruction de la hiérarchie
     Set Explorer = Nothing
     Set Explorer = New cExplorer

@@ -6,6 +6,15 @@ Begin VB.Form frmPrint
    ClientLeft      =   45
    ClientTop       =   285
    ClientWidth     =   4365
+   BeginProperty Font 
+      Name            =   "Tahoma"
+      Size            =   8.25
+      Charset         =   0
+      Weight          =   400
+      Underline       =   0   'False
+      Italic          =   0   'False
+      Strikethrough   =   0   'False
+   EndProperty
    Icon            =   "frmPrint.frx":0000
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -38,21 +47,21 @@ Begin VB.Form frmPrint
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
          NumListImages   =   3
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "frmPrint.frx":000C
-            Key             =   "quit"
-         EndProperty
-         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmPrint.frx":056A
             Key             =   "tous"
          EndProperty
-         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "frmPrint.frx":0AC8
+         BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmPrint.frx":014D
             Key             =   "voir"
+         EndProperty
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "frmPrint.frx":028D
+            Key             =   "quit"
          EndProperty
       EndProperty
    End
@@ -72,41 +81,31 @@ Begin VB.Form frmPrint
       Appearance      =   1
       Style           =   1
       ImageList       =   "ImageList1"
-      HotImageList    =   "ImageList1"
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
          NumButtons      =   5
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "tous"
-            ImageKey        =   "tous"
+            ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
          EndProperty
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "voir"
-            ImageKey        =   "voir"
+            ImageIndex      =   2
          EndProperty
          BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
          EndProperty
          BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "quit"
-            ImageKey        =   "quit"
+            ImageIndex      =   3
          EndProperty
       EndProperty
       BorderStyle     =   1
    End
    Begin VB.FileListBox File1 
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   3015
       Left            =   0
       Pattern         =   "c2i*.htm*;c2i*.xml"
@@ -115,15 +114,6 @@ Begin VB.Form frmPrint
       Width           =   4335
    End
    Begin VB.Label lblSelectedElement 
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Left            =   480
       TabIndex        =   4
@@ -131,15 +121,6 @@ Begin VB.Form frmPrint
       Width           =   3795
    End
    Begin VB.Label lblTitre 
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Left            =   120
       TabIndex        =   3
@@ -147,15 +128,6 @@ Begin VB.Form frmPrint
       Width           =   2415
    End
    Begin VB.Label lblInfos 
-      BeginProperty Font 
-         Name            =   "Tahoma"
-         Size            =   8.25
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
       Height          =   255
       Left            =   120
       TabIndex        =   1
@@ -265,6 +237,7 @@ Private Sub Form_Load()
 
     '    PositionForm Me, conVrai
     File1.Path = strCheminApp & "\html"
+'    ExtraireImageList ImageList1, "frmPrint.ImageList1"
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -362,8 +335,7 @@ Private Sub AnalyseHTMLMember(ByVal objVBMember As VBIDE.Member, ByRef sM As Str
     Exit Sub
     
 'AffichErr:
-'    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source _
-'            & vbCrLf & objVBMember.Name, vbExclamation, "AnalyseHTMLMember"
+'    GererErrInattendue , "frmPrint.AnalyseHTMLMember"
 '    Resume Next
 End Sub
 
@@ -379,7 +351,7 @@ Private Sub AnalyseHTMLPrj(ByVal objVBPrj As VBIDE.VBProject, ByRef sM As String
     Exit Sub
 
 AffichErr:
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "AnalyseHTMLPrj"
+    GererErrInattendue , "frmPrint.AnalyseHTMLPrj"
 End Sub
 
 Public Sub ExportHTML(ByVal sHTMLFileName As String)
@@ -433,13 +405,13 @@ Public Sub ExportHTML(ByVal sHTMLFileName As String)
 
     lngRep = ShellExecute(0, "open", c2iHTMLFile, vbNullString, vbNullString, SW_NORMAL)
     If (lngRep = 0) Then GoTo GestErr
-
     Exit Sub
+    
 GestErr:
     '    txtOut.Close
     '    Set txtOut = Nothing
     '    Set fso = Nothing
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    GererErrInattendue , "frmPrint.ExportHTML"
 End Sub
 
 Public Sub ExportHTMLProject(ByVal sHTMLFileName As String, ByVal objVBPrj As VBIDE.VBProject)
@@ -515,7 +487,7 @@ GestErr:
     '    Set txtOut = Nothing
     '    Set fso = Nothing
     Screen.MousePointer = vbDefault
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation, "ExportHTMLProject"
+    GererErrInattendue , "frmPrint.ExportHTMLProject"
 End Sub
 
 Public Sub ExportHTMLComponent(ByVal sHTMLFileName As String, ByVal objVBCmp As VBIDE.VBComponent)
@@ -597,7 +569,7 @@ GestErr:
     '    Set txtOut = Nothing
     '    Set fso = Nothing
     Screen.MousePointer = vbDefault
-    MsgBox conErrNo & Err.Number & vbCrLf & Err.Description & vbCrLf & Err.Source, vbExclamation
+    GererErrInattendue , "frmPrint.ExportHTMLComponent"
 End Sub
 
 'Modifié par René Rhéaume 1er août 2001
@@ -761,10 +733,10 @@ SortieProc:
 GestErr:
     Select Case Err.Number
         Case 52
-            MsgBox "Le fichier vers lequel vous essayez de sauvegarder est verrouillé par une autre application. Fermez ce fichier dans cette application et recommencez.", vbExclamation
+            MsgBox "Le fichier " & chnNomFichier & " est verrouillé par une autre application. Fermez ce fichier dans cette application et cliquez sur OK.", vbExclamation
             Resume
         Case Else
-            MsgBox conErrNo & Err.Number & vbCrLf & "Description : " & Err.Description, 48, App.Title
+            GererErrInattendue , "frmPrint.EcrireFichier"
             EcrireFichier = -1
     End Select
 End Function

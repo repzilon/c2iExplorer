@@ -6,6 +6,7 @@ Begin VB.UserDocument UDCompteur
    ClientTop       =   0
    ClientWidth     =   4800
    HScrollSmallChange=   225
+   Icon            =   "UDCompteur.dox":0000
    LockControls    =   -1  'True
    PaletteMode     =   2  'Custom
    ScaleHeight     =   3600
@@ -80,14 +81,13 @@ Begin VB.UserDocument UDCompteur
       Appearance      =   1
       Style           =   1
       ImageList       =   "imgTB"
-      HotImageList    =   "imgTB"
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
          NumButtons      =   5
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "actu"
             Object.ToolTipText     =   "Actualiser"
-            ImageKey        =   "actu"
+            ImageIndex      =   1
          EndProperty
          BeginProperty Button2 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Style           =   3
@@ -95,17 +95,17 @@ Begin VB.UserDocument UDCompteur
          BeginProperty Button3 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "addprj"
             Object.ToolTipText     =   "Ajouter les projets"
-            ImageKey        =   "addprj"
+            ImageIndex      =   2
          EndProperty
          BeginProperty Button4 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "prop"
             Object.ToolTipText     =   "Modifier la durée"
-            ImageKey        =   "prop"
+            ImageIndex      =   3
          EndProperty
          BeginProperty Button5 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Key             =   "delete"
             Object.ToolTipText     =   "Supprimer"
-            ImageKey        =   "delete"
+            ImageIndex      =   4
          EndProperty
       EndProperty
    End
@@ -117,29 +117,25 @@ Begin VB.UserDocument UDCompteur
       BackColor       =   -2147483643
       ImageWidth      =   25
       ImageHeight     =   17
-      MaskColor       =   128
+      MaskColor       =   132
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   5
+         NumListImages   =   4
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDCompteur.dox":0000
+            Picture         =   "UDCompteur.dox":00D2
             Key             =   "actu"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDCompteur.dox":01A4
-            Key             =   "prop"
-         EndProperty
-         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDCompteur.dox":0704
+            Picture         =   "UDCompteur.dox":0171
             Key             =   "addprj"
          EndProperty
-         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDCompteur.dox":0C6C
-            Key             =   "delete"
+         BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":02C2
+            Key             =   "prop"
          EndProperty
-         BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "UDCompteur.dox":11CC
-            Key             =   "print"
+         BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "UDCompteur.dox":0400
+            Key             =   "delete"
          EndProperty
       EndProperty
    End
@@ -297,6 +293,7 @@ Private Sub UserDocument_Initialize()
     ActuCompteur
     ChargeInfos
     UserDocument_Resize
+'    ExtraireImageList imgTB, "UDCompteur.imgTB"
 End Sub
 
 Private Sub UserDocument_Resize()
@@ -461,12 +458,13 @@ Public Function ImporterDurees() As Byte
         ImporterDurees = 0
 
 Fin:
-        Exit Function
+    Exit Function
 GestErr:
-        MsgBox "Une erreur est survenue lors de l'importation des durées de la base de registres vers le fichier INI" & vbCrLf & conErrNo & Err.Number & vbCrLf & "Description : " & Err.Description & vbCrLf & "Lignes réussies : " & lngLigneCode, 48, App.Title
-        ImporterDurees = 1
-        Resume Fin
-    End Function
+    GererErrInattendue "Une erreur est survenue lors de l'importation des durées " & vbNewLine & _
+                        "de la base de registres vers le fichier INI." & vbNewLine & _
+                        "Lignes réussies : " & lngLigneCode, "UDCompteur.ImporterDurees"
+    ImporterDurees = 1
+End Function
 #End If
 
 'Déplacé de MExtraitIcone par René Rhéaume le 18 mai 2002
