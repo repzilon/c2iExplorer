@@ -747,7 +747,6 @@ Private Function SaveLibrary() As Byte
 Fin:
     Set cCommonDialog = Nothing
     SaveLibrary = 2
-    Exit Function
 End Function
 
 Private Sub DeleteNode()

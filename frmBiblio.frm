@@ -285,6 +285,8 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
 End Sub
 
 ' Optimisé par René Rhéaume le 18 janvier 2002
+' Modifié par René Rhéaume le 1 septembre 2002
+'  Correction d'un plantage
 Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
@@ -295,13 +297,15 @@ Private Sub AddCode()
         Case mNodeParent Is Nothing, Trim$(txtName) = vbNullString
 '            Exit Sub
         Case Else
-            On Error GoTo 0
+            On Error GoTo GestErr
             If (mNodeParent.Image = conElement) Then
                 Set mNodeParent = mNodeParent.Parent
             End If
 
             sKey = mNodeParent.FullPath & "/" & Trim$(txtName)
+            On Error Resume Next
             Set objE = Explorer.Elements(sKey)
+            On Error GoTo GestErr
             If (objE Is Nothing) Then
                 'on ajoute un nouvel élément
                 Set objE = Explorer.Elements.Add(Trim$(txtDeclaration), _
@@ -317,6 +321,12 @@ Private Sub AddCode()
             End If
     End Select
 
+SortieProc:
     Set mNodeParent = Nothing
     Set objE = Nothing
+    Exit Sub
+    
+GestErr:
+    GererErrInattendue , "frmBiblio.AddCode"
+    Resume SortieProc
 End Sub

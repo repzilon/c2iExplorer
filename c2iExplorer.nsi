@@ -27,14 +27,28 @@
 ; Script NSIS pour c2iExplorer 1.60.${Revision} VB5/6 Beta
 
 !ifdef VB6
-!define VersionVB 6
+  !define VersionVB 6
 !endif
 !ifndef VersionVB
-!define VersionVB 5
+  !define VersionVB 5
 !endif
-!define Revision 146
+!define Revision 147
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
+!define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"
+
+!macro Removec2iExRegKeys
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElements"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cExplorer"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.Connectc2iExplorer"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDAddCode"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDBiblio"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDClassViewer"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDCompteur"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDExplorer"
+  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDMsgBox"
+!macroend
 
 Name "c2iExplorer 1.60.${Revision} Beta for VB${VersionVB}"
 Caption "c2iExplorer 1.60.${Revision} Beta for VB${VersionVB}"
@@ -44,18 +58,16 @@ LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
 ComponentText "Select c2iExplorer components you want to install."
 DirText "Specify the folder where Visual Basic ${VersionVB}.0 is installed on your computer."
 UninstallText "This will delete c2iExplorer from tour computer. Click on 'Uninstall' to uninstall or on 'Cancel' to exit."
-;!packhdr "temp.dat" "E:\progra~1\console\bin\upx.exe -q --best --compress-icons=1 temp.dat"
-;UninstallExeName uninst-c2iexplorer.exe
 OutFile "${CheminBase}\SourceForge\Fichiers\c2iexplorer-VB${VersionVB}-${Revision}.exe"
 Icon "${CheminBase}\Source\c2iExplorer.ico"
 EnabledBitmap "${CheminBase}\Source\checked16.bmp"
 DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
 !ifdef VB6
-InstallDir "$PROGRAMFILES\Microsoft Visual Studio\VB98"
+  InstallDir "$PROGRAMFILES\Microsoft Visual Studio\VB98"
 !else
-InstallDir "$PROGRAMFILES\DevStudio\Vb"
+  InstallDir "$PROGRAMFILES\DevStudio\Vb"
 !endif
-InstallDirRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}" "UninstallString"
+InstallDirRegKey HKEY_LOCAL_MACHINE "${UninstRegKey}" "UninstallString"
 InstType "Standard French"
 InstType "Standard English"
 InstType "Full"
@@ -74,9 +86,6 @@ Section "c2iExplorer for VB${VersionVB}"
   File "${CheminBase}\Source\FredJust modifications.txt"
   File "${CheminBase}\Source\Modifications René Rhéaume.txt"
   File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.dll"
-  File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.lib"
-  File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.exp"
-  File "${CheminBase}\ReleaseVB${VersionVB}\UD*.vbd"
   SetOutPath "$INSTDIR\Wizards\Data"
   File "${CheminBase}\Data\*.*"
   SetOutPath "$INSTDIR\Wizards\Html"
@@ -87,16 +96,7 @@ Section "c2iExplorer for VB${VersionVB}"
   File "${CheminBase}\Html\Img\*.*"
   SetOutPath "$INSTDIR\Wizards\Lang"
   File "${CheminBase}\Lang\*.lng"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElements"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cExplorer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.Connectc2iExplorer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDAddCode"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDBiblio"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDClassViewer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDCompteur"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDExplorer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDMsgBox"
+  !insertmacro Removec2iExRegKeys
   WriteINIStr "$WINDIR\vbaddin.ini" "Add-Ins32" "c2iexplorer.Connectc2iExplorer" "1"
   RegDLL "$INSTDIR\Wizards\c2iexplorer.dll"
 SectionEnd
@@ -119,7 +119,28 @@ SectionDivider "Programmer stuff"
 Section "VB 5/6 source code"
   SectionIn 3
   SetOutPath "$INSTDIR\Wizards\c2iexplorer-source"
-  File "${CheminBase}\Source\*.*"
+  ;Tri selon le type de fichier afin d'optimiser la compression
+  File "${CheminBase}\Source\*.dob"
+  File "${CheminBase}\Source\*.frm"
+  File "${CheminBase}\Source\*.cls"
+  File "${CheminBase}\Source\*.bas"
+  File "${CheminBase}\Source\*.ctl"
+  File "${CheminBase}\Source\*.vbp"
+  File "${CheminBase}\Source\*.rtf"
+  File "${CheminBase}\Source\*.htm"
+  File "${CheminBase}\Source\*.nsi"
+  File "${CheminBase}\Source\*.txt"
+  File "${CheminBase}\Source\*.scc"
+  File "${CheminBase}\Source\*.doc"
+  File "${CheminBase}\Source\*.dox"
+  File "${CheminBase}\Source\*.frx"
+  File "${CheminBase}\Source\*.ico"
+  File "${CheminBase}\Source\*.res"
+  File "${CheminBase}\Source\*.ctx"
+  File "${CheminBase}\Source\*.bmp"
+  File "${CheminBase}\Source\*.zip"
+  File "${CheminBase}\Source\*.gz"
+
   Exec "$WINDIR\explorer.exe /n,$INSTDIR\Wizards\c2iexplorer-source"
 SectionEnd
 
@@ -133,8 +154,8 @@ Section "Localisation Dev Kit (LDK)"
 SectionEnd
 
 Section -PostInstall
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}" "DisplayName" "c2i Explorer pour VB${VersionVB}"
-  WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}" "UninstallString" "$INSTDIR\uninst-c2iexplorer.exe"
+  WriteRegStr HKEY_LOCAL_MACHINE "${UninstRegKey}" "DisplayName" "c2i Explorer pour VB${VersionVB}"
+  WriteRegStr HKEY_LOCAL_MACHINE "${UninstRegKey}" "UninstallString" "$INSTDIR\uninst-c2iexplorer.exe"
   Delete "$INSTDIR\uninst-c2iexplorer.exe"
   WriteUninstaller uninst-c2iexplorer.exe
   BringToFront
@@ -142,20 +163,12 @@ SectionEnd
 
 Section Uninstall
   CopyFiles "$INSTDIR\Wizards\DATA\c2iExplorer.ini" "$DESKTOP" 1
-  DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
+  DeleteRegKey HKEY_LOCAL_MACHINE "${UninstRegKey}"
+  DeleteRegKey HKEY_CURRENT_USER "Software\VB and VBA Program Settings\c2iExplorer"
   DeleteRegKey HKEY_CURRENT_USER "Software\VB and VBA Program Settings\MesCompléments\c2iExplorer"
   WriteINIStr "$WINDIR\vbaddin.ini" "Add-Ins32" "c2iexplorer.Connectc2iExplorer" "0"
   UnRegDLL "$INSTDIR\Wizards\c2iexplorer.dll"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElements"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cExplorer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.Connectc2iExplorer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDAddCode"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDBiblio"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDClassViewer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDCompteur"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDExplorer"
-  DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDMsgBox"
+  !insertmacro Removec2iExRegKeys
   Delete "$INSTDIR\Wizards\UDMsgBox.vbd"
   Delete "$INSTDIR\Wizards\UDCompteur.vbd"
   Delete "$INSTDIR\Wizards\UDBiblio.vbd"
@@ -250,6 +263,7 @@ Section Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\UDMsgBox.dox"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmBiblio.frm"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmDuree.frm"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\frmDuree.frx"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmPrint.frm"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmBiblio.frx"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmPrint.frx"
@@ -273,11 +287,14 @@ Section Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\MiseAJourCode.doc"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frm"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frx"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\frmOptions.fr?"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-gif.tar.gz"
   RmDir "$INSTDIR\Wizards\Data"
   RmDir "$INSTDIR\Wizards\Html\Img"
   RmDir "$INSTDIR\Wizards\Html"
   RmDir "$INSTDIR\Wizards\Lang"
+  RmDir "$INSTDIR\Wizards\LDK"
   RmDir "$INSTDIR\Wizards\c2iexplorer-source"
   Delete "$INSTDIR\uninst-c2iexplorer.exe"
-  MessageBox "MB_OK|MB_ICONINFORMATION" "c2iExplorer est maintenant désinstallé. Cependant, le fichier de préférences «c2iExplorer.ini» a été copié sur le bureau à des fins d'archivage et de restauration de préférences."
+  MessageBox "MB_OK|MB_ICONINFORMATION" "c2iExplorer is now uninstalled. However, settings file «c2iExplorer.ini» has been copied onto the desktop for archiving and settings restoration purposes."
 SectionEnd

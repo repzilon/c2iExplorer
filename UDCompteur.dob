@@ -495,15 +495,17 @@ End Sub
 ' Retourne 0 s'il n'y a pas d'erreur
 'Fonction modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Fonction modifiée par René Rhéaume le 14 septembre 2002
+' Retrait du code de déboguage
 Public Function ImporterDurees() As Byte
     Static mlgarErrImportation() As String
     Static blnLangOK As Boolean
     Dim J As Long
     If (Not blnLangOK) Then
         StrArray mlgarErrImportation, "Une erreur est survenue lors de l'importation des durées", _
-            "de la base de registres vers le fichier INI.", "Lignes réussies :"
+            "de la base de registres vers le fichier INI."
         If (blnMultilingueActive) Then
-            For J = 0 To 2
+            For J = 0 To 1
                 mlgarErrImportation(J) = LireChaineLocalisee(conNomUD, _
                     "Code.ImporterDurees.mlgarErrImportation(" & J & conPF, mlgarErrImportation(J))
             Next J
@@ -514,25 +516,17 @@ Public Function ImporterDurees() As Byte
     Dim tbSettings As Variant, I As Long
     Dim sFileName As String
     Dim chnDuree As String                ' Un peu bizarre, mais pas de conversions inutiles
-    Dim lngLigneCode As Long
     Dim lngFinTab As String
 
     On Error GoTo GestErr
-    lngLigneCode = 0
     tbSettings = GetAllSettings(conNomApp, conSecDurees)
-    lngLigneCode = 1
 
     If (IsEmpty(tbSettings) = conFaux) Then
-        lngLigneCode = 2
         lngFinTab = UBound(tbSettings)
         For I = 0 To lngFinTab
-            lngLigneCode = 3
             sFileName = tbSettings(I, 0)
-            lngLigneCode = 4
             chnDuree = tbSettings(I, 1)
-            lngLigneCode = 5
             Call WritePrivateProfileString(conSecDurees, sFileName, chnDuree, c2iINIFile)
-            lngLigneCode = 6
         Next I
     End If
     ImporterDurees = 0
@@ -541,8 +535,7 @@ Fin:
     Exit Function
 GestErr:
     GererErrInattendue mlgarErrImportation(0) & vbNewLine & _
-                        mlgarErrImportation(1) & vbNewLine & _
-                        mlgarErrImportation(2) & conEsp & lngLigneCode, "UDCompteur.ImporterDurees"
+                        mlgarErrImportation(1), "UDCompteur.ImporterDurees"
     ImporterDurees = 1
 End Function
 #End If

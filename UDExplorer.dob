@@ -495,11 +495,11 @@ Begin VB.UserDocument UDExplorer
       Caption         =   "Affichage"
       Visible         =   0   'False
       Begin VB.Menu mnuAffichageBarreDescription 
-         Caption         =   ""
+         Caption         =   "Barre de description"
          Checked         =   -1  'True
       End
       Begin VB.Menu mnuAffichageBarreFiltres 
-         Caption         =   ""
+         Caption         =   "Barre des filtres"
          Checked         =   -1  'True
       End
    End
@@ -871,6 +871,9 @@ GestErr:
 End Sub
 
 'Ajouté par René Rhéaume le 5 juillet 2002
+'Modifié par René Rhéaume le 25 août 2002
+' Met en premier plan la fenêtre de code si elle est
+' en dessous de la fenêtre de conception correspondante
 Private Sub OuvrirFenetreCode(ByVal vbpProjet As VBIDE.VBProject, _
                                 ByVal vbcComposant As VBIDE.VBComponent)
     If (Not vbpProjet Is VBInstance.ActiveVBProject) Then
@@ -878,9 +881,12 @@ Private Sub OuvrirFenetreCode(ByVal vbpProjet As VBIDE.VBProject, _
     End If
     'connection pour l'ajout de références
     Set Connection.refEvent = VBInstance.Events.ReferencesEvents(vbpProjet)
-    If (Not vbcComposant.CodeModule.CodePane Is VBInstance.ActiveCodePane) Then
-        Set VBInstance.ActiveCodePane = vbcComposant.CodeModule.CodePane    'on met le codepane actif
-    End If
+    
+    With vbcComposant.CodeModule.CodePane
+        If (Not .Window Is VBInstance.ActiveWindow) Then
+            .Show
+        End If
+    End With
 End Sub
 
 'Ajout par René Rhéaume 2 août 2001
@@ -1253,6 +1259,9 @@ End Sub
 ' (les deux variables commençant par «blnAff»)
 'Modifié par René Rhéaume le 19 juin 2002
 ' Support multilingue
+'Modifié par René Rhéaume le 25 août 2002
+' Corrigé les libellés du menu contextuel d'affichage
+' si le support multilingue est désactivé
 Private Sub UserDocument_Initialize()
 '    Set tv.ImageList = ImgLSttv
     'par défaut, on affiche tout
@@ -1274,9 +1283,10 @@ Private Sub UserDocument_Initialize()
     
     If (blnMultilingueActive) Then
         mnuAffichageBarreDescription.Caption = LireChaineLocalisee(conNomUD, _
-                "Obj.mnuAffichageBarreDescription.Caption", "Barre de description")
+                "Obj.mnuAffichageBarreDescription.Caption", _
+                mnuAffichageBarreDescription.Caption)
         mnuAffichageBarreFiltres.Caption = LireChaineLocalisee(conNomUD, _
-                "Obj.mnuAffichageBarreFiltres.Caption", "Barre des filtres")
+                "Obj.mnuAffichageBarreFiltres.Caption", mnuAffichageBarreFiltres.Caption)
     End If
     
 '    ExtraireImageList ImgLstFilter, "UDExplorer.ImgLstFilter"
@@ -1670,6 +1680,11 @@ End Sub
 ' Recherche dichotomique
 'Procédure modifiée par René Rhéaume le 21 juin 2002
 ' Support multilingue
+'Procédure modifiée par René Rhéaume le 30 juillet 2002
+' Correction de la recherche dichotomique
+'Note par René Rhéaume le 24 août 2002
+' J'avais oublié d'écrire que j'avais modifié cette
+' fonction le 30 juillet dernier
 Private Function NodeTypeFeuille(ByVal sNomProjet As String, sImageKey As String) As Node
     Const conClefL10nTypeMod As String = "Code.NodeTypeFeuille.mlgarTitreTypeModule("
     Static mlgarTitreTypeModule() As String

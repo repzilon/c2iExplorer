@@ -83,8 +83,8 @@ Begin VB.Form frmOptions
    Begin VB.Line linSep 
       BorderColor     =   &H80000014&
       Index           =   1
-      X1              =   135
-      X2              =   3435
+      X1              =   120
+      X2              =   3420
       Y1              =   855
       Y2              =   855
    End
@@ -266,7 +266,8 @@ Private Sub ChargerChainesLocales()
     chkUseLangPack.Caption = LireChaineLocalisee(conNomForm, _
             "Obj.chkUseLangPack.Caption", "Utiliser le fichier de traduction suivant :")
     lblNote.Caption = LireChaineLocalisee(conNomForm, _
-            "Obj.lblNote.Caption", "Le changement de langue s'appliquera au prochain démarrage.")
+            "Obj.lblNote.Caption", _
+            "Le changement de langue s'appliquera au prochain démarrage de Visual Basic.")
     cmdOK.Caption = LireChaineLocalisee(conNomForm, "Obj.cmdOK.Caption", "&OK")
     cmdCancel.Caption = LireChaineLocalisee(conNomForm, "Obj.cmdCancel.Caption", "&Annuler")
 End Sub

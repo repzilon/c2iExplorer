@@ -851,8 +851,8 @@ Private intIdxPannOuvert As Integer
 'Note par René Rhéaume 1er août 2001
 'Avant de compiler :
 'Seul le dernier c2iContainerIntMsg (indice 6) doit être ouvert
-'(Ouvert = conVrai) dans la fenêtre de conception. Tous les autres doivent
-'être fermés.
+'(Ouvert = conVrai) dans la fenêtre de conception. Tous les autres
+'doivent être fermés.
 
 'Procédure optimisée par René Rhéaume le 30 juin 2002
 Private Sub c2iContainerIntMsg_OuvertureChange(Index As Integer)
