@@ -310,6 +310,8 @@ End Sub
 '  Correction d'un plantage
 ' Modifié par René Rhéaume le 19 octobre 2002
 ' Optimisé par René Rhéaume le 13 janvier 2003
+' Modifié par René Rhéaume le 23 mars 2003
+'  Sauvegarde automatique
 Private Sub AddCode()
     Dim mNodeParent As Node, sKey As String
     Dim objE As cElement
@@ -344,6 +346,8 @@ Private Sub AddCode()
                 objE.EndProc = Trim$(txtEnd)
                 objE.Description = Trim$(txtDescription)
             End If
+            objUDBiblio.blnModifie = conVrai
+            objUDBiblio.SauvegarderBibliotheque c2iCurrentDataFileName
     End Select
 
 SortieProc:

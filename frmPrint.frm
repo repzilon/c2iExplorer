@@ -110,7 +110,7 @@ Begin VB.Form frmPrint
    Begin VB.FileListBox File1 
       Height          =   3015
       Left            =   0
-      Pattern         =   "[*]*.*htm*;[*]*.xml"
+      Pattern         =   "[*]c2i*.*htm*;[*]c2i*.xml"
       TabIndex        =   0
       Top             =   1440
       Width           =   4335

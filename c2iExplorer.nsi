@@ -23,19 +23,20 @@
 ;
 ; ***** END LICENSE BLOCK *****
 
-; <!DOCTYPE Nullsoft-SuperPiMPScript 1.94>
-; Script NSIS pour c2iExplorer 1.60.${Revision} VB5/6 Beta
-
 !ifdef VB6
   !define VersionVB 6
 !endif
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 155
+!define Revision 156
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
-!include "E:\Progra~1\NSIS\nsisconf.nsi"
+!define NomApp "c2iExplorer"
+!define Titre "${NomApp} 1.60.${Revision} for VB${VersionVB}"
+!define UninstProg "uninst-c2iexplorer.exe"
+!define en ;installation en anglais
+!include "E:\Progra~1\NSIS\nsisconf.nsi" ;nécessaire si appelé de l'invite de commandes
 
 !macro Removec2iExRegKeys
   DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
@@ -50,18 +51,21 @@
   DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.UDMsgBox"
 !macroend
 
-Name "c2iExplorer 1.60.${Revision} Beta for VB${VersionVB}"
-Caption "c2iExplorer 1.60.${Revision} Beta for VB${VersionVB}"
-CRCCheck On
-LicenseText "Read this before continuing installation."
-LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
-ComponentText "Select c2iExplorer components you want to install."
-DirText "Specify the folder where Visual Basic ${VersionVB}.0 is installed on your computer."
-UninstallText "This will delete c2iExplorer from tour computer. Click on 'Uninstall' to uninstall or on 'Cancel' to exit."
+Name "${Titre}"
+Caption "${Titre}"
 OutFile "${CheminBase}\SourceForge\Fichiers\c2iExplorer-1.60.${Revision}-vb${VersionVB}.i586.exe"
+CRCCheck On
+
 Icon "${CheminBase}\Source\c2iExplorer.ico"
 EnabledBitmap "${CheminBase}\Source\checked16.bmp"
 DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
+
+LicenseText "Read this before continuing installation."
+LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
+ComponentText "Select ${NomApp} components you want to install."
+DirText "Specify the folder where Visual Basic ${VersionVB}.0 is installed on your computer."
+UninstallText "This will delete ${NomApp} from your computer. Click on 'Uninstall' to uninstall or on 'Cancel' to exit."
+
 !ifdef VB6
   InstallDir "$PROGRAMFILES\Microsoft Visual Studio\VB98"
 !else
@@ -72,7 +76,7 @@ InstType "Standard French"
 InstType "Standard English"
 InstType "Full"
 
-Section "c2iExplorer for VB${VersionVB}"
+Section "${NomApp} for VB${VersionVB}"
   SectionIn 1,2,3
   SetCompress Auto
   ; SetOverwrite ifnewer
@@ -153,10 +157,10 @@ Section "Localisation Dev Kit (LDK)"
 SectionEnd
 
 Section -PostInstall
-  WriteRegStr HKEY_LOCAL_MACHINE "${UninstRegKey}" "DisplayName" "c2i Explorer pour VB${VersionVB}"
-  WriteRegStr HKEY_LOCAL_MACHINE "${UninstRegKey}" "UninstallString" "$INSTDIR\uninst-c2iexplorer.exe"
-  Delete "$INSTDIR\uninst-c2iexplorer.exe"
-  WriteUninstaller uninst-c2iexplorer.exe
+  WriteRegStr HKEY_LOCAL_MACHINE "${UninstRegKey}" "DisplayName" "${Titre}"
+  WriteRegStr HKEY_LOCAL_MACHINE "${UninstRegKey}" "UninstallString" "$INSTDIR\${UninstProg}"
+  Delete "$INSTDIR\${UninstProg}"
+  WriteUninstaller ${UninstProg}
   BringToFront
 SectionEnd
 
@@ -285,6 +289,7 @@ Section Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\InsertCode.txt"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\InsertCode.doc"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\MiseAJourCode.doc"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\SauvegarderBibliotheque.doc"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frm"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frx"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmOptions.fr?"
@@ -295,6 +300,6 @@ Section Uninstall
   RmDir "$INSTDIR\Wizards\Lang"
   RmDir "$INSTDIR\Wizards\LDK"
   RmDir "$INSTDIR\Wizards\c2iexplorer-source"
-  Delete "$INSTDIR\uninst-c2iexplorer.exe"
-  MessageBox "MB_OK|MB_ICONINFORMATION" "c2iExplorer is now uninstalled. However, settings file «c2iExplorer.ini» has been copied onto the desktop for archiving and settings restoration purposes."
+  Delete "$INSTDIR\${UninstProg}"
+  MessageBox "MB_OK|MB_ICONINFORMATION" "${NomApp} is now uninstalled. However, settings file «c2iExplorer.ini» has been copied onto the desktop for archiving and settings restoration purposes."
 SectionEnd

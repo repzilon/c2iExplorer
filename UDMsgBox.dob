@@ -933,7 +933,7 @@ Private Sub UserDocument_Initialize()
     Dim oleFermee As IPictureDisp, oleOuvert As IPictureDisp
     lngCompte = c2iContainerIntMsg.UBound
     Set oleFermee = imgFermee.Picture
-    Set oleOuvert = imgOuvert.Picture
+    Set oleOuvert = ImgOuvert.Picture
     For iNum = 0 To lngCompte
         With c2iContainerIntMsg(iNum)
             Set .PictureFerméeDown = oleFermee
@@ -1040,7 +1040,7 @@ Private Sub cmdParcoursFile_Click()
     Set cCommonDialog = New cDlgCom
     With cCommonDialog
         .DefaultEx = ".hlp"
-        .Flags = OFN_HIDEREADONLY + OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST + OFN_EXPLORER + OFN_LONGNAMES
+        .Flags = conFanionsOuvrir
         .Filter = strFiltre
         .FilterIndex = 1
         .Filename = txtHelpFile.Text

@@ -269,11 +269,11 @@ Property Let DialogTitle(sDialogTitleA As String)
     sDialogTitle = sDialogTitleA
 End Property
 
-Property Get Flags() As Long
+Property Get Flags() As FileOpenConstants
     Flags = lngFlags
 End Property
 
-Property Let Flags(lngFlagsA As Long)
+Property Let Flags(lngFlagsA As FileOpenConstants)
     lngFlags = lngFlagsA
 End Property
 

@@ -148,6 +148,7 @@ Private Sub IDTExtensibility_OnDisconnection(ByVal RemoveMode As vbext_Disconnec
     On Error Resume Next
     If (Not objWindow Is Nothing) Then
         On Error GoTo GestErr
+        objUDBiblio.SauvegarderAncienneBiblio c2iCurrentDataFileName
         If (objWindow.Visible) Then                            'sauvegarde de la visibilité
             WritePrivateProfileString conSecGen, conClefVisible, "1", c2iINIFile
         Else

@@ -759,9 +759,17 @@ Private Sub tbMain_ButtonClick(ByVal Button As MSComctlLib.Button)
     End Select
 End Sub
 
+'Procédure modifiée par René Rhéaume le 22 mars 2003
+' Support multilingue
 Private Sub CopieCode()
+    Static mlgAucuneFenetreCode As String
+    If (LenB(mlgAucuneFenetreCode) = 0) Then
+        mlgAucuneFenetreCode = LireChaineLocalisee(conNomUD, _
+            "Code.CopieCode.mlgAucuneFenetreCode", "Aucune fenêtre de code active")
+    End If
+    
     If (VBInstance.ActiveCodePane Is Nothing) Then
-        MsgBox "Aucune fenêtre de code active", vbInformation
+        MsgBox mlgAucuneFenetreCode, vbInformation
     Else
         With VBInstance.ActiveCodePane.CodeModule
             .AddFromString txtCodeDeclarationView
