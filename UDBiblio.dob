@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDBiblio 
    ClientHeight    =   5310
    ClientLeft      =   285
@@ -222,6 +222,18 @@ Private Const conExtBD As String = ".mdb"
 Private Const conFiltreBD As String = "Bases de données (*.mdb)|*.mdb"
 Private Const conDossierData As String = "\data"
 Private Const conRSElements As String = "Elements"
+Private Enum TypePosition
+    posDeclarations = 1
+    posPostDeclar = 2
+    posEntreDeuxProc = 3
+    posDansProc = 4
+    posFinModule = 5
+End Enum
+Private Enum Direction
+    enAvant = 1
+    enArriere = -1
+End Enum
+
 Public bFrmBiblio As Boolean
 Public TVEx As TreeView
 
@@ -411,204 +423,163 @@ Public Sub AddElement(ByVal objElement As cElement)
 End Sub
 
 ' Note par René Rhéaume le 7 janvier 2002 :
-' Nouvel algorithme demandé
+' Nouvel algorithme demandé (RÉSOLU)
 ' 17 janvier 2002 :
 ' Description de la procédure :
 ' BUT : Insérer le code défini par les quatre sections : déclarations,
 ' en-tête, corps, pied.
-' S'il y a un module actif, Alors obtenir sa sélection ainsi que le type
-' de la procédure sélectionnée.
-'   S'il n'y a pas de procédure à cet endroit OU Si la procédure n'est
-'   pas une propriété ET que le numéro de ligne du début de la sélection
-'   est <= à la ligne où est située la procédure, Alors insérer le code
-'   tout de suite après la section (Déclarations).
-'   Sinon, placer dans une variable la ligne où du début de la procédure
-'   ou de la propriété, chercher la fin de la procédure
-Private Sub InsertCode(ByVal sDeclare As String, ByVal sHead As String, ByVal sInLine As String, ByVal sEnd As String)
+' 12 avril 2002 :
+' la description est devenue obsolète
+' nouvel algorithme développé par René Rhéaume (voir InsertCode.doc)
+Private Sub InsertCode(ByVal strDeclaration As String, ByVal strEnTete As String, _
+                        ByVal strContenu As String, ByVal strPied As String)
+    Const conMsgAucuneFenetreCodeActive As String = "Il n'y a pas de fenêtre de code active"
     Dim objCodeModule As VBIDE.CodeModule
-    Dim lngStartLine As Long, lngStartColumn As Long, lngEndLine As Long, lngEndColumn As Long
-    Dim objMember As VBIDE.Member
-    Dim lngLine As Long, bTrouve As Boolean, sTexte As String
-    Dim lngCodeLocation As Long
     Dim lngNbLignesDeclar As Long
-
-    On Error Resume Next
+    Dim blnEnTetePresent As Boolean, blnContenuPresent As Boolean, blnPiedPresent As Boolean
+    Dim lngCodePresence As Long
+    Dim lngTypePosCurseur As TypePosition
+    Dim lngLigneCurseur As Long
+    Dim lngStartColumn As Long, lngEndLine As Long, lngEndColumn As Long
+    
     If (VBInstance.ActiveCodePane.CodeModule Is Nothing) Then
-        MsgBox "Il n'y a pas de module actif"
-        Exit Sub
-    End If
-    Set objCodeModule = VBInstance.ActiveCodePane.CodeModule
-
-    'détermination du membre
-    objCodeModule.CodePane.GetSelection lngStartLine, lngStartColumn, lngEndLine, lngEndColumn
-    On Error Resume Next
-    Set objMember = objCodeModule.Members(objCodeModule.ProcOfLine(lngStartLine, vbext_pk_Proc))
-    Select Case conFaux
-        Case objMember.Type <> vbext_mt_Property, lngStartLine <= objMember.CodeLocation
-        Case Else
-            Err.Raise 13
-    End Select
-    If (Err.Number <> 0) Then
-        With objCodeModule
-            .InsertLines .CountOfDeclarationLines + 1, sDeclare
-            lngNbLignesDeclar = .CountOfDeclarationLines
-            .InsertLines lngNbLignesDeclar + .CountOfLines + 1, sHead
-            .InsertLines lngNbLignesDeclar + .CountOfLines + 1, sInLine
-            .InsertLines lngNbLignesDeclar + .CountOfLines + 1, sEnd
-        End With
-        Exit Sub
-    End If
-
-    On Error GoTo 0
-    If (objMember.Type = vbext_mt_Property) Then
-        lngCodeLocation = lngStartLine
-        TypePropriete objCodeModule, lngCodeLocation
+        MsgBox conMsgAucuneFenetreCodeActive, vbExclamation
     Else
-        lngCodeLocation = objMember.CodeLocation
-    End If
-    '    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
-
-    'on détermine si on est a la fin du code
-    lngLine = lngCodeLocation + 1
-    bTrouve = conFaux
-    On Error Resume Next
-    Err.Clear
-
-    Do Until ((bTrouve) Or (lngLine > objCodeModule.CountOfLines))
-        sTexte = objCodeModule.Lines(lngLine, 1)
-        If Err.Number <> 0 Then Exit Do
-        Select Case conVrai
-            Case RechercheString(sTexte, "End Sub"), RechercheString(sTexte, "End Function"), RechercheString(sTexte, "End Property")
-                bTrouve = conVrai
-            Case Else
-                lngLine = lngLine + 1
-        End Select
-    Loop
-
-    On Error GoTo 0
-    'Insertion de la déclaration
-    If (Trim$(sDeclare) <> vbNullString) Then
-        objCodeModule.InsertLines objCodeModule.CountOfDeclarationLines + 1, sDeclare
-    End If
-
-    'Insertion du HEAD
-    'redétermination du début
-    If (objMember.Type = vbext_mt_Property) Then
-        lngCodeLocation = lngStartLine
-        TypePropriete objCodeModule, lngCodeLocation
-    Else
-        lngCodeLocation = objMember.CodeLocation
-    End If
-    '    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
-
-    If (Trim$(sHead) <> vbNullString) Then
-        If (bTrouve) Then
-            objCodeModule.InsertLines lngCodeLocation + 1, sHead
-        Else
-            objCodeModule.InsertLines objCodeModule.CountOfLines + 1, sHead
+        Set objCodeModule = VBInstance.ActiveCodePane.CodeModule
+        lngNbLignesDeclar = objCodeModule.CountOfDeclarationLines
+        If (LenB(strDeclaration) > 0) Then
+            objCodeModule.InsertLines lngNbLignesDeclar + 1, strDeclaration
+            lngNbLignesDeclar = objCodeModule.CountOfDeclarationLines
         End If
-    End If
-
-    'Insertion du InLine
-    If (Trim$(sInLine) <> vbNullString) Then
-        If bTrouve Then
-            objCodeModule.CodePane.GetSelection lngStartLine, lngStartColumn, lngEndLine, lngEndColumn
-            objCodeModule.InsertLines lngStartLine, sInLine
-        Else
-            objCodeModule.InsertLines objCodeModule.CountOfLines + 1, sInLine
-        End If
-    End If
-
-    'Insertion du End
-    'redétermination du début
-    If (objMember.Type = vbext_mt_Property) Then
-        lngCodeLocation = lngStartLine
-        TypePropriete objCodeModule, lngCodeLocation
-    Else
-        lngCodeLocation = objMember.CodeLocation
-    End If
-    '    MsgBox lngCodeLocation & vbTab & lngStartLine & vbTab & objMember.CodeLocation
-
-    If (Trim$(sEnd) <> vbNullString) Then
-        If (bTrouve) Then
-            lngLine = lngCodeLocation + 1
-            bTrouve = conFaux
-            On Error Resume Next
-            Err.Clear
-            Do Until (bTrouve)
-                sTexte = objCodeModule.Lines(lngLine, 1)
-                If Err.Number <> 0 Then Exit Do
-                Select Case conVrai
-                    Case RechercheString(sTexte, "End Sub"), RechercheString(sTexte, "End Function"), RechercheString(sTexte, "End Property")
-                        bTrouve = conVrai
-                    Case Else
-                        lngLine = lngLine + 1
+        blnEnTetePresent = (LenB(strEnTete) > 0)
+        blnContenuPresent = (LenB(strContenu) > 0)
+        blnPiedPresent = (LenB(strPied) > 0)
+        lngCodePresence = (blnEnTetePresent * -4) + (blnContenuPresent * -2) - blnPiedPresent
+        objCodeModule.CodePane.GetSelection lngLigneCurseur, lngStartColumn, lngEndLine, lngEndColumn
+        'MsgBox "lngCodePresence = " & lngCodePresence, vbInformation
+        lngTypePosCurseur = DeterminerPositionCurseur(lngLigneCurseur)
+'        MsgBox "lngTypePosCurseur = " & lngTypePosCurseur & vbNewLine & _
+                "lngCodePresence = " & lngCodePresence, vbInformation
+        Select Case (lngCodePresence)
+            Case 5, 7
+                Select Case (lngTypePosCurseur)
+                    Case posDeclarations, posDansProc
+                        lngLigneCurseur = objCodeModule.CountOfLines + 2
                 End Select
-            Loop
-            objCodeModule.InsertLines lngLine, sEnd
-        Else
-            objCodeModule.InsertLines objCodeModule.CountOfLines + 1, sEnd
-        End If
+            Case 4
+                Select Case (lngTypePosCurseur)
+                    Case posDeclarations
+                        lngLigneCurseur = lngNbLignesDeclar + 2
+                    Case posDansProc
+                        lngLigneCurseur = objCodeModule.CountOfLines + 2
+                End Select
+        End Select
+        ' Condition optimisée avec des tableaux de Karnaugh
+        ' Si (codePresence <> 1) OU ((codePresence = 1) ET ((typePosCurseur = 4) OU (typePosCurseur = 5))) Alors
+        Select Case conVrai
+            Case (lngCodePresence <> 1), (lngTypePosCurseur = posDansProc), (lngTypePosCurseur = posFinModule)
+                objCodeModule.InsertLines lngLigneCurseur, strEnTete & vbNewLine _
+                                            & strContenu & vbNewLine & strPied
+        End Select
+        Set objCodeModule = Nothing
     End If
+End Sub
 
+' Fonction ajoutée par René Rhéaume le 12 avril 2002
+' Fonction subordonnée à la nouvelle version de InsertCode
+Private Function DeterminerPositionCurseur(ByVal lngLigneCurseur As Long) As TypePosition
+    ' Si seulement on pouvait faire des tableaux de constantes avec VB
+    Dim strarDebutProc(0 To 2) As String
+    Dim strarFinProc(0 To 2) As String
+    Dim lngNbLignesDeclar As Long
+    Dim lngNoLignePremProc As Long
+    Dim lngNoLigneDebProcAvant As Long, lngNoLigneFinProcAvant As Long
+    Dim objCodeModule As VBIDE.CodeModule
+    
+    DeterminerPositionCurseur = 0
+    Set objCodeModule = VBInstance.ActiveCodePane.CodeModule
+    ' Gardez l'espace après pour rechercher le mor entier
+    strarDebutProc(0) = "Sub "
+    strarDebutProc(1) = "Function "
+    strarDebutProc(2) = "Property "
+    strarFinProc(0) = "End Sub"
+    strarFinProc(1) = "End Function"
+    strarFinProc(2) = "End Property"
+    
+    lngNbLignesDeclar = objCodeModule.CountOfDeclarationLines
+    If (lngLigneCurseur <= lngNbLignesDeclar) Then
+        DeterminerPositionCurseur = posDeclarations
+    Else
+        lngNoLignePremProc = ChercherCode(lngNbLignesDeclar + 1, enAvant, strarDebutProc)
+'        MsgBox "lngNoLignePremProc  = " & lngNoLignePremProc & vbNewLine & _
+                "lngLigneCurseur = " & lngLigneCurseur, vbInformation
+        Select Case conVrai
+            Case (lngNoLignePremProc = 0), (lngLigneCurseur < lngNoLignePremProc)
+                DeterminerPositionCurseur = posPostDeclar
+            Case Else
+                If (lngLigneCurseur < objCodeModule.CountOfLines) Then
+                    lngNoLigneDebProcAvant = ChercherCode(lngLigneCurseur, enArriere, strarDebutProc)
+                    lngNoLigneFinProcAvant = ChercherCode(lngLigneCurseur, enArriere, strarFinProc)
+                    If (lngNoLigneDebProcAvant > lngNoLigneFinProcAvant) Then
+                        DeterminerPositionCurseur = posDansProc
+                    Else
+                        DeterminerPositionCurseur = posEntreDeuxProc
+                    End If
+                Else
+                    DeterminerPositionCurseur = posFinModule
+                End If
+        End Select
+    End If
     Set objCodeModule = Nothing
-    Set objMember = Nothing
-End Sub
+End Function
 
-' Optimisé par René Rhéaume 2 septembre 2001
-' 5 janvier 2002 : nouvel algorithme demandé
-Public Sub TypePropriete(ByVal objCodeModule As VBIDE.CodeModule, ByRef lngStartLine As Long)
-    'retourne la ligne de début de la propriété
-    Dim lngDummy As Long, bTrouve As Boolean, sTexte As String
-    'on stocke la valeur initiale
-    lngDummy = lngStartLine
-
-    bTrouve = conFaux
-    On Error Resume Next
-    Do Until bTrouve
-        sTexte = objCodeModule.Lines(lngStartLine, 1)
-        If Err.Number <> 0 Then Exit Do
-        If lngStartLine > objCodeModule.CountOfLines Then Exit Do
-        ' Si sTexte contient soit "Property Let", "Property Get" ou "Property Set"
-        Select Case conVrai
-            Case InStr(1, sTexte, "Property Let") > 0, InStr(1, sTexte, "Property Get") > 0, InStr(1, sTexte, "Property Set") > 0
-                If Left$(sTexte, 1) <> "'" Then
-                    bTrouve = conVrai
-                    Exit Do
-                End If
-        End Select
-        If RechercheString(sTexte, "End Property") Then
-            bTrouve = conFaux
-            Exit Do
-        End If
-        lngStartLine = lngStartLine + 1
+' Fonction ajoutée par René Rhéaume le 12 avril 2002
+' Fonction subordonnée à DeterminerPositionCurseur
+Private Function ChercherCode(ByVal lngDebut As Long, ByVal lngSens As Direction, strarTermes() As String) As Long
+    Dim blnTrouve As Boolean
+    Dim lngPremTerme As Long, lngDernTerme As Long, lngNoTerme As Long
+    Dim lngPosCode As Long, lngPosAposthophe As Long, lngPosGuillemet As Long
+    Dim lngNbLignes As Long
+    Dim objCodeModule As VBIDE.CodeModule
+    Dim strContenuLigne As String
+    
+    ChercherCode = lngDebut
+    Set objCodeModule = VBInstance.ActiveCodePane.CodeModule
+    lngNbLignes = objCodeModule.CountOfLines
+    lngPremTerme = LBound(strarTermes)
+    lngDernTerme = UBound(strarTermes)
+    
+    Do Until ((blnTrouve) Or (ChercherCode > lngNbLignes) Or (ChercherCode < 1))
+        strContenuLigne = objCodeModule.Lines(ChercherCode, 1)
+        lngNoTerme = lngPremTerme
+        blnTrouve = conFaux
+        Do Until ((blnTrouve) Or (lngNoTerme > lngDernTerme))
+            lngPosCode = InStr(strContenuLigne, strarTermes(lngNoTerme))
+            If (lngPosCode > 0) Then
+                lngPosAposthophe = InStr(strContenuLigne, "'")
+                lngPosGuillemet = InStr(strContenuLigne, conGlmt)
+                Select Case conVrai
+                    Case (lngPosAposthophe = 0), (lngPosAposthophe > lngPosCode), _
+                            ((lngPosGuillemet > 0) And (lngPosGuillemet < lngPosAposthophe))
+                        blnTrouve = conVrai
+                End Select
+            End If
+            lngNoTerme = lngNoTerme + 1
+        Loop
+        ChercherCode = ChercherCode + lngSens
     Loop
-    'si bTrouve, on se casse
-    If bTrouve Then Exit Sub
-    'sinon, il faut faire une recherche arrière
-    lngStartLine = lngDummy                                'on recommence du début
-    Do Until bTrouve
-        sTexte = objCodeModule.Lines(lngStartLine, 1)
-        If Err.Number <> 0 Then Exit Do
-        ' Si sTexte contient soit "Property Let", "Property Get" ou "Property Set"
-        Select Case conVrai
-            Case InStr(1, sTexte, "Property Let") > 0, InStr(1, sTexte, "Property Get") > 0, InStr(1, sTexte, "Property Set") > 0
-                If Left$(sTexte, 1) <> "'" Then
-                    bTrouve = conVrai
-                    Exit Do
-                End If
-        End Select
-        If RechercheString(sTexte, "End Property") Then
-            lngStartLine = lngStartLine + 1
-            Exit Do
-        End If
-        lngStartLine = lngStartLine - 1
-    Loop
-
-End Sub
+    If (blnTrouve) Then
+    ' Une fois que l'on a trouvé le bout de code recherché, il y a une
+    ' incrémentation de trop. Réglons ça.
+        ChercherCode = ChercherCode - 1
+    Else
+    ' Retournons comme InStr si ce n'a pas été trouvé
+        ChercherCode = 0
+    End If
+    Set objCodeModule = Nothing
+End Function
 
 Private Sub MakeToolBar()
-
     Dim objButton As Button
 
     With tbMain
@@ -981,12 +952,3 @@ End Sub
 Private Sub UserDocument_Terminate()
     Set TVEx = Nothing
 End Sub
-
-Private Function RechercheString(ByVal sTexte As String, sM As String) As Boolean
-    '    RechercheString = conFaux
-    '    If InStr(1, sTexte, sM) > 0 Then                       'recherche
-    If Left$(sTexte, Len(sM)) = sM Then
-        RechercheString = conVrai
-    End If
-    '    End If
-End Function

@@ -33,8 +33,9 @@
 !ifndef VersionVB
 !define VersionVB 5
 !endif
-!define Revision 128
+!define Revision 129
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
+!include "E:\Progra~1\NSIS\nsisconf.nsi"
 
 Name "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
 Caption "c2iExplorer 1.60.${Revision} Beta pour VB${VersionVB}"
@@ -44,7 +45,7 @@ LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
 ComponentText "Sélectionnez les composants de c2iExplorer que vous souhaitez installer."
 DirText "Indiquez dans quel dossier est installé Visual Basic ${VersionVB}.0 sur votre ordinateur."
 UninstallText "Ceci supprimera c2iExplorer de votre ordinateur. Cliquez sur «Désinstaller» pour désinstaller ou sur «Annuler» pour quitter."
-!packhdr "temp.dat" "E:\progra~1\console\upx120w\upx.exe -q --best --compress-icons=1 temp.dat"
+!packhdr "temp.dat" "E:\progra~1\console\bin\upx.exe -q --best --compress-icons=1 temp.dat"
 ;UninstallExeName uninst-c2iexplorer.exe
 OutFile "${CheminBase}\c2iexplorer-VB${VersionVB}.exe"
 Icon "${CheminBase}\Source\c2iExplorer.ico"

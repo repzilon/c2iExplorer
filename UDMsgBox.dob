@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDMsgBox 
    ClientHeight    =   5130
    ClientLeft      =   210
@@ -957,7 +957,6 @@ Private Sub UserDocument_Initialize()
 End Sub
 
 Private Function ExtraitSautDeLigne(ByVal sMessage As String) As String
-    Const conGlmt As String = """"
     Dim lngPos As Long
 
     lngPos = InStr(1, sMessage, vbCrLf)
@@ -1259,7 +1258,6 @@ Private Sub lblModal_Click(Index As Integer)
 End Sub
 
 Private Sub MiseAJourCode()
-    Const conGlmt As String = """"
     Const conPlus As String = " + "
     Const con1V As String = ","
     Const con2V As String = ",,"

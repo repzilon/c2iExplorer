@@ -81,6 +81,7 @@ Public Const conGet As String = "Get"
 Public Const conLet As String = "Let"
 Public Const conSet As String = "Set"
 Public Const conLibelDescrpt As String = "Description"
+Public Const conGlmt As String = """"
 
 'l'objet contenant notre UserControl
 Public objUD As UDExplorer                                 'objet contenant le document créé
