@@ -29,7 +29,7 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 157
+!define Revision 158
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !define NomApp "c2iExplorer"
@@ -103,6 +103,10 @@ Section "${NomApp} for VB${VersionVB}"
   !insertmacro Removec2iExRegKeys
   WriteINIStr "$WINDIR\vbaddin.ini" "Add-Ins32" "c2iexplorer.Connectc2iExplorer" "1"
   RegDLL "$INSTDIR\Wizards\c2iexplorer.dll"
+  !ifdef VB6
+    File "${CheminBase}\ReleaseVB${VersionVB}\ImporterDurees.exe"
+    Exec "$INSTDIR\Wizards\ImporterDurees.exe"
+  !endif
 SectionEnd
 
 SectionDivider "English translation"
@@ -185,6 +189,7 @@ Section Uninstall
   Delete "$INSTDIR\Wizards\c2iExplorer.dll"
   Delete "$INSTDIR\Wizards\c2iExplorer.lib"
   Delete "$INSTDIR\Wizards\c2iExplorer.exp"
+  Delete "$INSTDIR\Wizards\ImporterDurees.exe"
   Delete "$INSTDIR\Wizards\DATA\duree.txt"
   Delete "$INSTDIR\Wizards\DATA\TYPES.TXT"
   Delete "$INSTDIR\Wizards\DATA\c2iExplorer.ini"
@@ -294,6 +299,9 @@ Section Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmErreurINI.frx"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\frmOptions.fr?"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-gif.tar.gz"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\ImporterDurees.vb?"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\modFonctions.bas"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\modImporterDurees.bas"
   RmDir "$INSTDIR\Wizards\Data"
   RmDir "$INSTDIR\Wizards\Html\Img"
   RmDir "$INSTDIR\Wizards\Html"

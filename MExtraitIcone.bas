@@ -107,8 +107,6 @@ Public strCheminApp As String
 Public c2iHTMLFile As String
 Public c2iINIFile As String                                'Ajout par René Rhéaume, 28 juillet 2001
 Public c2iCurrentDataFileName As String
-Public strFichLangueActuel As String
-Public blnMultilingueActive As Boolean
 Public lngDureeSauve As Long
 Public bSauve As Boolean
 Public blnSauvAutoBiblCode As Boolean                      'Ajout par René Rhéaume, 16 avril 2003

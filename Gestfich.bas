@@ -56,6 +56,8 @@ Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivatePro
 Declare Function GetPrivateProfileInt Lib "kernel32" Alias "GetPrivateProfileIntA" (ByVal lpApplicationName As String, ByVal lpKeyName As String, ByVal nDefault As Long, ByVal lpFileName As String) As Long
 Private Declare Function SHFileOperation Lib "shell32.dll" Alias "SHFileOperationA" (lpFileOp As SHFILEOPSTRUCT) As Long
 
+Public strFichLangueActuel As String
+Public blnMultilingueActive As Boolean
 
 'Module d'exploitation des fichiers
 

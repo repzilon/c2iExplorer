@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDExplorer 
    BackColor       =   &H00FFFFFF&
    ClientHeight    =   4920
@@ -745,9 +745,9 @@ Private Sub Suppression(ByVal mNode As Node)
     Static blnLangOK As Boolean
     If (Not blnLangOK) Then
         mlgMsgConfirm = LireChaineLocalisee(conNomUD, _
-            conClefL10nSuppr & "mlgMsgConfirm", "Êtes-vous sur de vouloir supprimer")
+            conClefL10nSuppr & "mlgMsgConfirm", "Êtes-vous sur de vouloir retirer")
         mlgMsgSupprImpossible = LireChaineLocalisee(conNomUD, _
-            conClefL10nSuppr & "mlgMsgSupprImpossible", "Suppression impossible")
+            conClefL10nSuppr & "mlgMsgSupprImpossible", "Retrait impossible")
         blnLangOK = conVrai
     End If
 

@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDCompteur 
    ClientHeight    =   3600
    ClientLeft      =   0
@@ -366,6 +366,10 @@ End Sub
 
 ' Procédure modifiée par René Rhéaume 25 août 2001
 ' Utilise le fichier INI au lieu de la base de registres
+' Procédure modifiée par René Rhéaume le 26 juin 2003
+' Ajustement à l'appel de ImporterDurees
+' Procédure modifiée par René Rhéaume le 2 juillet 2003
+' Retrait de l'appel à ImporterDurees
 Public Sub ActuCompteur()
     ' Ancienne version
     '    Dim tbSettings As Variant, I As Long
@@ -402,15 +406,6 @@ Public Sub ActuCompteur()
     Dim lngDernIdxATraiter As Long
 
     On Error GoTo Fin
-
-#If VersionVB = 6 Then
-    ' Importe les durées et
-    ' Vérifie si la conversion Base de registres -> c2iExplorer.ini
-    ' a été réussie. Si oui, supprime la clé de registre devenue obsolète.
-    If (ImporterDurees = 0) Then
-        DeleteSetting App.EXEName
-    End If
-#End If
 
     chnContenuSectionDurees = LireSectionFichierINI(conSecDurees, c2iINIFile)
     SplitB chnContenuSectionDurees, tblSectionDurees(), vbNullChar
@@ -487,58 +482,6 @@ Private Sub ChargerOptions()
     '    End If
     Timer1.Enabled = bSauve
 End Sub
-
-#If VersionVB = 6 Then
-'Ajouté par René Rhéaume 25 août 2001
-' Importe les durées de la base de registres vers le fichier INI
-' Utile pour les versions VB6 seulement
-' Retourne 0 s'il n'y a pas d'erreur
-'Fonction modifiée par René Rhéaume le 20 juin 2002
-' Support multilingue
-'Fonction modifiée par René Rhéaume le 14 septembre 2002
-' Retrait du code de déboguage
-Public Function ImporterDurees() As Byte
-    Static mlgarErrImportation() As String
-    Static blnLangOK As Boolean
-    Dim J As Long
-    If (Not blnLangOK) Then
-        StrArray mlgarErrImportation, "Une erreur est survenue lors de l'importation des durées", _
-            "de la base de registres vers le fichier INI."
-        If (blnMultilingueActive) Then
-            For J = 0 To 1
-                mlgarErrImportation(J) = LireChaineLocalisee(conNomUD, _
-                    "Code.ImporterDurees.mlgarErrImportation(" & J & conPF, mlgarErrImportation(J))
-            Next J
-        End If
-        blnLangOK = conVrai
-    End If
-
-    Dim tbSettings As Variant, I As Long
-    Dim sFileName As String
-    Dim chnDuree As String                ' Un peu bizarre, mais pas de conversions inutiles
-    Dim lngFinTab As String
-
-    On Error GoTo GestErr
-    tbSettings = GetAllSettings(conNomApp, conSecDurees)
-
-    If (Not IsEmpty(tbSettings)) Then
-        lngFinTab = UBound(tbSettings)
-        For I = 0 To lngFinTab
-            sFileName = tbSettings(I, 0)
-            chnDuree = tbSettings(I, 1)
-            Call WritePrivateProfileString(conSecDurees, sFileName, chnDuree, c2iINIFile)
-        Next I
-    End If
-    ImporterDurees = 0
-
-Fin:
-    Exit Function
-GestErr:
-    GererErrInattendue mlgarErrImportation(0) & vbNewLine & _
-                        mlgarErrImportation(1), "UDCompteur.ImporterDurees"
-    ImporterDurees = 1
-End Function
-#End If
 
 'Déplacé de MExtraitIcone par René Rhéaume le 18 mai 2002
 ' Optimisation de taille mémoire indiquée dans les manuels en ligne

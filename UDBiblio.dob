@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
 Begin VB.UserDocument UDBiblio 
    ClientHeight    =   5310
    ClientLeft      =   285
@@ -406,7 +406,7 @@ Private Sub UserDocument_Initialize()
     
     MakeToolBar
     strDebutFiltreBD = LireChaineLocalisee(conNomUD, _
-            "Code.UserDocument_Initialize.strDebutFiltreBD", "Bases de données")
+            "Code.UserDocument_Initialize.strDebutFiltreBD", "Bibliothèques de code")
     strFiltreBD = strDebutFiltreBD & " (*.mdb)|*.mdb"
     
     UserDocument_Resize
@@ -658,15 +658,15 @@ Private Sub MakeToolBar()
         'Set objButton = .Add(, , , tbrSeparator)
 
         .Item(conNewdata).ToolTipText = LireChaineLocalisee(conNomUD, _
-                conL10nTbMain & "1-->'newdata').ToolTipText", "Nouvelle base de données")
+                conL10nTbMain & "1-->'newdata').ToolTipText", "Nouvelle bibliothèque")
         .Item(conBiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
-                conL10nTbMain & "2-->'biblio').ToolTipText", "Charger une base de données")
+                conL10nTbMain & "2-->'biblio').ToolTipText", "Charger une bibliothèque")
         .Item(conSave).ToolTipText = LireChaineLocalisee(conNomUD, _
-                conL10nTbMain & "3-->'save').ToolTipText", "Sauvegarder la base de données sous")
+                conL10nTbMain & "3-->'save').ToolTipText", "Sauvegarder la bibliothèque sous")
         .Item(conNewbiblio).ToolTipText = LireChaineLocalisee(conNomUD, _
-                conL10nTbMain & "5-->'newbiblio').ToolTipText", "Créer une bibliothèque")
+                conL10nTbMain & "5-->'newbiblio').ToolTipText", "Créer une catégorie")
         .Item(conNewcategorie).ToolTipText = LireChaineLocalisee(conNomUD, _
-                conL10nTbMain & "6-->'newcategorie').ToolTipText", "Créer une catégorie")
+                conL10nTbMain & "6-->'newcategorie').ToolTipText", "Créer un dossier")
         .Item(conDelete).ToolTipText = mlgLibelDelete
         .Item(conVoir).ToolTipText = LireChaineLocalisee(conNomUD, _
                 conL10nTbMain & "10-->'voir').ToolTipText", "Voir/ajouter un élément")
