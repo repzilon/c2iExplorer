@@ -277,9 +277,14 @@ End Sub
 '    Debug.Print VBComponent.Name
 'End Sub
 
+'Modifié par René Rhéaume le 23 février 2003
+' Change de dossier lorsqu'on change de projet
 Private Sub prjEvent_ItemActivated(ByVal VBProject As VBIDE.VBProject)
     Set refEvent = VBInstance.Events.ReferencesEvents(VBProject)
     Set VBPrjSelected = VBProject
+    If (LenB(VBProject.Filename) > 0) Then
+        VBInstance.LastUsedPath = VBProject.Filename
+    End If
 End Sub
 
 Private Sub prjEvent_ItemAdded(ByVal VBProject As VBIDE.VBProject)

@@ -285,7 +285,7 @@ Private Sub AjouteProjet()
     Dim sc2iMsgBox As VbMsgBoxResult
 
     For Each objVBPrj In VBInstance.VBProjects
-        If (objVBPrj.Filename = vbNullString) Then
+        If (LenB(objVBPrj.Filename) = 0) Then
             MsgBox mlgarMsgImpossibleAjouterPrj(0) & vbCrLf & objVBPrj.Name & vbCrLf & _
                     mlgarMsgImpossibleAjouterPrj(1), vbInformation
         Else
@@ -426,7 +426,7 @@ Public Sub ActuCompteur()
         lItem.SubItems(2) = chnCheminFichier
         Set objVBPrj = Nothing
         For Each objVBPrj In VBInstance.VBProjects
-            If objVBPrj.Filename = chnCheminFichier Then
+            If (IsSameString(objVBPrj.Filename, chnCheminFichier)) Then
                 lItem.Bold = conVrai
                 Exit For
             End If

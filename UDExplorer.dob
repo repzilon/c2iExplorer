@@ -963,10 +963,10 @@ Private Sub tbDescription_ButtonClick(ByVal Button As MSComctlLib.Button)
                 Case conAbrTagMet
                     Analyse_Methode SelectedNode, objVBPrj, objCmp, objMember    'par référence
                     If (Not objMember Is Nothing) Then
-                        If (strDescription = vbNullString) Then
-                            objMember.Description = vbNullChar
-                        Else
+                        If (LenB(strDescription) > 0) Then
                             objMember.Description = strDescription
+                        Else
+                            objMember.Description = vbNullChar
                         End If
                     End If
             End Select
@@ -1113,7 +1113,7 @@ Public Sub Impression()
         strDebTag = Left$(SelectedNode.Tag, 3)
         Select Case strDebTag
             Case conAbrTagCom, conAbrTagMet
-                If (strDebTag = conAbrTagCom) Then
+                If (IsSameString(strDebTag, conAbrTagCom)) Then
                     Analyse_Component SelectedNode, objPrj, objCmp
                 Else
                     Analyse_Methode SelectedNode, objPrj, objCmp, objMember    'par référence

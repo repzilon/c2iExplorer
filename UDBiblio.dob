@@ -280,7 +280,7 @@ Private Sub Enregistrement(ByVal sFile As String)
     End If
     If (blnProceder) Then
         On Error GoTo Fin
-        Set db = DBEngine.CreateDatabase(sFile, dbLangGeneral, dbEncrypt + dbVersion30)
+        Set db = DBEngine.CreateDatabase(sFile, dbLangGeneral, dbVersion30)
         db.Execute conSQLCreation
         Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
         
@@ -899,6 +899,9 @@ End Sub
 ' Optimisation de la lisibilité et de la vitesse (un peu)
 'Procédure modifiée par René Rhéaume le 20 juin 2002
 ' Support multilingue
+'Procédure modifiée par René Rhéaume le 23 février 2003
+' On peut ajouter une catégorie si un élément est sélectionné.
+' Il sera placé dans le même endroit que cet élément.
 Private Sub AddCategorie()
     Const conClefL10nCat As String = "Code.AddCategorie."
     Static mlgarMsgCat() As String
@@ -906,39 +909,41 @@ Private Sub AddCategorie()
     Dim I As Long
     If (Not blnLangOK) Then
         StrArray mlgarMsgCat, "Saisissez le nom de la nouvelle catégorie :", _
-            "Ce nom de catégorie est déjà utilisé.", _
-            "Le nom de la catégorie n'est pas correct."
+            "Ce nom de catégorie est déjà utilisé."
         If (blnMultilingueActive) Then
-            For I = 0 To 2
+            For I = 0 To 1
                 mlgarMsgCat(I) = LireChaineLocalisee(conNomUD, _
                         conClefL10nCat & "mlgarMsgCat(" & I & conPF, mlgarMsgCat(I))
             Next I
         End If
         blnLangOK = conVrai
     End If
-
+    
     Dim sResult As String
-    Dim mNode As Node
+    Dim mNode As Node, nodBase As Node
     Dim strClef As String
 
     If (Not tv.SelectedItem Is Nothing) Then
-        If (tv.SelectedItem.Image <> conElement) Then
-            sResult = Trim$(InputBox(mlgarMsgCat(0)))
-            If (LenB(sResult) > 0) Then
-                On Error Resume Next
-                strClef = tv.SelectedItem.Key & conSepChemBiblio & sResult
-                Set mNode = tv.Nodes(strClef)
-                If (mNode Is Nothing) Then
-                    tv.Nodes.Add tv.SelectedItem, tvwChild, strClef, sResult, "categorie"
-                Else
-                    MsgBox mlgarMsgCat(1), vbInformation
-                End If
+        Set nodBase = tv.SelectedItem
+        Select Case nodBase.Image
+            Case conElement, conMail, conWeb
+                Set nodBase = nodBase.Parent
+        End Select
+        
+        sResult = Trim$(InputBox(mlgarMsgCat(0)))
+        If (LenB(sResult) > 0) Then
+            On Error Resume Next
+            strClef = nodBase.Key & conSepChemBiblio & sResult
+            Set mNode = tv.Nodes(strClef)
+            If (mNode Is Nothing) Then
+                tv.Nodes.Add nodBase, tvwChild, strClef, sResult, "categorie"
+            Else
+                MsgBox mlgarMsgCat(1), vbInformation
             End If
-        Else
-            MsgBox mlgarMsgCat(2), vbInformation
         End If
     End If
     Set mNode = Nothing
+    Set nodBase = Nothing
 End Sub
 
 Private Sub UserDocument_Paint()

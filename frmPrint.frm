@@ -218,7 +218,7 @@ Private Sub OK(Optional ByVal blnTous As Boolean = conFaux)
 End Sub
 
 Private Sub File1_DblClick()
-    If (File1.Filename <> vbNullString) Then OK
+    If (LenB(File1.Filename) > 0) Then OK
 End Sub
 
 'Modifié par René Rhéaume le 5 janvier 2002
@@ -638,7 +638,7 @@ End Sub
 ' Support multilingue
 Private Function LireFichierTexte(ByVal chnNomFichier As String, ByRef ContenuFichier As String) As Integer
     Static mlgMsgImpossOuvrir As String
-    If (mlgMsgImpossOuvrir = vbNullString) Then
+    If (LenB(mlgMsgImpossOuvrir) = 0) Then
         mlgMsgImpossOuvrir = LireChaineLocalisee(conNomForm, _
             "Code.LireFichierTexte.mlgMsgImpossOuvrir", "Impossible d'ouvrir le fichier :")
     End If

@@ -32,7 +32,7 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 154
+!define Revision 155
 !define CheminBase "I:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !include "E:\Progra~1\NSIS\nsisconf.nsi"

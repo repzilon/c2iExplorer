@@ -286,7 +286,7 @@ Private Sub SelectionnerCombo()
         lngNbElem = cboLangPack.ListCount
         
         Do Until ((blnTrouve) Or (lngIdx >= lngNbElem))
-            If (cboLangPack.List(lngIdx) = strFichierLangue) Then
+            If (IsSameString(cboLangPack.List(lngIdx), strFichierLangue)) Then
                 cboLangPack.ListIndex = lngIdx
                 chkUseLangPack.Value = 1
                 blnTrouve = conVrai
