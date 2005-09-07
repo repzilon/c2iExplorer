@@ -258,6 +258,7 @@ Begin VB.UserDocument UDExplorer
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
+      OLEDropMode     =   1
    End
    Begin MSComctlLib.Toolbar tbDescription 
       Align           =   2  'Align Bottom
@@ -604,6 +605,7 @@ Private Const conCodeBackSlash As Long = 92
 Private Const conCodeSlash As Long = 47
 Private Const conValDescBar As String = "DescriptionBar"
 Private Const conValFltBar As String = "FilterBar"
+Private Const conProcIndefinie As Long = 35
 
 Private conarClefBtnMenu() As String
 
@@ -646,7 +648,7 @@ SortieProc:
     Exit Sub
 GestErr:
     Select Case Err.Number
-        Case conErrVarObjIndefinie, 92
+        Case conErrVarObjIndefinie, 92, conProcIndefinie
             Resume Next
         Case Else
             GererErrInattendue , "UDExplorer.ActuMembreComponent"
@@ -660,6 +662,7 @@ End Sub
 Private Sub AnalyseNode(ByVal Node As Node)
     Dim objVBPrj As VBIDE.VBProject, objCmp As VBIDE.VBComponent
     Dim objMember As Member
+    Dim strDebTag As String
 
     'GENERE LORS D'UN SIMPLE CLICK
     On Error GoTo GestErr
@@ -667,9 +670,9 @@ Private Sub AnalyseNode(ByVal Node As Node)
     txtDescription = vbNullString
 
     'on regarde sur quel type d'image on a cliqué
-    Select Case Left$(Node.Tag, 3)
+    strDebTag = ObtenirObjetsVBDuNoeud(Node, objVBPrj, objCmp, objMember, conFaux)
+    Select Case strDebTag
         Case conAbrTagCom 'on clique sur un component
-            Analyse_Component Node, objVBPrj, objCmp
             'VERIF QUE TOUT EXISTE
             'le projet a été supprimé, on ne sait pas pourquoi
             If (objVBPrj Is Nothing) Then
@@ -695,9 +698,6 @@ Private Sub AnalyseNode(ByVal Node As Node)
 
             'on clique sur une méthode
         Case conAbrTagMet
-
-            Analyse_Methode Node, objVBPrj, objCmp, objMember    'par référence
-
             'VERIF QUE TOUT EXISTE
             'le projet a été supprimé, on ne sait pas pourquoi
             If (objVBPrj Is Nothing) Then
@@ -720,7 +720,7 @@ Private Sub AnalyseNode(ByVal Node As Node)
     
 GestErr:
     Select Case Err.Number
-        Case ccElemNotFound, ccNonUniqueKey, conErrVarObjIndefinie
+        Case ccElemNotFound, ccNonUniqueKey, conErrVarObjIndefinie, conProcIndefinie
             Err.Clear
         Case Is <> 0
             GererErrInattendue , "UDExplorer.AnalyseNode"
@@ -738,6 +738,8 @@ End Sub
 'Procédure optimisée par René Rhéaume le 5 juillet 2002
 'Procédure modifiée par René Rhéaume le 13 janvier 2003
 ' On peut supprimer les fichiers de ressource et les documents associés
+'Procédure modifiée par René Rhéaume le 24 décembre 2003
+' Utilise ObtenirObjetsVBDuNoeud pour raccourcir le code
 Private Sub Suppression(ByVal mNode As Node)
     Const conClefL10nSuppr As String = "Code.Suppression."
     Static mlgMsgConfirm As String
@@ -758,7 +760,7 @@ Private Sub Suppression(ByVal mNode As Node)
     Dim strConfirmation As String, strDebTag As String
 
     On Error GoTo GestErr
-    strDebTag = Left$(mNode.Tag, 3)
+    strDebTag = ObtenirObjetsVBDuNoeud(mNode, objVBPrj, objCmp, objMember)
     Select Case (strDebTag)
         Case conAbrTagPro, conAbrTagCom
             strConfirmation = mlgMsgConfirm & conEsp & mNode.Text & " ?"
@@ -766,24 +768,15 @@ Private Sub Suppression(ByVal mNode As Node)
     End Select
     Select Case (strDebTag)
         Case conAbrTagPro
-'            sc2iMsgBox = MsgBox(strConfirmation, conBoutons)
             If (sc2iMsgBox = vbYes) Then
-                VBInstance.VBProjects.Remove VBInstance.VBProjects(mNode.Key)
+                VBInstance.VBProjects.Remove objVBPrj
             End If
         Case conAbrTagCom
-'            sc2iMsgBox = MsgBox(strConfirmation, conBoutons)
             If (sc2iMsgBox = vbYes) Then
-                Select Case mNode.Image
-                    Case conarClefTypeModule(5), conarClefTypeModule(6)
-                        ChercherDocAssocie mNode, objVBPrj, objCmp
-                    Case Else
-                        Analyse_Component mNode, objVBPrj, objCmp
-                End Select
                 objVBPrj.VBComponents.Remove objCmp
 '                tv.Nodes.Remove mNode
             End If
         Case conAbrTagMet
-            Analyse_Methode mNode, objVBPrj, objCmp, objMember    'par référence
             'suppression d'un membre
             Dim lngStartLine As Long, lngNumCount As Long, lngType As Long
 
@@ -1102,28 +1095,23 @@ End Sub
 'Modifié par René Rhéaume le 19 décembre 2002
 ' Correction d'un plantage lorsqu'un composant est
 ' sélectionné dans l'explorateur
-Public Sub Impression()
+'Procédure modifiée par René Rhéaume le 24 décembre 2003
+' Utilise ObtenirObjetsVBDuNoeud pour raccourcir le code
+Friend Sub Impression()
     Dim objPrj As VBProject, objCmp As VBComponent, objMember As Member
 '    Dim nodSelection As Node
     Dim strDebTag As String
 '    Set nodSelection = tv.SelectedItem
 
     If (Not SelectedNode Is Nothing) Then
-        Load frmPrint
-        strDebTag = Left$(SelectedNode.Tag, 3)
+        strDebTag = ObtenirObjetsVBDuNoeud(SelectedNode, objPrj, objCmp, objMember, conFaux)
         Select Case strDebTag
             Case conAbrTagCom, conAbrTagMet
-                If (IsSameString(strDebTag, conAbrTagCom)) Then
-                    Analyse_Component SelectedNode, objPrj, objCmp
-                Else
-                    Analyse_Methode SelectedNode, objPrj, objCmp, objMember    'par référence
-                End If
                 If (Not objCmp Is Nothing) Then
                     frmPrint.ObjetSelectionnés Nothing, objCmp
                     frmPrint.Show vbModal
                 End If
             Case conAbrTagPro
-                Set objPrj = VBInstance.VBProjects(SelectedNode.Key)
                 If (Not objPrj Is Nothing) Then
                     frmPrint.ObjetSelectionnés objPrj, Nothing
                     frmPrint.Show vbModal
@@ -1178,6 +1166,8 @@ End Sub
 '  Correction de l'erreur 91 avec les fichiers de ressources
 '  et les documents associés
 ' Optimisation par René Rhéaume le 12 janvier 2003
+' Modification par René Rhéaume le 5 septembre 2005
+'  Maj+Clic affiche la fenêtre de code
 Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 #If (JGuelluyRightMenu = 1) Then
     #If (VersionVB = 6) Then
@@ -1213,14 +1203,19 @@ Private Sub tv_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Si
             Case vbLeftButton
                 strImage = nodActif.Image
                 Select Case conFaux
-                    Case Shift = vbCtrlMask, strTag = conTagComponent, _
+                    Case strTag = conTagComponent, _
                         Not IsSameString(strImage, conarClefTypeModule(5)), _
                         Not IsSameString(strImage, conarClefTypeModule(6))
                     Case Else
-                        Analyse_Component nodActif, objPrj, objCmp
-                        On Error Resume Next
-                        objWindowClassViewer.Visible = conVrai
-                        objUDClassViewer.Init objCmp
+                        If (Shift = vbCtrlMask) Then
+                            Analyse_Component nodActif, objPrj, objCmp
+                            On Error Resume Next
+                            objWindowClassViewer.Visible = conVrai
+                            objUDClassViewer.Init objCmp
+                        ElseIf (Shift = vbShiftMask) Then
+                            Analyse_Component nodActif, objPrj, objCmp
+                            OuvrirFenetreCode objPrj, objCmp
+                        End If
                 End Select
 #If (JGuelluyRightMenu = 1) Then
             Case vbRightButton
@@ -1321,6 +1316,49 @@ Private Sub tv_NodeClick(ByVal Node As MSComctlLib.Node)
 '    AnalyseNode SelectedNode
 End Sub
 
+'Procédure événementielle ajoutée par René Rhéaume le 22 décembre 2003
+' Support du glisser déplacer OLE
+Private Sub tv_OLEDragDrop(Data As MSComctlLib.DataObject, Effect As Long, Button As Integer, Shift As Integer, X As Single, Y As Single)
+    On Error GoTo GestErr
+    Dim i As Long
+    Dim J As Long
+    Dim conarExtensions() As String
+    Dim blnFichierTexteVB As Boolean
+    Dim lngIndMaxExt As Long
+    StrArray conarExtensions, ".frm", ".bas", ".cls", ".ctl", ".dob", ".dsr", ".pag", ".res"
+    lngIndMaxExt = UBound(conarExtensions)
+    Dim vbpProjet As VBIDE.VBProject
+    Dim nodActif As Node
+
+    If (Data.GetFormat(vbCFFiles)) Then
+        Set nodActif = tv.HitTest(x, y)
+        If (Not nodActif Is Nothing) Then
+            ObtenirObjetsVBDuNoeud nodActif, vbpProjet, Nothing, Nothing, conFaux
+            With Data.Files
+                For i = 1 To .Count
+                    J = 0
+                    blnFichierTexteVB = conFaux
+                    Do Until ((blnFichierTexteVB) Or (J > lngIndMaxExt))
+                        If (StrComp(Right$(.Item(i), 4), conarExtensions(J), vbTextCompare) = 0) Then
+                            blnFichierTexteVB = conVrai
+                        Else
+                            J = J + 1
+                        End If
+                    Loop
+                    If (blnFichierTexteVB) Then
+                        vbpProjet.VBComponents.AddFile .Item(i), conFaux
+                    End If
+                Next i
+            End With
+        End If
+    End If
+
+SortieProc:
+    Exit Sub
+GestErr:
+    GererErrInattendue , "UDExplorer.tv_OLEDragDrop"
+End Sub
+
 'Modification par René Rhéaume le 23 février 2002
 ' Correction du bogue d'affichage des barres d'outils
 ' en forçant l'affichage des 2 barres d'outils du bas
@@ -1387,7 +1425,7 @@ Private Sub UserDocument_Resize()
     End If
 End Sub
 
-Public Sub Init(Optional ByVal bClear As Boolean = conFaux)
+Friend Sub Init(Optional ByVal bClear As Boolean = conFaux)
     Dim objVBPrj As VBIDE.VBProject
 
     If (bClear) Then
@@ -1406,7 +1444,7 @@ Public Sub Init(Optional ByVal bClear As Boolean = conFaux)
     Set objVBPrj = Nothing
 End Sub
 
-Public Sub AjouteProjet(ByVal objVBPrj As VBIDE.VBProject)
+Friend Sub AjouteProjet(ByVal objVBPrj As VBIDE.VBProject)
     Dim sKey As String, sImageKey As String
     Dim mNodePrj As Node
     Dim objVBCmp As VBIDE.VBComponent
@@ -1466,7 +1504,7 @@ Public Sub AjouteProjet(ByVal objVBPrj As VBIDE.VBProject)
     Set objVBCmp = Nothing
 End Sub
 
-Public Sub RetireProjet(ByVal objVBPrj As VBIDE.VBProject)
+Friend Sub RetireProjet(ByVal objVBPrj As VBIDE.VBProject)
     On Error Resume Next
     tv.Nodes.Remove objVBPrj.Name
 End Sub
@@ -1474,7 +1512,7 @@ End Sub
 'Optimisé par René Rhéaume le 18 mai 2002
 'Modifié par René Rhéaume le 3 janvier 2003
 ' Support des documents associés
-Public Sub AjouteComponent(ByVal objVBCmp As VBIDE.VBComponent)
+Friend Sub AjouteComponent(ByVal objVBCmp As VBIDE.VBComponent)
     Dim mNodePrj As Node, mNodeCmp As Node
     Dim sKey As String
     Dim sImageKey As String
@@ -1543,13 +1581,9 @@ End Function
 ' On peut maintenant supprimer des documents associés
 ' et des fichiers de ressources.
 ' Le message d'erreur s'affichera plus rarement.
-Public Sub RetireComposant(objVBCmp As VBIDE.VBComponent, Optional ByVal sOldName As String)
-    Static mlgMsgActualiser As String
-    If (LenB(mlgMsgActualiser) = 0) Then
-        mlgMsgActualiser = LireChaineLocalisee(conNomUD, _
-            "Code.RetireComposant.mlgMsgActualiser", "Cliquez sur le bouton Actualiser")
-    End If
-    
+'Procédure modifiée par René Rhéaume le 5 septembre 2005
+' Ne demande plus de cliquer sur le bouton Actualiser
+Friend Sub RetireComposant(objVBCmp As VBIDE.VBComponent, Optional ByVal sOldName As String)
     Dim sKeyParent As String, sName As String, strClef As String
 
     If (LenB(sOldName) = 0) Then
@@ -1576,10 +1610,10 @@ Public Sub RetireComposant(objVBCmp As VBIDE.VBComponent, Optional ByVal sOldNam
     
     Exit Sub
 GestErr:
-    MsgBox mlgMsgActualiser, vbInformation
+    Init conVrai
 End Sub
 
-Public Sub AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Member)
+Friend Sub AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Member)
     #If OldC2iStyle <> 1 Then
     Const conCmd As String = "cmd"
     #End If
@@ -1598,7 +1632,7 @@ Public Sub AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Membe
     ' Nom du projet + \ + Nom du component + \ + Nom du membre+Get Set ou Let
     'TAG Met + Num Ligne
     '***********************************************
-    On Error Resume Next
+    
     If AfficheMembre(objVBMember) Then                     'on l'affiche ?
         sImageKey = ExtraitIconeMembre(objVBMember, lngCouleurPortee)    'détermination de l'icone
         'Modifié par René Rhéaume le 9 janvier 2002
@@ -1618,6 +1652,7 @@ Public Sub AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Membe
             'Ajout d'un Node pour le dossier
             With objVBMember.Collection.Parent.Parent
                 sKey = .Collection.Parent.Name & conBS & .Name & conBS
+                On Error Resume Next
                 Select Case conFaux
                     Case objVBMember.Type = vbext_mt_Method, InStr(1, objVBMember.Name, "_") <> 0
                         Set Neu = tv.Nodes(sKey & sImageKey)
@@ -1628,6 +1663,7 @@ Public Sub AjouteMembre(ByRef mNodeCmp As Node, ByRef objVBMember As VBIDE.Membe
                         Set Neu = tv.Nodes.Add(mNodeCmp, tvwChild, sKey & conCmd, _
                                 mlgarTypeMembres(0), "dcmd")
                 End Select
+                Neu.Sorted = conVrai
                 sKey = sKey & objVBMember.Name
                 Set mNodeMember = tv.Nodes.Add(Neu, tvwChild, sKey, objVBMember.Name, sImageKey)
             End With
@@ -1687,7 +1723,7 @@ End Function
 ' Une variable objet en moins
 'Procédure modifiée par René Rhéaume le 21 juin 2002
 ' Support multilingue
-Public Sub InitReferences(objVBPrj As VBIDE.VBProject)
+Friend Sub InitReferences(objVBPrj As VBIDE.VBProject)
     Const conClefL10nInitRef As String = "Code.InitReferences."
     Static mlgTitreReferences As String
     Static mlgTitreComposants As String
@@ -1740,7 +1776,7 @@ End Sub
 
 'Modifié par René Rhéaume le 20 mai 2002
 ' Fusion avec AjouteOCX et AjouteBibliotheque
-Public Sub AjouteReference(ByRef objVBPrj As VBIDE.VBProject, ByRef objRef As VBIDE.Reference)
+Friend Sub AjouteReference(ByRef objVBPrj As VBIDE.VBProject, ByRef objRef As VBIDE.Reference)
     '***********************************************
     'CLE D'UNE REFERENCE
     ' Nom du projet + \ + Nom du component + \ + Nom du composant
@@ -1789,7 +1825,7 @@ Public Sub AjouteReference(ByRef objVBPrj As VBIDE.VBProject, ByRef objRef As VB
 End Sub
 
 ' Procédure ajoutée par René Rhéaume le 11 janvier 2003
-Public Sub RetireReference(objRef As VBIDE.Reference)
+Friend Sub RetireReference(objRef As VBIDE.Reference)
     Dim strClefParent As String
     Dim strClef As String
     
@@ -1893,6 +1929,7 @@ GestErr:
     NodeTypeFeuille.Tag = "Dossier"
     'NodeTypeFeuille.ForeColor = RGB(0, 0, 255)
     NodeTypeFeuille.Bold = conVrai
+    NodeTypeFeuille.Sorted = conVrai
 End Function
 
 'Procédure modifiée par René Rhéaume le 15 juillet 2002
@@ -1931,7 +1968,11 @@ Private Sub Analyse_Methode(ByVal mNode As Node, ByRef objPrj As VBIDE.VBProject
             Set mNodeRecherche = mNode
     End Select
     'Set objPrj = VBInstance.VBProjects(mNodeRecherche.Parent.Parent.Parent.Key)    'on recherche le projet
+#If OldC2iStyle = 1 Then
+    With mNodeRecherche.Parent
+#Else
     With mNodeRecherche.Parent.Parent
+#End If
         strClefPrj = .Parent.Parent.Key
         strClefPar = .Key
     End With
@@ -2031,7 +2072,7 @@ Private Sub InitialiserTbDescription()
 End Sub
 
 'Procédure modiifée par René Rhéaume le 12 janvier 2003
-Public Sub Work(Optional ByVal bWork As Boolean = conVrai)
+Friend Sub Work(Optional ByVal bWork As Boolean = conVrai)
     With tbGene.Buttons(conActu)
         If (bWork) Then
             .Image = "actuwork"
@@ -2079,3 +2120,31 @@ ByRef vbcDocAssocie As VBIDE.VBComponent)
         Loop
     End With
 End Sub
+
+'Procédure ajoutée par René Rhéaume le 23 décembre 2003
+'Procédure modifiée par René Rhéaume le 24 décembre 2003
+Private Function ObtenirObjetsVBDuNoeud(nodNoeud As Node, ByRef vbpProjet As VBIDE.VBProject, _
+ByRef vbcComposant As VBIDE.VBComponent, ByRef vbmMembre As VBIDE.Member, _
+Optional ByVal blnTraiterDocAss As Boolean = conVrai) As String
+    Dim blnDocAssFait As Boolean
+    If (Not nodNoeud Is Nothing) Then
+        ObtenirObjetsVBDuNoeud = Left$(nodNoeud.Tag, 3)
+        Select Case ObtenirObjetsVBDuNoeud
+            Case conAbrTagPro
+                Set vbpProjet = VBInstance.VBProjects(nodNoeud.Key)
+            Case conAbrTagCom
+                Select Case nodNoeud.Image
+                    Case conarClefTypeModule(5), conarClefTypeModule(6)
+                        If (blnTraiterDocAss) Then
+                            ChercherDocAssocie nodNoeud, vbpProjet, vbcComposant
+                            blnDocAssFait = conVrai
+                        End If
+                End Select
+                If (Not blnDocAssFait) Then
+                    Analyse_Component nodNoeud, vbpProjet, vbcComposant
+                End If
+            Case conAbrTagMet
+                Analyse_Methode nodNoeud, vbpProjet, vbcComposant, vbmMembre
+        End Select
+    End If
+End Function

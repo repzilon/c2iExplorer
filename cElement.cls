@@ -43,7 +43,7 @@ Private sInLineProc As String
 Private sHeadProc As String
 Private sDeclareProc As String
 
-Public Property Let Nom(ByVal sNomA As String)
+Friend Property Let Nom(ByVal sNomA As String)
     Const conLongueurMax As Long = 255
     If (Len(sNomA) > conLongueurMax) Then
         sNom = Left$(sNomA, conLongueurMax)
@@ -52,11 +52,11 @@ Public Property Let Nom(ByVal sNomA As String)
     End If
 End Property
 
-Public Property Get Nom() As String
+Friend Property Get Nom() As String
     Nom = sNom
 End Property
 
-Public Property Get Titre() As String
+Friend Property Get Titre() As String
     Dim iPos As Long, iDeb As Long
 
     iDeb = 1
@@ -68,7 +68,7 @@ Public Property Get Titre() As String
     Titre = Right$(sNom, Len(sNom) - iDeb)
 End Property
 
-Public Property Let Description(ByVal sDescriptionA As String)
+Friend Property Let Description(ByVal sDescriptionA As String)
     Const conLongueurMax As Long = 255
     If Len(sDescriptionA) > conLongueurMax Then
         sDescription = Left$(sDescriptionA, conLongueurMax)
@@ -77,31 +77,31 @@ Public Property Let Description(ByVal sDescriptionA As String)
     End If
 End Property
 
-Public Property Get Description() As String
+Friend Property Get Description() As String
     Description = sDescription
 End Property
 
-Public Property Let EndProc(ByVal sEndProcA As String)
+Friend Property Let EndProc(ByVal sEndProcA As String)
     sEndProc = sEndProcA
 End Property
 
-Public Property Get EndProc() As String
+Friend Property Get EndProc() As String
     EndProc = sEndProc
 End Property
 
-Public Property Let InLineProc(ByVal sInLineProcA As String)
+Friend Property Let InLineProc(ByVal sInLineProcA As String)
     sInLineProc = sInLineProcA
 End Property
 
-Public Property Get InLineProc() As String
+Friend Property Get InLineProc() As String
     InLineProc = sInLineProc
 End Property
 
-Public Property Let HeadProc(ByVal sHeadProcA As String)
+Friend Property Let HeadProc(ByVal sHeadProcA As String)
     sHeadProc = sHeadProcA
 End Property
 
-Public Property Get HeadProc() As String
+Friend Property Get HeadProc() As String
     HeadProc = sHeadProc
 End Property
 
@@ -113,15 +113,15 @@ End Property
 '    InitClass 4, -1
 'End Sub
 
-Public Property Let DeclareProc(ByVal sDeclareProcA As String)
+Friend Property Let DeclareProc(ByVal sDeclareProcA As String)
     sDeclareProc = sDeclareProcA
 End Property
 
-Public Property Get DeclareProc() As String
+Friend Property Get DeclareProc() As String
     DeclareProc = sDeclareProc
 End Property
 
-Public Property Get Ident() As Long
+Friend Property Get Ident() As Long
     Dim iPos As Long
 
     iPos = 1
@@ -136,7 +136,7 @@ End Property
 
 'Modification par René Rhéaume le 9 mars 2002
 'Réduction de taille
-Public Property Get NomRepertoire(ByVal iIdent As Long) As String
+Friend Property Get NomRepertoire(ByVal iIdent As Long) As String
     'c2i/API/GRAPHICS/BitBlt
     'Renvoi API pour iIdent=1
     'Ident=3
@@ -146,7 +146,7 @@ End Property
 
 'Modification par René Rhéaume le 9 mars 2002
 'Réduction de taille
-Public Property Get CheminComplet(ByVal iIdent As Long) As String
+Friend Property Get CheminComplet(ByVal iIdent As Long) As String
     'c2i/API/GRAPHICS/BitBlt
     'Renvoi c2i/API pour iIdent=1
     'Ident=3

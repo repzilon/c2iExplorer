@@ -144,7 +144,7 @@ Public Enum FileOpenConstants
     OFN_SHOWHELP = &H10
 End Enum
 
-Public Function ShowOpen() As Boolean
+Friend Function ShowOpen() As Boolean
     ShowOpen = ShowOpenSave(conVrai)
 End Function
 
@@ -218,7 +218,7 @@ Private Function ShowOpenSave(bOpen As Boolean) As Boolean
     End With
 End Function
 
-Public Function ShowSave() As Boolean
+Friend Function ShowSave() As Boolean
     ShowSave = ShowOpenSave(conFaux)
 End Function
 
@@ -249,74 +249,74 @@ End Function
 
 '//****************LES PROPRIÉTÉS**************************
 
-Property Get Folder() As String
+Friend Property Get Folder() As String
     Folder = sFolder
 End Property
 
-Property Get Filename() As String
+Friend Property Get Filename() As String
     Filename = sFileName
 End Property
 
-Property Let Filename(sFileNameA As String)
+Friend Property Let Filename(sFileNameA As String)
     sFileName = sFileNameA
 End Property
 
-Property Get DialogTitle() As String
+Friend Property Get DialogTitle() As String
     DialogTitle = sDialogTitle
 End Property
 
-Property Let DialogTitle(sDialogTitleA As String)
+Friend Property Let DialogTitle(sDialogTitleA As String)
     sDialogTitle = sDialogTitleA
 End Property
 
-Property Get Flags() As FileOpenConstants
+Friend Property Get Flags() As FileOpenConstants
     Flags = lngFlags
 End Property
 
-Property Let Flags(lngFlagsA As FileOpenConstants)
+Friend Property Let Flags(lngFlagsA As FileOpenConstants)
     lngFlags = lngFlagsA
 End Property
 
-Property Get hdcOwner() As Long
+Friend Property Get hdcOwner() As Long
     hdcOwner = lnghdcOwner
 End Property
 
-Property Let hdcOwner(lnghdcOwnerA As Long)
+Friend Property Let hdcOwner(lnghdcOwnerA As Long)
     lnghdcOwner = lnghdcOwnerA
 End Property
 
-Property Get Filter() As String
+Friend Property Get Filter() As String
     Filter = sFilter
 End Property
 
-Property Let Filter(sFilterA As String)
+Friend Property Let Filter(sFilterA As String)
     sFilter = sFilterA
 End Property
 
-Property Get FilterIndex() As Long
+Friend Property Get FilterIndex() As Long
     FilterIndex = lngFilterIndex
 End Property
 
-Property Let FilterIndex(lngFilterIndexA As Long)
+Friend Property Let FilterIndex(lngFilterIndexA As Long)
     lngFilterIndex = lngFilterIndexA
 End Property
 
-Property Get InitDir() As String
+Friend Property Get InitDir() As String
     InitDir = sInitDir
 End Property
 
-Property Let InitDir(sInitDirA As String)
+Friend Property Let InitDir(sInitDirA As String)
     sInitDir = sInitDirA
 End Property
 
-Property Get FileTitle() As String
+Friend Property Get FileTitle() As String
     FileTitle = sFileTitle
 End Property
 
-Property Get DefaultEx() As String
+Friend Property Get DefaultEx() As String
     DefaultEx = sDefaultEx
 End Property
 
-Property Let DefaultEx(sDefaultExA As String)
+Friend Property Let DefaultEx(sDefaultExA As String)
     sDefaultEx = sDefaultExA
 End Property

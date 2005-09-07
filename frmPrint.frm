@@ -197,7 +197,7 @@ Private Sub OK(Optional ByVal blnTous As Boolean = conFaux)
     strCheminModele = File1.Path & conBS & strFichierModele
 
     If (LenB(strFichierModele) > 0) Then
-        If (FichierExiste(strCheminModele)) Then
+        If (Existe(strCheminModele)) Then
             blnPrjPresent = Not objVBPrjPrint Is Nothing
             blnCmpPresent = Not objVBCmpPrint Is Nothing
             blnExporterTout = blnTous Or (Not (blnPrjPresent Or blnCmpPresent))
@@ -224,8 +224,11 @@ End Sub
 'Modifié par René Rhéaume le 5 janvier 2002
 'Modifié par René Rhéaume le 18 juin 2002
 ' Support multilingue
+'Modifié par René Rhéaume le 4 septembre 2005
+' Élimination d'un plantage lorsque le sous-répertoire html n'existe pas
 Private Sub Form_Load()
     Dim I As Long
+    Dim strCheminHtml As String
     
     Me.Caption = LireChaineLocalisee(conNomForm, conL10nWCap, "Générer un rapport")
     If (blnMultilingueActive) Then
@@ -238,7 +241,10 @@ Private Sub Form_Load()
     lblTitre = LireChaineLocalisee(conNomForm, "Obj.lblTitre.Caption", "Élément sélectionné :")
     
     '    PositionForm Me, conVrai
-    File1.Path = strCheminApp & "\html"
+    strCheminHtml = strCheminApp & "\html"
+    If (Existe(strCheminHtml, conVrai)) Then
+        File1.Path = strCheminHtml
+    End If
 '    ExtraireImageList ImageList1, "frmPrint.ImageList1"
 End Sub
 
@@ -265,7 +271,7 @@ Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
     End Select
 End Sub
 
-Public Sub ObjetSelectionnés(ByVal objVBPrj As VBIDE.VBProject, objVBCmp As VBIDE.VBComponent)
+Friend Sub ObjetSelectionnés(ByVal objVBPrj As VBIDE.VBProject, objVBCmp As VBIDE.VBComponent)
     Set objVBPrjPrint = objVBPrj
     Set objVBCmpPrint = objVBCmp
     lblSelectedElement = vbNullString
@@ -730,7 +736,7 @@ End Sub
 
 'Procédure ajoutée par René Rhéaume le 30 juin 2002
 Private Sub SupprimerFichTemp()
-    If FichierExiste(c2iHTMLFile) Then
+    If Existe(c2iHTMLFile) Then
         Kill c2iHTMLFile
     End If
 End Sub

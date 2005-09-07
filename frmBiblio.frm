@@ -279,7 +279,7 @@ Private Sub Form_Unload(Cancel As Integer)
     Set mObjE = Nothing
 End Sub
 
-Public Property Set Element(ByVal objE As cElement)
+Friend Property Set Element(ByVal objE As cElement)
     If (Not objE Is mObjE) Then
         Set mObjE = objE
         With mObjE

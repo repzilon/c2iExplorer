@@ -273,7 +273,7 @@ Private Sub EcrireBibliotheque(ByVal sFile As String)
 
     strNomFichBak = sFile & ".bak"
     blnProceder = conVrai
-    If (FichierExiste(sFile)) Then
+    If (Existe(sFile)) Then
         If (Not Rename(sFile, strNomFichBak, FOF_NOCONFIRMATION + FOF_SILENT)) Then
             MsgBox mlgarMsgErrSauvegarde(0) & vbCrLf & _
                 conNomApp & mlgarMsgErrSauvegarde(1) & vbCrLf & _
@@ -301,7 +301,7 @@ Private Sub EcrireBibliotheque(ByVal sFile As String)
             End Select
             rs.Update
         Next
-        If FichierExiste(strNomFichBak) Then
+        If Existe(strNomFichBak) Then
             Kill strNomFichBak
         End If
         blnModifie = conFaux
@@ -400,7 +400,7 @@ Private Sub UserDocument_Initialize()
     blnSauvAutoBiblCode = GetPrivateProfileInt(conSecGen, conValSauvBibl, 1, c2iINIFile)
     bFrmBiblio = conFaux
     tv.PathSeparator = conSepChemBiblio
-    If (FichierExiste(c2iCurrentDataFileName)) Then
+    If (Existe(c2iCurrentDataFileName)) Then
         ChargeBase c2iCurrentDataFileName
     End If
     
@@ -458,9 +458,11 @@ Public Sub AddElement(ByVal objElement As cElement)
             strClefImg = conElement
     End Select
     tv.Nodes.Add mNodeParent, tvwChild, objElement.Nom, objElement.Titre, strClefImg
-    
+
+SortieProc:
     Set mNodeParent = Nothing
     Set mNodeNewRep = Nothing
+    Exit Sub
 End Sub
 
 ' Note par René Rhéaume le 7 janvier 2002 :
@@ -820,7 +822,7 @@ Private Sub ChargeBase(ByVal sFileName As String)
     Dim rs As DAO.Recordset
 
     Set db = OpenDatabase(sFileName)
-    Set rs = db.OpenRecordset(conRSElements, dbOpenDynaset)
+    Set rs = db.OpenRecordset(conRSElements, dbOpenForwardOnly)
     Do Until rs.EOF
         ElementsBiblio.Add AnnuleNull(rs, conDeclareProc), AnnuleNull(rs, conHeadProc), _
                 AnnuleNull(rs, conInLineProc), AnnuleNull(rs, conEndProc), _
@@ -1029,7 +1031,7 @@ End Sub
 
 ' Procédure ajoutée par René Rhéaume le 23 mars 2003
 '  réorganisation de la sauvegarde
-Public Sub SauvegarderBibliotheque(ByRef strNomFichier As String, _
+Friend Sub SauvegarderBibliotheque(ByRef strNomFichier As String, _
 Optional ByVal blnEnregistrerSous As Boolean = conFaux)
     Dim strNouvNomFichier As String
     Select Case conVrai
@@ -1051,7 +1053,7 @@ End Sub
 
 ' Fonction ajoutée par René Rhéaume le 23 mars 2003
 '  réorganisation de la sauvegarde
-Public Function SauvegarderAncienneBiblio(ByRef strNomFichier As String) As Boolean
+Friend Function SauvegarderAncienneBiblio(ByRef strNomFichier As String) As Boolean
     Static mlgQuestion As String
     If (LenB(mlgQuestion) = 0) Then
         mlgQuestion = LireChaineLocalisee(conNomUD, _

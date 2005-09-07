@@ -370,7 +370,7 @@ End Sub
 ' Ajustement à l'appel de ImporterDurees
 ' Procédure modifiée par René Rhéaume le 2 juillet 2003
 ' Retrait de l'appel à ImporterDurees
-Public Sub ActuCompteur()
+Friend Sub ActuCompteur()
     ' Ancienne version
     '    Dim tbSettings As Variant, I As Long
     '    Dim sFileName As String, sFileTitle As String
@@ -486,7 +486,7 @@ End Sub
 'Déplacé de MExtraitIcone par René Rhéaume le 18 mai 2002
 ' Optimisation de taille mémoire indiquée dans les manuels en ligne
 ' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
-Public Function GetDuree(ByVal sFileName As String) As Long
+Friend Function GetDuree(ByVal sFileName As String) As Long
     Dim sM As String
     Dim I As Long, iNumPrj As Long
 
@@ -529,7 +529,7 @@ End Function
 'Déplacé de MExtraitIcone par René Rhéaume le 18 mai 2002
 ' Optimisation de taille mémoire indiquée dans les manuels en ligne
 ' ~/Guide de l'utilisateur/Partie 2/Optimisation et compatibilité/Optimisation de la taille/Réduction de la taille du code
-Public Sub SauveDuree(objPrj As VBProject)
+Friend Sub SauveDuree(objPrj As VBProject)
     Dim lngDuree As Long
 
     On Error GoTo Fin

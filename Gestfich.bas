@@ -64,17 +64,20 @@ Public blnMultilingueActive As Boolean
 'Fonction modifiée par René Rhéaume
 'Nouvelle version le 2 juin 2002
 ' Inspiré de la fonction de Richard Clark dans MFileOp sur c2i.fr
-Public Function FichierExiste(ByVal sNom As String) As Boolean
+'Modifiée et renommée par René Rhéaume le 4 septembre 2005
+' Peut aussi vérifier l'existence d'un dossier
+Public Function Existe(ByVal sNom As String, _
+Optional ByVal blnDossier As Boolean = conFaux) As Boolean
     On Error GoTo GestErr
     Select Case conFaux
-        Case (LenB(sNom)), (LenB(Dir(sNom))), Not (GetAttr(sNom) And vbDirectory)
+        Case (LenB(sNom)), (LenB(Dir(sNom))), (GetAttr(sNom) And vbDirectory) = blnDossier
         Case Else
-            FichierExiste = conVrai
+            Existe = conVrai
     End Select
     Exit Function
 
 GestErr:
-'   FichierExiste = conFaux
+'   Existe = conFaux
 End Function
 
 'Mise en commentaire par René Rhéaume le 26 juillet 2001
@@ -184,7 +187,7 @@ End Function
 Public Function ValiderFichierLangue(ByVal strFichierLangue As String) As Boolean
     Const conSecInfo As String = "@Info"
     Dim strVersion As String
-    If (FichierExiste(strFichierLangue)) Then
+    If (Existe(strFichierLangue)) Then
         If (IsSameString(LireChaineFichierINI(conSecInfo, "ProgramName", vbNullString, strFichierLangue), conNomApp)) Then
             strVersion = App.Major & "." & App.Minor & "." & App.Revision
             If (IsSameString(LireChaineFichierINI(conSecInfo, "ProgramVer", vbNullString, strFichierLangue), strVersion)) Then

@@ -92,7 +92,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
         'Ajout par René Rhéaume, 28 juillet 2001
         c2iINIFile = strCheminApp & conCheminRelatifINI
         Select Case conVrai
-            Case FichierExiste(c2iINIFile), frmErreurINI.ObtenirActionINIAbsent
+            Case Existe(c2iINIFile), frmErreurINI.ObtenirActionINIAbsent
                 ' Initialisation des variables globales
                 c2iHTMLFile = strCheminApp & "\html\prev.htm"
                 strFichierLangue = strCheminApp & "\Lang\" & _
@@ -280,13 +280,50 @@ End Sub
 
 'Modifié par René Rhéaume le 23 février 2003
 ' Change de dossier lorsqu'on change de projet
+'Modifié par René Rhéaume le 22 décembre 2003
+' Élimination de l'erreur d'éxécution 76 (chemin introuvable)
 Private Sub prjEvent_ItemActivated(ByVal VBProject As VBIDE.VBProject)
     Set refEvent = VBInstance.Events.ReferencesEvents(VBProject)
     Set VBPrjSelected = VBProject
     If (LenB(VBProject.Filename) > 0) Then
-        VBInstance.LastUsedPath = VBProject.Filename
+        VBInstance.LastUsedPath = ObtenirDossier(VBProject.Filename)
     End If
 End Sub
+
+'Fonction ajoutée par René Rhéaume le 22 décembre 2003
+' Basée sur le code trouvé à http://www.xbeat.net/vbspeed/c_GetPath.htm
+Private Function ObtenirDossier(strNomFich As String) As String
+#If VersionVB = 6 Then
+    ' by Peter Weighill, pweighill@btinternet.com, 20001020
+    ' Only for VB6
+    Dim iPos As Long
+    
+    ' search last backslash
+    iPos = InStrRev(sFile, "\", -1, vbBinaryCompare)
+    
+    If iPos > 0 Then
+        ObtenirDossier = Left$(strNomFich, iPos)
+    Else
+        ObtenirDossier = strNomFich
+    End If
+#Else
+    ' by Donald, donald@xbeat.net, 20001010
+    Dim iPos As Long
+    Dim iPosPrev As Long
+    
+    ' search last backslash
+    Do
+        iPosPrev = iPos
+        iPos = InStr(iPos + 1, strNomFich, "\", vbBinaryCompare)
+    Loop While iPos > 0
+    
+    If iPosPrev > 0 Then
+        ObtenirDossier = Left$(strNomFich, iPosPrev)
+    Else
+        ObtenirDossier = strNomFich
+    End If
+#End If
+End Function
 
 Private Sub prjEvent_ItemAdded(ByVal VBProject As VBIDE.VBProject)
     Dim lngFinTabDurees As Long

@@ -281,15 +281,15 @@ Private Sub DessineFond(Optional ByVal blnTitreSeul As Boolean = conFaux)
 End Sub
 #End If
 
-Public Property Get hWnd() As Long
+Friend Property Get hWnd() As Long
     hWnd = UserControl.hWnd
 End Property
 
-Property Get Ouvert() As Boolean
+Public Property Get Ouvert() As Boolean
     Ouvert = bOuvert
 End Property
 
-Property Let Ouvert(bOuvertA As Boolean)
+Public Property Let Ouvert(bOuvertA As Boolean)
     Dim bCancel As Boolean
     If (bOuvertA <> bOuvert) Then
         bCancel = conFaux
@@ -302,22 +302,22 @@ Property Let Ouvert(bOuvertA As Boolean)
     End If
 End Property
 
-Property Get Caption() As String
+Public Property Get Caption() As String
 Attribute Caption.VB_ProcData.VB_Invoke_Property = "Standard"
     Caption = sCaption
 End Property
 
-Property Let Caption(sCaptionA As String)
+Public Property Let Caption(sCaptionA As String)
     sCaption = sCaptionA
     PropertyChanged conCaption
     DessineTitre
 End Property
 
-Property Get Alignement() As AlignmentConstants
+Friend Property Get Alignement() As AlignmentConstants
     Alignement = iAlignement
 End Property
 
-Property Let Alignement(iAlignA As AlignmentConstants)
+Friend Property Let Alignement(iAlignA As AlignmentConstants)
     iAlignement = iAlignA
     PropertyChanged conAlignement
     DessineTitre
@@ -583,7 +583,7 @@ End Property
 #If ((SlimC2iContainer = 0) And (NoContainerDownImage = 0)) Then
 'Procédure optimisée par René Rhéaume le 18 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Set PictureFerméeDown(ByVal picPictureFerméeDownA As Picture)
+Friend Property Set PictureFerméeDown(ByVal picPictureFerméeDownA As Picture)
 Attribute PictureFerméeDown.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set ImgFermée(0).Picture = picPictureFerméeDownA
     PropertyChanged conImgFermée0
@@ -592,7 +592,7 @@ End Property
 
 'Procédure optimisée par René Rhéaume le 18 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get PictureFerméeDown() As Picture
+Friend Property Get PictureFerméeDown() As Picture
     Set PictureFerméeDown = ImgFermée(0).Picture
 End Property
 #End If
@@ -611,7 +611,7 @@ End Property
 #If ((SlimC2iContainer = 0) And (NoContainerDownImage = 0)) Then
 'Procédure optimisée par René Rhéaume le 18 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Set PictureOuvertDown(ByVal picPictureOuvertDownA As Picture)
+Friend Property Set PictureOuvertDown(ByVal picPictureOuvertDownA As Picture)
 Attribute PictureOuvertDown.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set ImgOuvert(1).Picture = picPictureOuvertDownA
     PropertyChanged conImgOuvert1
@@ -620,71 +620,71 @@ End Property
 
 'Procédure optimisée par René Rhéaume le 18 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get PictureOuvertDown() As Picture
+Friend Property Get PictureOuvertDown() As Picture
     Set PictureOuvertDown = ImgOuvert(1).Picture
 End Property
 #End If
 
-Public Property Let CouleurFond(ByVal lngBackColorA As OLE_COLOR)
+Friend Property Let CouleurFond(ByVal lngBackColorA As OLE_COLOR)
 Attribute CouleurFond.VB_ProcData.VB_Invoke_PropertyPut = ";Apparence"
     BackColor = lngBackColorA
     PropertyChanged conCouleurFond
 End Property
 
-Public Property Get CouleurFond() As OLE_COLOR
+Friend Property Get CouleurFond() As OLE_COLOR
     CouleurFond = BackColor
 End Property
 
-Public Property Let CouleurFondTitre(ByVal lngCouleurFondTitreA As OLE_COLOR)
+Friend Property Let CouleurFondTitre(ByVal lngCouleurFondTitreA As OLE_COLOR)
 Attribute CouleurFondTitre.VB_ProcData.VB_Invoke_PropertyPut = ";Apparence"
     PicTitre.BackColor = lngCouleurFondTitreA
     PropertyChanged conCouleurFondTitre
     Dessine
 End Property
 
-Public Property Get CouleurFondTitre() As OLE_COLOR
+Friend Property Get CouleurFondTitre() As OLE_COLOR
     CouleurFondTitre = PicTitre.BackColor
 End Property
 
-Public Property Let CouleurTexteTitre(ByVal lngCouleurTexteTitreA As OLE_COLOR)
+Friend Property Let CouleurTexteTitre(ByVal lngCouleurTexteTitreA As OLE_COLOR)
 Attribute CouleurTexteTitre.VB_ProcData.VB_Invoke_PropertyPut = ";Apparence"
     PicTitre.ForeColor = lngCouleurTexteTitreA
     PropertyChanged conCouleurTexteTitre
     Dessine
 End Property
 
-Public Property Get CouleurTexteTitre() As OLE_COLOR
+Friend Property Get CouleurTexteTitre() As OLE_COLOR
     CouleurTexteTitre = PicTitre.ForeColor
 End Property
 
-Public Property Let Hauteur(ByVal sngHauteurA As Single)
+Friend Property Let Hauteur(ByVal sngHauteurA As Single)
     sngHauteur = sngHauteurA
     PropertyChanged conHauteur
     Dessine
 End Property
 
-Public Property Get Hauteur() As Single
+Friend Property Get Hauteur() As Single
     Hauteur = sngHauteur
 End Property
 
 #If SlimC2iContainer = 0 Then
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Let Automatique(ByVal bFermetureAutomatiqueA As Boolean)
+Friend Property Let Automatique(ByVal bFermetureAutomatiqueA As Boolean)
     bFermetureAutomatique = bFermetureAutomatiqueA
     PropertyChanged conAutomatique
 End Property
 
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get Automatique() As Boolean
+Friend Property Get Automatique() As Boolean
     Automatique = bFermetureAutomatique
 End Property
 
 #If NoContainerDownImage = 0 Then
 'Procédure optimisée par René Rhéaume le 18 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Let Border(ByVal bBorderA As Boolean)
+Friend Property Let Border(ByVal bBorderA As Boolean)
     bBorder = bBorderA
     PropertyChanged conBorder
     Dessine
@@ -692,7 +692,7 @@ End Property
 
 'Procédure optimisée par René Rhéaume le 18 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get Border() As Boolean
+Friend Property Get Border() As Boolean
     Border = bBorder
 End Property
 #End If
@@ -701,7 +701,7 @@ End Property
 'Problème avec cette propriété
 'VB5 ne connaît pas ContainerHwnd (il le prend pour une variable non définie)
 #If VersionVB = 6 Then
-Public Property Get ParentHwnd() As Long
+Friend Property Get ParentHwnd() As Long
     ParentHwnd = ContainerHwnd
 End Property
 #End If
@@ -709,7 +709,7 @@ End Property
 #If SlimC2iContainer = 0 Then
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Set PictureFond(ByVal picPictureFondA As Picture)
+Friend Property Set PictureFond(ByVal picPictureFondA As Picture)
 Attribute PictureFond.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set picFond.Picture = picPictureFondA
     PropertyChanged conPicFond
@@ -718,13 +718,13 @@ End Property
 
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get PictureFond() As Picture
+Friend Property Get PictureFond() As Picture
     Set PictureFond = picFond.Picture
 End Property
 
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Set PictureTitleFond(ByVal picPictureTitleFondA As Picture)
+Friend Property Set PictureTitleFond(ByVal picPictureTitleFondA As Picture)
 Attribute PictureTitleFond.VB_ProcData.VB_Invoke_PropertyPutRef = ";Apparence"
     Set picTitleFond.Picture = picPictureTitleFondA
     PropertyChanged conPictureTitleFond
@@ -733,23 +733,23 @@ End Property
 
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get PictureTitleFond() As Picture
+Friend Property Get PictureTitleFond() As Picture
     Set PictureTitleFond = picTitleFond.Picture
 End Property
 
 'Procédure optimisée par René Rhéaume le 19 avril 2003
 ' Mise en compilation conditionnelle d'éléments superflus
-Public Property Get TitleHeight() As Long
+Friend Property Get TitleHeight() As Long
     TitleHeight = ImgFermée(0).Height
 End Property
 #End If
 
-Public Property Get Font() As StdFont
+Friend Property Get Font() As StdFont
 Attribute Font.VB_UserMemId = -512
     Set Font = PicTitre.Font
 End Property
 
-Public Property Set Font(FontA As StdFont)
+Friend Property Set Font(FontA As StdFont)
     Set PicTitre.Font = FontA
     DessineTitre
     PropertyChanged conFont

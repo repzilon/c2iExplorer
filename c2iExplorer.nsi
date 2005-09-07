@@ -29,14 +29,14 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 158
-!define CheminBase "I:\rene\Visual Basic\c2iExplorer"
+!define Revision 159
+!define CheminBase "E:\rene\Visual Basic\c2iExplorer"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !define NomApp "c2iExplorer"
 !define Titre "${NomApp} 1.60.${Revision} for VB${VersionVB}"
 !define UninstProg "uninst-c2iexplorer.exe"
 !define en ;installation en anglais
-!include "E:\Progra~1\NSIS\nsisconf.nsi" ;nécessaire si appelé de l'invite de commandes
+;!include "D:\Program Files\NSIS2\nsisconf.nsh" ;nécessaire si appelé de l'invite de commandes
 
 !macro Removec2iExRegKeys
   DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
@@ -57,8 +57,8 @@ OutFile "${CheminBase}\SourceForge\Fichiers\c2iExplorer-1.60.${Revision}-vb${Ver
 CRCCheck On
 
 Icon "${CheminBase}\Source\c2iExplorer.ico"
-EnabledBitmap "${CheminBase}\Source\checked16.bmp"
-DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
+;EnabledBitmap "${CheminBase}\Source\checked16.bmp"
+;DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
 
 LicenseText "Read this before continuing installation."
 LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
@@ -77,7 +77,9 @@ InstType "Standard English"
 InstType "Full"
 
 Section "${NomApp} for VB${VersionVB}"
-  SectionIn 1,2,3
+  SectionIn 1 RO
+  SectionIn 2 RO
+  SectionIn 3 RO
   SetCompress Auto
   ; SetOverwrite ifnewer
   ; Placé en commentaire à cause d'un règlement de sourceforge.net
@@ -109,20 +111,22 @@ Section "${NomApp} for VB${VersionVB}"
   !endif
 SectionEnd
 
-SectionDivider "English translation"
+;SectionDivider "English translation"
 
 Section "English user interface"
-  SectionIn 2,3
+  SectionIn 2
+  SectionIn 3
   WriteINIStr "$INSTDIR\Wizards\DATA\c2iExplorer.ini" "General" "Language" "c2iExplorer-en.lng"
 SectionEnd
 
 Section "English report templates"
-  SectionIn 2,3
+  SectionIn 2
+  SectionIn 3
   SetOutPath "$INSTDIR\Wizards\Html"
   File "${CheminBase}\Html\[en]c2i*.htm"
 SectionEnd
 
-SectionDivider "Programmer stuff"
+;SectionDivider "Programmer stuff"
 
 Section "VB 5/6 source code"
   SectionIn 3
@@ -168,7 +172,7 @@ Section -PostInstall
   BringToFront
 SectionEnd
 
-Section Uninstall
+Section un.Uninstall
   CopyFiles "$INSTDIR\Wizards\DATA\c2iExplorer.ini" "$DESKTOP" 1
   DeleteRegKey HKEY_LOCAL_MACHINE "${UninstRegKey}"
   DeleteRegKey HKEY_CURRENT_USER "Software\VB and VBA Program Settings\c2iExplorer"

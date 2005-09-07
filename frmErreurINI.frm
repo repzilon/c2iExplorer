@@ -180,7 +180,7 @@ Private Sub Form_Load()
 End Sub
 
 ' Fonction modifiée par René Rhéaume le 12 janvier 2003
-Public Function ObtenirActionINIAbsent() As Long
+Friend Function ObtenirActionINIAbsent() As Long
     Beep
     Me.Show vbModal
     ObtenirActionINIAbsent = lngRetourMessage

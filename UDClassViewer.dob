@@ -282,7 +282,7 @@ Private Sub UserDocument_Resize()
     End With
 End Sub
 
-Public Sub Init(ByVal objCmp As VBIDE.VBComponent)
+Friend Sub Init(ByVal objCmp As VBIDE.VBComponent)
     Const conPropgetlet As String = "propgetlet"
     Const conProplet As String = "proplet"
     Const conPropget As String = "propget"

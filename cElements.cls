@@ -39,7 +39,7 @@ Option Explicit
 'variable locale pour la collection
 Private mCol As Collection
 
-Public Function Add(DeclareProc As String, HeadProc As String, _
+Friend Function Add(DeclareProc As String, HeadProc As String, _
                     InLineProc As String, EndProc As String, _
                     Description As String, Nom As String, _
                     Optional sKey As String) As cElement
@@ -66,16 +66,16 @@ Public Function Add(DeclareProc As String, HeadProc As String, _
 
 End Function
 
-Public Property Get Item(vntIndexKey As Variant) As cElement
+Friend Property Get Item(vntIndexKey As Variant) As cElement
 Attribute Item.VB_UserMemId = 0
     Set Item = mCol(vntIndexKey)
 End Property
 
-Public Property Get Count() As Long
+Friend Property Get Count() As Long
     Count = mCol.Count
 End Property
 
-Public Sub Remove(vntIndexKey As Variant)
+Friend Sub Remove(vntIndexKey As Variant)
     mCol.Remove vntIndexKey
 End Sub
 
