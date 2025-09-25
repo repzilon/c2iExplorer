@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomctl.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.UserDocument UDExplorer 
    BackColor       =   &H00FFFFFF&
    ClientHeight    =   4920
@@ -1320,7 +1320,7 @@ End Sub
 ' Support du glisser déplacer OLE
 Private Sub tv_OLEDragDrop(Data As MSComctlLib.DataObject, Effect As Long, Button As Integer, Shift As Integer, X As Single, Y As Single)
     On Error GoTo GestErr
-    Dim i As Long
+    Dim I As Long
     Dim J As Long
     Dim conarExtensions() As String
     Dim blnFichierTexteVB As Boolean
@@ -1331,24 +1331,24 @@ Private Sub tv_OLEDragDrop(Data As MSComctlLib.DataObject, Effect As Long, Butto
     Dim nodActif As Node
 
     If (Data.GetFormat(vbCFFiles)) Then
-        Set nodActif = tv.HitTest(x, y)
+        Set nodActif = tv.HitTest(X, Y)
         If (Not nodActif Is Nothing) Then
             ObtenirObjetsVBDuNoeud nodActif, vbpProjet, Nothing, Nothing, conFaux
             With Data.Files
-                For i = 1 To .Count
+                For I = 1 To .Count
                     J = 0
                     blnFichierTexteVB = conFaux
                     Do Until ((blnFichierTexteVB) Or (J > lngIndMaxExt))
-                        If (StrComp(Right$(.Item(i), 4), conarExtensions(J), vbTextCompare) = 0) Then
+                        If (StrComp(Right$(.Item(I), 4), conarExtensions(J), vbTextCompare) = 0) Then
                             blnFichierTexteVB = conVrai
                         Else
                             J = J + 1
                         End If
                     Loop
                     If (blnFichierTexteVB) Then
-                        vbpProjet.VBComponents.AddFile .Item(i), conFaux
+                        vbpProjet.VBComponents.AddFile .Item(I), conFaux
                     End If
-                Next i
+                Next I
             End With
         End If
     End If

@@ -1,0 +1,138 @@
+c2iExplorer version 1.60.159 Beta par René Rhéaume
+Lisez-moi (see below for english version)
+==================================================
+
+
+Table des matières
+------------------
+1. À propos de c2iExplorer
+2. Modifications du code source
+3. Configuration logicielle requise
+4. VBAddin.ini
+5. Améliorations futures
+6. Notes légales et utilisation du code source
+
+À propos de c2iExplorer
+-----------------------
+c2iExplorer est un explorateur de projet d'abord conçu par Richard Clark pour Visual Basic 6.0. Il permet de remplacer l'explorateur de projet standard fourni avec VB. N'ayant que la version 5.0 (avec Service Pack 3), je ne pouvais pas en profiter avant que ce complément ne soit en source ouvert. J'ai alors décidé de le porter à VB5, puis de l'héberger sur sourceforge.net.
+
+Modifications au code source
+----------------------------
+Voici les changements depuis la version 1.60.158, il y a plus de deux ans :
+    - éliminé quelques erreurs d'exécution bêtes
+    - ajouté le support du glisser déplacer OLE dans l'arbre. Vous pouvez ainsi
+      ajouter des fichiers existants au projet en les déposant.
+    - la combinaison Maj+Clic affiche la fenêtre de code d'un composant
+    - réduit la taille de 12 Ko en changeant un maximum de procédures publiques 
+      en procédures amies (Friend)
+J'indique Beta car il y a des corrections (encore) à apporter.
+Veuillez rapporter les bogues en allant à http://www.sourceforge.net/projects/c2iexplorer, puis en cliquant sur le liens Bugs.
+Le code source peut être compilé facilement sous VB5 ou VB6 en utilisant le fichier projet approprié.
+
+Configuration logicielle requise
+--------------------------------
+Vous avez besoin de :
+    - Windows 32 bits (95, 98, 98 SE, Me, NT4, 2000)
+    - Visual Basic 5.0 SP3 (compilé avec et il y a eu des modifications au niveau des composants ActiveX) ou Visual Basic 6.0 (compilé avec la version SP4, quand je peux).
+    - une version récente de la bibliothèque de contrôles communs de Windows (Internet Explorer 5 vous en fournit une récente).
+    - le contrôle ActiveX des contrôles communs de Windows version 6.0 ou ultérieure.
+    - DAO (Data Access Objects) 3.5 . Microsoft Office 97 (Access) et VB5 Pro ou Entreprise vous l'installe que si vous le demandez dans leur programme d'installation respectif.
+    - Pour la fonction d'impression, Internet Explorer 5.0 ou plus récent, Mozilla ou son petit cousin Firefox sont recommandés.
+VBAddin.ini
+-----------
+Au cas où le programme d'installation n'installerait pas correctement le complément, ajoutez le texte suivant dans la section [Add-Ins32] du fichier vbaddin.ini, qui se trouve dans le dossier de Windows :
+
+c2iexplorer.Connectc2iExplorer=1
+
+Améliorations futures
+---------------------
+    - corriger des bogues;
+    - réduire la taille du complément (maintenant de 420 Ko);
+    - écrire de la documentation.
+
+Notes légales et utilisation du code source
+-------------------------------------------
+Microsoft, Windows, Visual Basic, ActiveX, Office, Access et Internet Explorer sont des marques de commerce de Microsoft Corporation.
+
+c2iExplorer est l'idée originale de Richard Clark.
+Étant couvert par la licence MPL 1.1, il vous est fourni "comme tel", sans aucune garantie implicite ou explicite. L'utilisation de ce programme est à vos risques et périls.
+Ni René Rhéaume, Fred Just, Richard Clark, c2i ni tout autre contributeur ne sera tenu responsable de quelconque perte suite à une bonne ou mauvaise utilisation de ce programme.
+
+Vous pouvez utiliser et compiler le code source fourni pour vous-même ou pour le distribuer. Par contre, si vous distribuez le code source et/ou le complément modifié, vous devez :
+   - indiquer quelle version vous a servi de base.
+   - indiquer que votre version est une version modifiée.
+   - ne pas la confondre avec la version originale.
+   - ne pas vous vanter d'avoir conçu c2iExplorer.
+   - ne pas vendre le code source.
+   - ne pas modifier cette note.
+
+
+
+c2iExplorer version 1.60.159 Beta by René Rhéaume
+Readme
+=================================================
+
+
+Table of contents
+------------------
+1. About c2iExplorer
+2. Modifications to source code
+3. Required software configuration
+4. VBAddin.ini
+5. Future improvements
+6. Legal notes and source code use
+
+About c2iExplorer
+-----------------
+c2iExplorer is a project explorer first designed by Richard Clark for Visual Basic 6.0. It can replace the standard project explorer built-in within VB. Having only version 5.0 (with Service Pack 3), I could not use it until this add-in became open-source. I decided to port it to VB5 and then host it on sourceforge.net.
+
+Modifications to source code
+----------------------------
+Here are the changes since version 1.60.158, more than two years ago:
+    - removed some stupid errors at run-time
+    - added OLE drag-and-drop support into the tree. You can add existing files 
+      to the project by dropping them.
+    - the Shift+Click combination shows the code window of a component
+    - reduced size by 12 KB by changing a maximum of public procedures to 
+      friend procedures
+I wrote Beta because there are still bugs in it.
+Report them to http://www.sourceforge.net/projects/c2iexplorer, then click on Bugs link.
+Source code can be easily compiled in VB5 or VB6 using the according project file.
+
+Required software configuration
+-------------------------------
+You need:
+    - 32 bits Windows (95, 98, 98 SE, Me, NT4, 2000)
+    - Visual Basic 5.0 SP3 (compiled with it and SP3 contains modifications about ActiveX components) or Visual Basic 6.0 (compiled with SP4 applied, when I can).
+    - Recent version of the Windows common controls DLL (install Internet Explorer 5 or newer).
+    - Windows common controls ActiveX control version 6.0 or better.
+    - DAO (Data Access Objects) 3.5 . Microsoft Office 97 (Access) and VB5 Pro or Enterprise installation programs can let you install it in a custom install.
+    - For project report function, Internet Explorer 5.0 or newer, Mozilla or its little cousin Firefox are recommended.
+
+VBAddin.ini
+-----------
+In case of installation program does not install correctly the add-in, add this line in the [Add-Ins32] section in file vbaddin.ini, which is in Windows directory:
+
+c2iexplorer.Connectc2iExplorer=1
+
+Future improvements
+-------------------
+    - correct bugs;
+    - reduce add-in size (now 420 KB);
+    - write documentation.
+
+Legal notes and source code use
+-------------------------------
+Microsoft, Windows, Visual Basic, ActiveX, Office, Access et Internet Explorer are trademarks of Microsoft Corporation.
+
+c2iExplorer original idea came from Richard Clark.
+Being covered by MPL 1.1, it comes "AS IS", without any warranty either implicit or explicit. Use of this program is at your own risks.
+Neither René Rhéaume, Fred Just, Richard Clark, c2i nor any other contributor will be held responsible of any loss on a use or misuse of this computer program.
+
+You can use and compile source code supplied for yourself or to create a branch. However, if you distribute source code and/or modified add-in, you must:
+   - state which version you used for your code base.
+   - state that your version is a modified one.
+   - not confuse with the original version.
+   - not pretend to have designed c2iExplorer.
+   - not sell source code.
+   - not change this note.
