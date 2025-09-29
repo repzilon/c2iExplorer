@@ -162,6 +162,8 @@ End Function
 'End Function
 
 'Ajout par René Rhéaume le 28 juillet 2001
+'Fonction modifiée par René Rhéaume le 25 septembre 2025
+' En cas de problème avec GetPrivateProfileString, retourner nous-mêmes la valeur par défaut
 Public Function LireChaineFichierINI(ByVal chnSection As String, _
         ByVal chnClef As String, ByVal chnValeurDefaut As String, _
         ByVal chnFichierIni As String) As String
@@ -169,7 +171,11 @@ Public Function LireChaineFichierINI(ByVal chnSection As String, _
     Dim chnTemp As String, lngLongueurChaine As Long
     chnTemp = String$(512, 0)
     lngLongueurChaine = GetPrivateProfileString(chnSection, chnClef, chnValeurDefaut, chnTemp, Len(chnTemp), chnFichierIni)
-    LireChaineFichierINI = Left$(chnTemp, lngLongueurChaine)
+    If (lngLongueurChaine < 1) Then
+        LireChaineFichierINI = chnValeurDefaut
+    Else
+        LireChaineFichierINI = Left$(chnTemp, lngLongueurChaine)
+    End If
 End Function
 
 'Ajout par René Rhéaume le 28 juillet 2001
