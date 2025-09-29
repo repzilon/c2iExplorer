@@ -92,7 +92,7 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
         'Ajout par René Rhéaume, 28 juillet 2001
         c2iINIFile = strCheminApp & conCheminRelatifINI
         Select Case conVrai
-            Case Existe(c2iINIFile), frmErreurINI.ObtenirActionINIAbsent
+            Case Existe(c2iINIFile), GestFichier.ObtenirActionINIAbsent2
                 ' Initialisation des variables globales
                 c2iHTMLFile = strCheminApp & "\html\prev.htm"
                 strFichierLangue = strCheminApp & "\Lang\" & _

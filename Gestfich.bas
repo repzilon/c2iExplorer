@@ -228,3 +228,92 @@ Optional lngFlags As FileOperationFlags) As Boolean
     lngRep = SHFileOperation(tSHFileOp)
     Rename = (lngRep = 0) 'retourne si ca a reussi ou non
 End Function
+
+' Ajouté par René Rhéaume le 29 septembre 2025
+Public Function ObtenirActionINIAbsent2() As Long
+    Const conMessage_0 As String = "c2iExplorer n'a pas trouvé le fichier «c2iExplorer.ini» dans le dossier «"
+    Const conMessage_1 As String = "»." & vbCrLf & vbCrLf & _
+        "- Si vous avez une copie de ce fichier sur votre système, cliquez sur «Réessayer» afin de la localiser et de la copier au bon endroit." & vbCrLf & _
+        "- Vous pouvez également regénérer le fichier INI par défaut en cliquant sur «Ignorer»." & vbCrLf & _
+        "- Finalement, cliquez sur «Abandonner» si vous ne souhaitez pas démarrer c2iExplorer. Une fois sorti de Visual Basic, vous pourrez réinstaller le complément."
+    
+    Dim enuResultatMessage As VbMsgBoxResult
+    Dim lngRetourFonction As Long
+    Dim strCheminData As String
+    
+    lngRetourFonction = 0
+    strCheminData = strCheminApp & conDossierData
+    enuResultatMessage = MsgBox(conMessage_0 & strCheminData & conMessage_1, _
+     vbAbortRetryIgnore + vbExclamation + vbDefaultButton3, _
+     "Le fichier c2iExplorer.ini n'a pas été trouvé")
+    
+    If (enuResultatMessage = vbRetry) Then
+        If (ChercherINI(strCheminData) = conVrai) Then
+            lngRetourFonction = 1
+        End If
+    ElseIf (enuResultatMessage = vbIgnore) Then
+        RegenererINI strCheminData
+        lngRetourFonction = 2
+    End If
+    
+    ObtenirActionINIAbsent2 = lngRetourFonction
+End Function
+
+' Transféré de frmErreurINI par René Rhéaume le 29 septembre 2025
+Private Function ChercherINI(ByVal strCheminData As String) As Boolean
+    On Error GoTo Fin
+    ChercherINI = False
+    Dim cCommonDialog As cDlgCom
+    Set cCommonDialog = New cDlgCom
+    With cCommonDialog
+        .DefaultEx = ".ini"
+        .DialogTitle = "Sélectionner c2iExplorer.ini"
+        .Filter = "Paramètres de c2iExplorer (c2iExplorer.ini)|c2iExplorer.ini"
+        .FilterIndex = 1
+        .Flags = conFanionsOuvrir
+        .InitDir = strCheminApp & conDossierData
+        .ShowOpen
+        If (LenB(.Filename) > 0) Then
+            ' Copier le fichier vers le bon endroit
+            MkDir strCheminData
+            FileCopy .Filename, strCheminApp & conCheminRelatifINI
+            ChercherINI = True
+        End If
+    End With
+
+Fin:
+    Set cCommonDialog = Nothing
+End Function
+
+' Transféré de frmErreurINI par René Rhéaume le 29 septembre 2025
+Private Sub RegenererINI(ByVal strCheminData As String)
+    MkDir strCheminData
+    Open (strCheminApp & conCheminRelatifINI) For Output As #1
+    Print #1, "[General]"
+    Print #1, "DefaultType=6"
+    Print #1, "Data="
+    Print #1, "SaveDurations=1"
+    Print #1, "DurationSaveInterval=2"
+    Print #1, "Language="
+    Print #1, "DisplayOnConnect=0"
+    Print #1, vbNullString
+    Print #1, "[Types]"
+    Print #1, "Collection=o;m"
+    Print #1, "Object=o;obj"
+    Print #1, "Form=o;frm"
+    Print #1, "Control=o;ctl"
+    Print #1, "Picture=o;pic"
+    Print #1, "Integer=v;int"
+    Print #1, "Long=v;lng"
+    Print #1, "Boolean=v;bln"
+    Print #1, "String=v;str"
+    Print #1, "Single=v;sng"
+    Print #1, "Double=v;dbl"
+    Print #1, "Byte=v;byt"
+    Print #1, "Date=v;dtm"
+    Print #1, "Variant=v;vnt"
+    Print #1, "Currency=v;cur"
+    Print #1, vbNullString
+    Print #1, "[Durees]"
+    Close #1
+End Sub

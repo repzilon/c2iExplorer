@@ -20,7 +20,6 @@ UserControl=c2iContainerInt.ctl
 Class=Connectc2iExplorer; Connectc2iExplorer.cls
 Module=GestFichier; Gestfich.bas
 Class=cDlgCom; cDlgCom.cls
-Form=frmErreurINI.frm
 Form=frmOptions.frm
 ResFile32="c2iExplorer.RES"
 IconForm="frmBiblio"
