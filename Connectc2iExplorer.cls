@@ -57,7 +57,9 @@ Attribute prjEvent.VB_VarHelpID = -1
 'gestionnaire des ajouts de références
 Public WithEvents refEvent As VBIDE.ReferencesEvents
 Attribute refEvent.VB_VarHelpID = -1
+
 'Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivateProfileStringA" (ByVal lpApplicationName As String, ByVal lpKeyName As Any, ByVal lpString As Any, ByVal lpFileName As String) As Long
+Private Declare Function GetSystemDirectory Lib "kernel32" Alias "GetSystemDirectoryA" (ByVal lpBuffer As String, ByVal nSize As Long) As Long
 
 Private Sub IDTExtensibility_OnAddInsUpdate(custom() As Variant)
     ' commentaire pour que la procédure soit compilée
@@ -66,14 +68,14 @@ End Sub
 'Procédure modifiée par René Rhéaume le 29 avril 2002
 ' Meilleure conditions et vérification de l'existence
 ' de c2iExplorer.ini
-
 'Procédure optimisée par René Rhéaume le 12 janvier 2003
+'Procédure modifiée par René Rhéaume le 29 septembre 2025
+' Gestion de l'erreur no 339
 Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectMode As vbext_ConnectMode, ByVal AddInInst As VBIDE.AddIn, custom() As Variant)
     '=================================================
     'connection du complément
     'on crée l'objet window et usrcomm
     '=================================================
-'    Const conErrFichIntrouvable As Long = 53
     Const conNomMeth As String = "Connectc2iExplorer.IDTExtensibility_OnConnection"
     Dim strFichierLangue As String
     On Error GoTo GestErr
@@ -130,9 +132,23 @@ Private Sub IDTExtensibility_OnConnection(ByVal VBInst As Object, ByVal ConnectM
     Exit Sub
 
 GestErr:
-'    If (Err.Number <> conErrFichIntrouvable) Then
+' Traiter l'erreur 339 en réenregistrant mscomctl.ocx si présent dans le dossier système de Windows
+    If (Err.Number = 339) Then
+        Dim strMscomctl As String, lngRep As Long
+        strMscomctl = SystemeWindows & "\mscomctl.ocx"
+        If (Existe(strMscomctl)) Then
+            lngRep = ShellExecute(0, conOpen, "regsvr32.exe", strMscomctl, vbNullString, SW_NORMAL)
+            If (lngRep = 0) Then
+                GererErrInattendue "Veuillez réinstaller la version 6.0 des contrôles communs de Windows.", conNomMeth
+            Else
+                MsgBox "Les contrôles communs seraient de nouveau inscrits au registre. Vous devez cependant quitter puis relancer Visual Basic pour que cela prenne effet.", vbExclamation
+            End If
+        Else
+            GererErrInattendue "Veuillez installer la version 6.0 des contrôles communs de Windows.", conNomMeth
+        End If
+    Else
         GererErrInattendue , conNomMeth
-'    End If
+    End If
 End Sub
 
 ' Procédure modifiée par René Rhéaume le 29 avril 2002
@@ -383,3 +399,11 @@ End Sub
 '  ' Ceci doit être exécuté depuis la fenêtre Exécution.
 '  Debug.Print WritePrivateProfileString("Add-Ins32", "c2iExplorer.Connectc2iExplorer", conAZero, "vbaddin.ini")
 'End Sub
+
+'Ajouté par René Rhéaume le 29 septembre 2025
+Private Function SystemeWindows() As String
+    Dim chnTemp As String, lngLongueurChaine As Long
+    chnTemp = String$(512, 0)
+    lngLongueurChaine = GetSystemDirectory(chnTemp, Len(chnTemp))
+    SystemeWindows = Left$(chnTemp, lngLongueurChaine)
+End Function
