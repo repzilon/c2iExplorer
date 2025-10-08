@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<projects>
+   <!-- Projects -->
+   <project>
+      <name>[c2iProject-Name]</name>
+      <components>
+         <!-- Components -->
+         <component>
+            <name>[c2iComponent-Name]</name>
+            <members>
+               <!-- Members -->
+               <name>[c2iMember-Name]</name>
+               <!-- /Members -->
+            </members>
+         </component>
+         <!-- /Components -->
+      </components>
+   </project>
+   <!-- /Projects -->
+</projects>

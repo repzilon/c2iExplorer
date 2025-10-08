@@ -3,3 +3,5 @@
 *.vbw
 .DS_Store
 */.DS_Store
+Data/c2iExplorer.log
+LDK/c2iExplorer-*.lng

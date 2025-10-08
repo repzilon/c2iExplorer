@@ -1,0 +1,242 @@
+; ***** BEGIN LICENSE BLOCK *****
+; Version: MPL 1.1
+;
+; The contents of this file are subject to the Mozilla Public License Version
+; 1.1 (the "License"); you may not use this file except in compliance with
+; the License. You may obtain a copy of the License at
+; http://www.mozilla.org/MPL/
+;
+; Software distributed under the License is distributed on an "AS IS" basis,
+; WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+; for the specific language governing rights and limitations under the
+; License.
+;
+; The Original Code is c2iExplorer (for Visual Basic 6).
+;
+; The Initial Developer of the Original Code is
+; c2i - Richard Clark Ingénierie Informatique (www.c2i.fr).
+; Portions created by the Initial Developer are Copyright (C) 2000
+; the Initial Developer. All Rights Reserved.
+;
+; Contributor(s):
+; René Rhéaume (rener@mediom.qc.ca)
+;
+; ***** END LICENSE BLOCK *****
+
+[@Info]
+Translator="René Rhéaume"
+TranslatorEmail="rener@users.sourceforge.net"
+QAContact="René Rhéaume"
+QAEmail="rener@users.sourceforge.net"
+ProgramName="c2iExplorer"
+ProgramVer="1.60.159"
+XlationVer="1.16.159"
+LastModified="2005/09/06"
+Comment="Fichier de référence de la traduction. Sert uniquement de modèle."
+
+[frmBiblio]
+WProp.Caption="Détails"
+Obj.txtName.ToolTipText="La barre oblique est un caractère réservé et sera remplacée par «ou»"
+Obj.lblNom.Caption="Nom"
+Obj.lblDeclar.Caption="Déclaration"
+Obj.lblHeadProc.Caption="En-tête de la procédure"
+Obj.lblInlineProc.Caption="Code"
+Obj.lblEndProc.Caption="Fin de la procédure"
+Obj.tbMain.Buttons(1-->'add').ToolTipText="Ajouter à la catégorie sélectionnée"
+Obj.tbMain.Buttons(3-->'quit').ToolTipText="Quitter"
+Obj.tbMain.Buttons(4-->'reset').ToolTipText="Remettre à zéro"
+Code.txtName_Change.mlgAlternative="ou"
+
+[frmDuree]
+WProp.Caption="Modifier la durée"
+Obj.cmdAppliquer.Caption="&Appliquer"
+Obj.cmdQuit.Caption="&Fermer"
+
+;[frmErreurINI]
+;Obj.cmdAbandonner.Caption="&Abandonner"
+;Obj.cmdChercher.Caption="&Chercher"
+;Obj.cmdRegenerer.Caption="&Regénérer"
+;Code.cmdChercher_Click.conTitreDialogue="Sélectionner"
+;Code.cmdChercher_Click.conDebutFiltre="Paramètres de c2iExplorer"
+;Code.Form_Load.conMessage(0)="c2iExplorer n'a pas trouvé le fichier "c2iExplorer.ini" dans le dossier «"
+;Code.Form_Load.conMessage(1)="»."
+;Code.Form_Load.conMessage(2)="- Si vous avez une copie de ce fichier sur votre système, cliquez sur "Chercher" afin de la localiser et de la copier au bon endroit."
+;Code.Form_Load.conMessage(3)="- Vous pouvez également recréer le fichier INI par défaut en cliquant sur "Recréer"."
+;Code.Form_Load.conMessage(4)="- Finalement, cliquez sur "Abandonner" si vous ne souhaitez pas démarrer c2iExplorer. Une fois sorti de Visual Basic, vous pourrez réinstaller le complément."
+
+[frmOptions]
+WProp.Caption="Options"
+Obj.chkAutosaveLibrary.Caption="Sauvegarder automatiquement la biblio"
+Obj.chkSaveDurations.Caption="Sauvegarder les durées"
+Obj.lblSaveInterval.Caption="Intervalle de sauvegarde des durées :"
+Obj.txtSaveInterval.ToolTipText="En minutes"
+Obj.chkUseLangPack.Caption="Utiliser le fichier de traduction suivant :"
+Obj.lblNote.Caption="Le changement de langue s'appliquera au prochain démarrage de Visual Basic."
+Obj.cmdOK.Caption="&OK"
+Obj.cmdCancel.Caption="&Annuler"
+
+[frmPrint]
+WProp.Caption="Générer un rapport"
+Obj.Toolbar1.Buttons(1).ToolTipText="Aperçu général"
+Obj.Toolbar1.Buttons(3).ToolTipText="Aperçu élément sélectionné"
+Obj.Toolbar1.Buttons(5).ToolTipText="Quitter"
+Obj.lblInfos.Caption="Choisissez votre modèle :"
+Obj.lblTitre.Caption="Élément sélectionné :"
+Code.ExtraitHTML.mlgMsgFmtNonValable="Format non valable"
+Code.LireFichierTexte.mlgMsgImpossOuvrir="Impossible d'ouvrir le fichier :"
+Code.EcrireFichier.mlgMsgVerrouille="» est verrouillé par une autre application ou est en lecture seule."
+Code.VoirFichApercu.mlgarErrShellExec(0)="Impossible de voir l'aperçu"
+Code.VoirFichApercu.mlgarErrShellExec(1)="Retour de ShellExecute : "
+
+[MExtraitIcone]
+Code.Declarations.mlgLibelDescrpt="Description"
+Code.Declarations.mlgLibelActu="Actualiser"
+Code.Declarations.mlgLibelDelete="Supprimer"
+Code.Declarations.mlgLibelPrint="Imprimer"
+Code.Declarations.mlgMsgAucuneFenetreCodeActive="Il n'y a pas de fenêtre de code active."
+Code.Declarations.mlgarTypeMembres(0)="Objets"
+Code.Declarations.mlgarTypeMembres(1)="Variables"
+Code.Declarations.mlgarTypeMembres(2)="Constantes"
+Code.Declarations.mlgarTypeMembres(3)="Méthodes"
+Code.Declarations.mlgarTypeMembres(4)="Événements"
+Code.Declarations.mlgarTypeMembres(5)="Propriétés"
+Code.Declarations.mlgarTypeMembres(6)="API"
+Code.Declarations.mlgarTypeMembres(7)="Public"
+Code.Declarations.mlgarTypeMembres(8)="Private"
+Code.Declarations.mlgarTypeMembres(9)="Friend"
+Code.Declarations.mlgTitreInconnu="Inconnu"
+Code.Declarations.mlgarUniteTemps(0)="h"
+Code.Declarations.mlgarUniteTemps(1)="m"
+Code.Declarations.mlgarUniteTemps(2)="s"
+Code.Declarations.mlgarFichExistePas(0)="Le fichier «"
+Code.Declarations.mlgarFichExistePas(1)="» n'existe pas."
+Code.ConnectionInternet.mlgMsgPasConnInternet="Impossible de se connecter à Internet"
+
+[modImporterDurees]
+Code.ImporterDurees.mlgarErrImportation(0)="Une erreur est survenue lors de l'importation des durées"
+Code.ImporterDurees.mlgarErrImportation(1)="de la base de registres vers le fichier INI."
+
+[cDlgCom]
+Code.ShowOpenSave.mlgDebutDefaultFilter="Tous"
+
+[UDAddCode]
+Obj.FrameProp.Caption="Propriété :"
+Obj.frameLstProp.Caption="Liste des propriétés"
+Obj.FrameCode.Caption="Code généré"
+Obj.lblCode(0).Caption="Déclarations"
+Obj.lblCode(1).Caption="Code"
+Obj.lblNom.Caption="Nom :"
+Obj.lblType.Caption="Type :"
+Obj.tbMain.Buttons(1-->'addprop').ToolTipText="Ajouter une propriété"
+Obj.tbMain.Buttons(2-->'delprop').ToolTipText="Supprimer la propriété"
+Obj.tbMain.Buttons(4-->'delete').ToolTipText="Remettre à zéro"
+Obj.tbMain.Buttons(6-->'copie').ToolTipText="Copier le code généré"
+Code.ChargerCombos.mlgMsgErrChargement="Erreur au chargement de "
+Code.AjouteProp.mlgMsgPropExisteDeja="Cette propriété existe déjà."
+Code.VoirCode.mlgGenerePar="Généré par"
+Code.CopieCode.mlgAucuneFenetreCode="Aucune fenêtre de code active"
+
+[UDBiblio]
+Obj.tbMain.Buttons(1-->'newdata').ToolTipText="Nouvelle bibliothèque"
+Obj.tbMain.Buttons(2-->'biblio').ToolTipText="Charger une bibliothèque"
+Obj.tbMain.Buttons(3-->'save').ToolTipText="Sauvegarder la bibliothèque sous"
+Obj.tbMain.Buttons(5-->'newbiblio').ToolTipText="Créer une catégorie"
+Obj.tbMain.Buttons(6-->'newcategorie').ToolTipText="Créer un dossier"
+Obj.tbMain.Buttons(10-->'voir').ToolTipText="Voir/ajouter un élément"
+Obj.tbMain.Buttons(11-->'copie').ToolTipText="Insérer le code"
+Obj.tbMain.Buttons(13-->'DeclareProc').ToolTipText="Insérer le code des déclarations"
+Obj.tbMain.Buttons(14-->'HeadProc').ToolTipText="Insérer le code de début de procédure"
+Obj.tbMain.Buttons(15-->'InLineProc').ToolTipText="Insérer le code interne"
+Obj.tbMain.Buttons(16-->'EndProc').ToolTipText="Insérer le code de fin de procédure"
+Code.UserDocument_Initialize.strDebutFiltreBD="Bibliothèques de code"
+Code.EcrireBibliotheque.mlgarMsgErrSauvegarde(0)="Il y a eu une erreur lors de l'initialisation de la sauvegarde."
+Code.EcrireBibliotheque.mlgarMsgErrSauvegarde(1)="a peut-être créé un fichier de sauvegarde sous le nom de"
+Code.ChargeBase.mlgMsgErrChargeBase="Erreur lors du chargement de la base"
+Code.AddBiblio.mlgarMsgBibl(0)="Saisissez le nom de la nouvelle bibliothèque :"
+Code.AddBiblio.mlgarMsgBibl(1)="Ce nom de bibliothèque est déjà utilisé."
+Code.AddBiblio.mlgarMsgBibl(2)="Le nom de la bibliothèque n'est pas correct."
+Code.AddCategorie.mlgarMsgCat(0)="Saisissez le nom de la nouvelle catégorie :"
+Code.AddCategorie.mlgarMsgCat(1)="Ce nom de catégorie est déjà utilisé."
+Code.SauvegarderAncienneBiblio.mlgQuestion="Voulez-vous sauvegarder les modifications faites à cette bibliothèque ?"
+
+[UDCompteur]
+Obj.lv.ColumnHeaders(1).Text="Projet"
+Obj.lv.ColumnHeaders(2).Text="Durée"
+Obj.lv.ColumnHeaders(3).Text="Chemin et nom du fichier projet"
+Obj.tb.Buttons(3-->'addprj').ToolTipText="Ajouter les projets"
+Obj.tb.Buttons(4-->'prop').ToolTipText="Modifier la durée"
+Code.AjouteProjet.mlgarMsgImpossibleAjouterPrj(0)="Impossible d'ajouter le projet"
+Code.AjouteProjet.mlgarMsgImpossibleAjouterPrj(1)="Sauvegardez-le avant."
+Code.AjouteProjet.mlgarQuestionAjouterPrj(0)="Voulez-vous ajouter le projet"
+Code.AjouteProjet.mlgarQuestionAjouterPrj(1)="à vos compteurs ?"
+
+[UDExplorer]
+Obj.mnuAffichageBarreDescription.Caption="Barre de description"
+Obj.mnuAffichageBarreFiltres.Caption="Barre des filtres"
+Obj.tbGene.Buttons(2-->'voir').ToolTipText="Voir"
+Obj.tbGene.Buttons(6-->'compile').ToolTipText="Compiler"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(1).Text="Durée du développement"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(2).Text="Générateur de propriétés"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(3).Text="Générateur de MsgBox"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(4).Text="Bibliothèque de code"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(5).Text="c2iExplorer sur le Web"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(6).Text="Générer un rapport"
+Obj.tbGene.Buttons(4-->'prop').ButtonMenus(7).Text="Options"
+Obj.tbDescription.Buttons(1-->'ok').ToolTipText="Appliquer la description"
+Code.Suppression.mlgMsgConfirm="Êtes-vous sur de vouloir retirer"
+Code.Suppression.mlgMsgSupprImpossible="Retrait impossible"
+Code.InitReferences.mlgTitreReferences="Références"
+Code.InitReferences.mlgTitreComposants="Composants"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(0)="Concepteur(s) ActiveX"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(1)="Module(s) de classe"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(2)="Document(s) utilisateur"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(3)="Formulaire(s) MSForms"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(4)="Page(s) de propriétés"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(5)="Document(s) associé(s)"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(6)="Ressources externes"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(7)="Module(s)"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(8)="Contrôle(s) utilisateur"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(9)="Fenêtre(s) enfant MDI"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(10)="Formulaire(s)"
+Code.NodeTypeFeuille.mlgarTitreTypeModule(11)="Fenêtre MDI mère"
+
+[UDMsgBox]
+Obj.c2iContainerIntMsg(0).Caption="Icônes"
+Obj.c2iContainerIntMsg(1).Caption="Boutons"
+Obj.c2iContainerIntMsg(2).Caption="Bouton par défaut"
+Obj.c2iContainerIntMsg(3).Caption="Modalité"
+Obj.c2iContainerIntMsg(4).Caption="Aide"
+Obj.c2iContainerIntMsg(5).Caption="Divers"
+Obj.c2iContainerIntMsg(6).Caption="Message - Titre"
+Obj.chkHelpButton.Caption="Bouton d'aide"
+Obj.chk1Plan.Caption="Fenêtre de 1er plan"
+Obj.chkTextAlign.Caption="Texte aligné à droite"
+Obj.lblIconesInfos(0).Caption="Aucune"
+Obj.lblIconesInfos(1).Caption="Critique"
+Obj.lblIconesInfos(2).Caption="Question"
+Obj.lblIconesInfos(3).Caption="Exclamation"
+Obj.lblIconesInfos(4).Caption="Information"
+Obj.lblInvite(0).Caption="Titre"
+Obj.lblInvite(1).Caption="Message"
+Obj.lblInvite(2).Caption="Code"
+Obj.lblInvite(3).Caption="Contexte"
+Obj.lblInvite(4).Caption="Fichier d'aide"
+Obj.txtMessage.Text="Votre message"
+;Code.ChargerChainesLocales.strarButtons(0)="OK"
+;Code.ChargerChainesLocales.strarButtons(1)="Cancel"
+;Code.ChargerChainesLocales.strarButtons(2)="Abort"
+;Code.ChargerChainesLocales.strarButtons(3)="Retry"
+;Code.ChargerChainesLocales.strarButtons(4)="Ignore"
+;Code.ChargerChainesLocales.strarButtons(5)="Yes"
+;Code.ChargerChainesLocales.strarButtons(6)="No"
+Code.ChargerChainesLocales.strarRangs(1)="er"
+Code.ChargerChainesLocales.strarRangs(2)="e"
+Code.ChargerChainesLocales.strarRangs(3)="e"
+Code.ChargerChainesLocales.strarRangs(4)="e"
+Code.ChargerChainesLocales.strBouton="bouton"
+Code.ChargerChainesLocales.strModal="Modal"
+Code.ChargerChainesLocales.strarModality(0)="Application"
+Code.ChargerChainesLocales.strarModality(1)="Système"
+Code.cmdParcoursFile_Click.strFiltreAide="Fichiers d'aide"
+Code.cmdParcoursFile_Click.strFiltreTout="Tous les fichiers"
+Code.ShowMsgBox.mlgMsgErrCode="Erreur dans le code"

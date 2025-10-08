@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" type="text/css" href="c2iexplorer_ldk.css" />
+<title>c2iExplorer LDK Documentation</title>
+</head>
+
+<body>
+
+<h1><a name="top"></a>c2iExplorer LDK</h1>
+<p class="prem" style="margin-bottom: 0px">Version 1.02.159 of Localization
+Development Kit</p>
+<p class="prem"><a href="c2iexplorer_ldk_fr.html">Français</a>&nbsp;|&nbsp;<b>English</b></p>
+<h2>Table of Contents</h2>
+<ol class="prem">
+  <li><a href="#legal">Legal note</a></li>
+  <li><a href="#translate">How to translate c2iExplorer</a></li>
+  <li><a href="#program">How to support localization in your c2iExplorer
+    modifications</a></li>
+  <li><a href="#architecture">Inside multilingual </a><a href="#architecture">architecture</a></li>
+  <li><a href="#lngSpecs">Localization file format specifications</a></li>
+  <li><a href="#untranslated">Intentionally un-translated strings</a></li>
+  <li><a href="#gnufdl">GNU Free Documentation License</a></li>
+</ol>
+<h2><a name="legal"></a>Legal note</h2>
+<p class="prem">Copyright (c) 2002, 2005 <a href="mailto:rener@users.sourceforge.net">René
+Rhéaume</a>.<br />
+Permission is granted to copy, distribute and/or modify this document under the
+terms of the GNU Free Documentation License, Version 1.1 or any later version
+published by the Free Software Foundation; with the Invariant Sections being
+&quot;Legal note&quot; and &quot;GNU Free Documentation License&quot;, with no
+Front-Cover Texts, and with no Back-Cover Texts. A copy of the license is
+included in the section entitled &quot;GNU Free Documentation License&quot;.</p>
+<h2><a name="translate"></a>How to translate c2iExplorer</h2>
+<p class="prem">c2iExplorer localization architecture has been designed to be
+simple to use by translators. You have to translate one INI style text file. Use
+your favourite text editor to translate text between double-quotes (&quot;&quot;)
+except <i>@Info</i> section. Next, edit <i>@Info</i> section like this:</p>
+<dl>
+  <dt><i>Translator</i></dt>
+  <dd>your first and last name</dd>
+  <dt><i>TranslatorEmail</i></dt>
+  <dd>your email address</dd>
+  <dt><i>QAContact</i></dt>
+  <dd>your translation quality assurance contact first and last name</dd>
+  <dt><i>QAEmail</i></dt>
+  <dd>your quality assurance contact email address</dd>
+  <dt><i>ProgramName</i></dt>
+  <dd>program name. Must stay <i>c2iExplorer</i></dd>
+  <dt><i>ProgramVer</i></dt>
+  <dd>program version which language pack is made for</dd>
+  <dt><i>XlationVer</i></dt>
+  <dd>translation version. Last number group should be the same as <i>ProgramVer</i></dd>
+  <dt><i>LastModified</i></dt>
+  <dd>last modification date occurred on file in YYYY/MM/DD format.</dd>
+</dl>
+<p>Then, translate project report templates in the HTML folder. Do a file copy,
+then translate then. Do not forget to rename them indicating language between []
+as the first characters in file name. Do not translate neither what is between <i>&lt;</i>&nbsp;and
+<i>&gt;</i>&nbsp;(HTML tag), nor between <i>[</i>&nbsp;and <i>]</i> (internally
+used by c2iExplorer) nor between <i>&lt;!--</i> and <i>--&gt;</i> (usually a
+HTML comment, but used in a special manner by c2iExplorer).</p>
+<p>Finally, send all your translated files to <a href="mailto:rener@users.sourceforge.net">rener@users.sourceforge.net</a>
+.</p>
+<h2><a name="program"></a>How to support localization in your c2iExplorer
+modifications</h2>
+<p class="prem">If your modification contains strings to show at the user, you
+must place them in the localization file. You put the string in the section
+corresponding to module name. Key name preceding string is object or code
+hierarchy. If string were a constant if the localization system did not exist,
+variable prefix is <i>mlg</i>. If your code uses a localizable string to create
+another one, use <i>str</i> as prefix. After equals sign, put your localizable
+string between double quotes (&quot;&quot;). A space separates neither key from
+equals sign nor equals sign from string value. In your code, cal&nbsp; <i><a href="#LireChaineLocalisee">LireChaineLocalisee</a></i>
+function passing it module name, key to read and default value if an error
+occurs.</p>
+<p class="prem"><b>Important</b>: respect format <a href="#lngSpecs">specifications</a>
+in the localization file. Also, pass a non-empty string to the 3<sup>rd</sup>&nbsp;parameter
+of <i><a href="#LireChaineLocalisee">LireChaineLocalisee</a></i>. This will
+allow to show some text instead of a mysterious blank, even if it is in another
+language. Default text must be in French, because of c2iExplorer
+origin.</p>
+<h2><a name="architecture"></a>Inside multilingual architecture</h2>
+<p class="prem">Multilingual architecture consists in six functions and two
+global variables:</p>
+<h3>Functions</h3>
+<dl class="prem">
+  <dt><i><a name="ValiderFichierLangue"></a>Public Function
+    ValiderFichierLangue(ByVal strFichierLangue As String) As Boolean</i></dt>
+  <dd>Check if localization passed by <i>strFichierLangue</i> exists, that <i>ProgramName</i>
+    key of <i>@Info</i> section of file corresponds to program name and that the
+    <i>ProgramVer</i> value of <i>@Info</i> section corresponds to version
+    number of the running instance of the program. This function must be called
+    on program start passing it localization file full path read form registry
+    base, an INI file, a XML file, etc. Returns a Boolean value with which
+    variable <i><a href="#blnMultilingueActive">blnMultilingueActive</a></i> is
+    affected. If the return value is <i>True</i>, affect immediately to <i><a href="#strFichierLangueActuel">strFichierLangueActuel</a></i>
+    the value of <i>strFichierLangue</i> argument.<i></i></dd>
+  <dt><i><a name="LireChaineLocalisee"></a>Public Function
+    LireChaineLocalisee(ByVal strModule As String, ByVal strClef As String,
+    ByVal strValeurDefaut As String) As String</i></dt>
+  <dd>Read a string from localization file. <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>
+    must be called first. <i>strModule</i> is module name. Ideally, use a
+    symbolic constant. <i>strClef</i> is key used to get the string. <i>strValeurDefaut</i>
+    is the returned string if there is an error when reading localization file.
+    Put a string, control property or array element already containing text in
+    French. Returns the localized string or, if error, <i>strValeurDefaut</i>.</dd>
+  <dt><i>Public Function FichierExiste(ByVal sNom As String) As Boolean</i></dt>
+  <dd>Check if a file exists. Used by <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>.
+    <i>sNom</i> contains full path to the file to check. Returns a Boolean value
+    depending on if the file exists or not.</dd>
+  <dt><i>Public Function IsSameString(String1 As String, String2 As String) As
+    Boolean</i></dt>
+  <dd>Does a binary comparison binary of two strings. Used by <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>.
+    <i>String1</i> and <i>String2</i> are the strings to compare. Returns Returns
+    a Boolean value whether if strings are identical or not.</dd>
+  <dt><i>Public Function LireChaineFichierINI(ByVal chnSection As String, ByVal
+    chnClef As String, ByVal chnValeurDefaut As String, ByVal chnFichierIni As
+    String) As String</i></dt>
+  <dd>Read a string from an INI file. Used by <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>
+    and <a href="#LireChaineLocalisee"><i>LireChaineLocalisee</i></a>. <i>chnSection</i>
+    is section name<i>, chnClef</i> is key name, <i>chnValeurDefaut</i> is the
+    value to return on error and <i>chnFichierIni</i> is the INI file to read.
+    Returns the string read or <i>chnValeurDefaut</i> if error.</dd>
+  <dt><i>Public Sub StrArray(ByRef strarDest() As String, ParamArray
+    vntarChaines() As Variant)</i></dt>
+  <dd>Initialize a string array. <i>strarDest</i> contains reference to the
+    array to initialize. Then, pass the list of strings that the array will
+    contain. This function is a little bit faster than VB built-in <i>Array</i>.
+    It is useful to load localizable strings in a loop. You only have to specify
+    the contents of&nbsp; the array at the current index as <i>strValeurDefaut</i>
+    argument value of <i><a href="#LireChaineLocalisee">LireChaineLocalisee</a></i>
+    function.</dd>
+</dl>
+<h3>Variables</h3>
+<dl class="prem">
+  <dt><i><a name="strFichierLangueActuel"></a>strFichierLangueActuel</i></dt>
+  <dd>Full path to localization file currently used. Null string if there is no
+    valid file specified.</dd>
+  <dt><i><a name="blnMultilingueActive"></a>blnMultilingueActive</i></dt>
+  <dd>Flag indicating if the localization file specified in <i>strFichierLangueActuel</i>
+    can be used. Useful to optimize loading with generated arrays or des
+    controls containing their default caption.</dd>
+</dl>
+<h2><a name="lngSpecs"></a>Localization file format specifications</h2>
+<ul class="prem">
+  <li>section name corresponds to module name (standard, form, class, etc.)</li>
+  <li>key name begins with <i>WProp</i>, <i>Obj</i>, or <i>Code</i></li>
+  <li>graphical interface module (any form type, UserDocument) properties are
+    preceded by <i>WProp</i></li>
+  <li>next objects, properties , procedures, etc. hierarchy comes.</li>
+  <li>each hierarchical level is separated by a period (.)</li>
+  <li>for a string to localize situated in <i>(Declarations) </i>section, key
+    name starts with "<i>Code.Declarations.</i>".</li>
+  <li>key name does not contain user interface object hierarchy. For example, if
+    a control lblCode is inside fraCode, key will begin with "Obj.txtCode."
+    and not "Obj.fraCode.lblCode."</li>
+  <li>index containers are parentheses</li>
+  <li>collection key is not mandatory but highly recommended</li>
+  <li>to write a key associated to an index, use this syntax: index<i>--&gt;&quot;</i>key<i>&quot;</i></li>
+</ul>
+<h2><a name="untranslated"></a>Intentionally un-translated strings</h2>
+<p class="prem">There are some strings that do not use the
+localization&nbsp;system:</p>
+<dl>
+  <dt><i>frmErreurINI</i></dt>
+  <dd>This form is shown if file c2iExplorer.ini is not found. Because the
+    localization file name to used in written in this absent file, then it is
+    impossible to load localized strings. strings will stay in French while
+    francophone users form the majority of c2iExplorer users</dd>
+  <dt><i>MExtraitIcone.GererErrInattendue</i></dt>
+  <dd>This procedure shows an error message and writes to the log when an
+    unmanaged error occurred. The message being almost the same in dialog
+    box and in log file, it becomes awkward to use localization system. Strings
+    will remain in French while French speaking users and developers are the
+    biggest part of c2iExplorer users and developers</dd>
+  <dt><i>UDMsgBox.lblButtons()</i></dt>
+  <dd>Contains MsgBox button captions. Left in English because of the lack of
+    space and because they recall le Visual Basic constants names</dd>
+</dl>
+<h2><a name="gnufdl"></a>GNU Free Documentation License</h2>
+<p class="prem"><a href="gnu_fdl_en.html">Read GNU Free Documentation License
+covering this document</a></p>
+
+</body>
+
+</html>

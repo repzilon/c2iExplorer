@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" type="text/css" href="c2iexplorer_ldk.css" />
+<title>Documentation du LDK de c2iExplorer</title>
+</head>
+
+<body>
+
+<h1><a name="top"></a>c2iExplorer LDK</h1>
+<p class="prem" style="margin-bottom: 0px">Version 1.02.159 du kit de
+de localisation</p>
+<p class="prem"><b>Français</b>&nbsp;|&nbsp;<a href="c2iexplorer_ldk_en.html">English</a></p>
+<h2>Table des matières</h2>
+<ol class="prem">
+  <li><a href="#legal">Note légale</a></li>
+  <li><a href="#translate">Comment traduire c2iExplorer</a></li>
+  <li><a href="#program">Comment supporter la localisation dans ses
+    modifications de c2iExplorer</a></li>
+  <li><a href="#architecture">À l'intérieur de l'architecture multilingue</a></li>
+  <li><a href="#lngSpecs">Spécifications du format de fichier de localisation</a></li>
+  <li><a href="#untranslated">Chaînes intentionnellement non traduites</a></li>
+  <li><a href="#gnufdl">GNU Free Documentation License</a></li>
+</ol>
+<h2><a name="legal"></a>Note légale</h2>
+<p class="prem">Copyright (c) 2002, 2005 <a href="mailto:rener@users.sourceforge.net">René
+Rhéaume</a>.<br />
+Permission is granted to copy, distribute and/or modify this document under the
+terms of the GNU Free Documentation License, Version 1.1 or any later version
+published by the Free Software Foundation; with the Invariant Sections being
+&quot;Note légale&quot; and &quot;GNU Free Documentation License&quot;, with no
+Front-Cover Texts, and with no Back-Cover Texts. A copy of the license is
+included in the section entitled &quot;GNU Free Documentation License&quot;.</p>
+<h2><a name="translate"></a>Comment traduire c2iExplorer</h2>
+<p class="prem">L'architecture de localisation de c2iExplorer a été conçue
+pour être simple à utiliser pour les traducteurs. Vous avez un fichier texte
+de style INI à traduire. Utilisez votre éditeur de texte préféré pour
+traduire le texte se trouvant entre les guillemets (&quot;&quot;) sauf dans la
+section <i>@Info</i>. Ensuite, éditez la section <i>@Info</i> comme suit&nbsp;:</p>
+<dl>
+  <dt><i>Translator</i></dt>
+  <dd>votre prénom et nom</dd>
+  <dt><i>TranslatorEmail</i></dt>
+  <dd>votre adresse de courrier électronique</dd>
+  <dt><i>QAContact</i></dt>
+  <dd>prénom et nom de la personne chargée à l'assurance qualité de votre
+    traduction</dd>
+  <dt><i>QAEmail</i></dt>
+  <dd>adresse de courrier électronique du chargé à l'assurance qualité</dd>
+  <dt><i>ProgramName</i></dt>
+  <dd>nom du programme. Doit rester <i>c2iExplorer</i></dd>
+  <dt><i>ProgramVer</i></dt>
+  <dd>version du programme auquel le fichier de traduction a été fait pour</dd>
+  <dt><i>XlationVer</i></dt>
+  <dd>version de la traduction. Le dernier groupe de chiffres devrait être le
+    même que celui de <i>ProgramVer</i></dd>
+  <dt><i>LastModified</i></dt>
+  <dd>date de dernière modification du fichier dans le format AAAA/MM/JJ.</dd>
+</dl>
+<p>Ensuite, traduisez les modèles de rapport de projet situés dans le dossier
+HTML. Faites une copie des fichiers, puis traduisez-les. N'oubliez pas de les
+renommer en indiquant la langue entre crochets au tout début du nom de fichier.
+Ne traduisez pas ce qui est entre <i>&lt;</i>&nbsp;et&nbsp;<i>&gt;</i>&nbsp;(balise
+HTML), ni entre <i>[</i>&nbsp;et&nbsp;<i>]</i> (utilisé à l'interne par
+c2iExplorer) ni entre <i>&lt;!--</i> et <i>--&gt;</i> (habituellement un
+commentaire HTML, mais utilisé de manière spéciale par c2iExplorer).</p>
+<p>Finalement, envoyez votre traduction à <a href="mailto:rener@users.sourceforge.net">rener@users.sourceforge.net</a>
+.</p>
+<h2><a name="program"></a>Comment supporter la localisation dans ses
+modifications de c2iExplorer</h2>
+<p class="prem">Si votre modification comporte des chaînes de caractères à
+afficher à l'utilisateur, il faudra les placer dans les fichiers de traduction.
+Vous placez la chaîne dans la section correspondant au nom du module. Le nom de
+la clé précédent la chaîne est la hiérarchie d'objet ou du code. Si la
+chaîne était une constante s'il n'y avait pas ce système, le préfixe de
+variable est <i>mlg</i>. Si votre code utilise une chaîne pour en produire une
+autre, utilisez le préfixe <i>str</i>. Après le signe égal, entrez votre
+chaîne à traduire entre guillemets anglais doubles (&quot;&quot;). Aucun
+espace ne sépare la clé du signe égal et le signe égal de la valeur
+chaîne. Dans votre code, appelez ensuite la fonction <i><a href="#LireChaineLocalisee">LireChaineLocalisee</a></i>
+en lui passant le nom du module, la clé à lire et la valeur par défaut s'il y
+a erreur.</p>
+<p class="prem"><b>Important</b> : respectez les <a href="#lngSpecs">spécifications</a>
+du format dans le fichier de localisation. Aussi, spécifiez une chaîne non
+vide pour le 3<sup>e</sup>&nbsp;paramètre de <i><a href="#LireChaineLocalisee">LireChaineLocalisee</a></i>.
+Ceci permettra d'afficher quand même un texte explicatif et non un mystérieux
+blanc, même si c'est dans une autre langue. Le texte dans cette valeur par
+défaut doit être en français, à cause de l'origine de c2iExplorer.</p>
+<h2><a name="architecture"></a>À l'intérieur de l'architecture multilingue</h2>
+<p class="prem">L'architecture multilingue consiste en six fonctions et deux
+variables globales :</p>
+<h3>Fonctions</h3>
+<dl class="prem">
+  <dt><i><a name="ValiderFichierLangue"></a>Public Function
+    ValiderFichierLangue(ByVal strFichierLangue As String) As Boolean</i></dt>
+  <dd>Vérifie si le fichier de localisation passé par <i>strFichierLangue</i>
+    existe, que la clé <i>ProgramName</i> de la section <i>@Info</i> de ce
+    fichier correspond au nom du programme et que la valeur de <i>ProgramVer</i>
+    de la section <i>@Info</i> correspond au numéro de la version du programme
+    exécuté actuellement. Cette fonction doit être appelée au démarrage du
+    programme en lui passant le chemin complet du fichier de localisation lu de
+    la base de registres, d'un fichier INI, d'un fichier XML, etc. Retourne une
+    valeur booléenne avec laquelle la variable <i><a href="#blnMultilingueActive">blnMultilingueActive</a></i>
+    est affectée. Si la valeur retournée est <i>True</i>, affectez
+    immédiatement à <i><a href="#strFichierLangueActuel">strFichierLangueActuel</a></i>
+    la valeur du paramètre <i>strFichierLangue</i>.<i></i></dd>
+  <dt><i><a name="LireChaineLocalisee"></a>Public Function
+    LireChaineLocalisee(ByVal strModule As String, ByVal strClef As String,
+    ByVal strValeurDefaut As String) As String</i></dt>
+  <dd>Lit une chaîne du fichier de localisation. <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>
+    doit être appelé au préalable. <i>strModule</i> est le nom du module.
+    Utilisez idéalement une constante symbolique. <i>strClef</i> est la clé de
+    la chaîne à chercher. <i>strValeurDefaut</i> est la chaîne renvoyée s'il
+    y a une erreur lors de la lecture du fichier de localisation. Placez une
+    chaîne de caractères, la propriété du contrôle ou l'élément du
+    tableau qui contient déjà du texte français. Retourne la chaîne
+    localisée ou, si erreur, <i>strValeurDefaut</i>.</dd>
+  <dt><i>Public Function Existe(ByVal sNom As String) As Boolean</i></dt>
+  <dd>Détermine si un fichier existe. Utilisé par <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>.
+    <i>sNom</i> contient le chemin complet à vérifier. Retourne une valeur
+    booléenne selon si le fichier existe ou non.</dd>
+  <dt><i>Public Function IsSameString(String1 As String, String2 As String) As
+    Boolean</i></dt>
+  <dd>Effectue une comparaison binaire de deux chaînes de caractères. Utilisé
+    par <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>. <i>String1</i>
+    et <i>String2</i> sont les chaînes à comparer. Retourne une valeur
+    booléenne indiquant si les chaînes sont identiques ou non.</dd>
+  <dt><i>Public Function LireChaineFichierINI(ByVal chnSection As String, ByVal
+    chnClef As String, ByVal chnValeurDefaut As String, ByVal chnFichierIni As
+    String) As String</i></dt>
+  <dd>Lit une chaîne d'un fichier INI. Utilisé par <i><a href="#ValiderFichierLangue">ValiderFichierLangue</a></i>
+    et <a href="#LireChaineLocalisee"><i>LireChaineLocalisee</i></a>. <i>chnSection</i>
+    est le nom de la section<i>, chnClef</i> est la clé, <i>chnValeurDefaut</i>
+    est la valeur à retourner en cas d'erreur et <i>chnFichierIni</i> est le
+    fichier INI à lire. Retourne la chaîne de caractères lue ou si <i>chnValeurDefaut
+    </i>erreur.</dd>
+  <dt><i>Public Sub StrArray(ByRef strarDest() As String, ParamArray
+    vntarChaines() As Variant)</i></dt>
+  <dd>Initialise un tableau de chaînes de caractères. <i>strarDest</i>
+    contient la référence du tableau à initialiser. Ensuite, passez la liste
+    de chaînes que contiendra le tableau. Cette fonction est un peu plus rapide
+    que <i>Array</i> fourni avec VB. Elle est utile pour charger des chaînes de
+    localisation en boucle. Vous n'avez qu'à spécifier le contenu du tableau
+    à l'indice où vous êtes rendu comme valeur du paramètre <i>strValeurDefaut</i>
+    de la fonction <i><a href="#LireChaineLocalisee">LireChaineLocalisee</a></i>.</dd>
+</dl>
+<h3>Variables</h3>
+<dl class="prem">
+  <dt><i><a name="strFichierLangueActuel"></a>strFichierLangueActuel</i></dt>
+  <dd>Chemin complet et nom du fichier de localisation actuellement utilisé.
+    Chaîne nulle s'il n'y a pas de fichier valide spécifié.</dd>
+  <dt><i><a name="blnMultilingueActive"></a>blnMultilingueActive</i></dt>
+  <dd>Fanion indiquant si un fichier de localisation spécifié dans <i>strFichierLangueActuel</i>
+    est utilisable. Utile pour optimiser le chargement avec des tableaux
+    générés ou des contrôles contenant leur libellé par défaut.</dd>
+</dl>
+<h2><a name="lngSpecs"></a>Spécifications du format de fichier de localisation</h2>
+<ul class="prem">
+  <li>le nom de la section correspond au nom du module (standard, formulaire,
+    classe, etc.)</li>
+  <li>le nom de la clé commence par <i>WProp</i>, <i>Obj</i> ou <i>Code</i></li>
+  <li>les propriétés d'un module d'interface graphique (tous les types de
+    formulaire, UserDocument) sont précédées de <i>WProp</i></li>
+  <li>vient ensuite la hiérarchie des objets, propriétés, procédures, etc.</li>
+  <li>chacun des niveaux hiérarchiques est délimité par un point (.)</li>
+  <li>pour une chaîne à localiser se trouvant dans la section <i>(Déclarations)</i>,
+    le nom de la clé commence par «<i>Code.Declarations.</i>».</li>
+  <li>le nom de la clé ne contient pas la hiérarchie des objets de l'interface
+    utilisateur. Par exemple, si le contrôle lblCode se trouve dans fraCode, le
+    début de clé sera «Obj.txtCode.» et non «Obj.fraCode.lblCode.»</li>
+  <li>les délimiteurs d'indice sont les parenthèses</li>
+  <li>l'inscription des clés de collection n'est pas obligatoire mais est
+    fortement recommandée</li>
+  <li>pour écrire une clé associée à un indice, utiliser cette syntaxe :
+    indice<i>--&gt;&quot;</i>clef<i>&quot;</i></li>
+</ul>
+<h2><a name="untranslated"></a>Chaînes intentionnellement non traduites</h2>
+<p class="prem">Il y a quelques chaînes qui n'utilisent pas le système de
+localisation&nbsp;:</p>
+<dl>
+  <dt><i>frmErreurINI</i></dt>
+  <dd>Ce formulaire s'affiche quand le fichier c2iExplorer.ini n'a pas été
+    trouvé. Comme le nom du fichier de localisation à utiliser se trouve dans
+    ce fichier absent, il est alors impossible de charger les chaînes de
+    caractères localisées. Les chaînes resteront en français tant que les
+    utilisateurs francophones sont les utilisateurs majoritaires de c2iExplorer</dd>
+  <dt><i>MExtraitIcone.GererErrInattendue</i></dt>
+  <dd>Cette procédure affiche un message d'erreur et écrit dans le journal
+    quand une erreur non gérée s'est produite. Étant donné que c'est à peu
+    près le même message dans la boîte de message et dans le fichier journal,
+    il devient fastidieux d'utiliser le système de localisation. Les chaînes
+    resteront en français tant que les utilisateurs et développeurs
+    francophones sont les utilisateurs et développeurs majoritaires de
+    c2iExplorer</dd>
+  <dt><i>UDMsgBox.lblButtons()</i></dt>
+  <dd>Contient les libellés des boutons d'un MsgBox. Elles sont laissées en
+    anglais à cause du manque d'espace et parce qu'elles rappellent le noms des
+    constantes de Visual Basic</dd>
+</dl>
+<h2><a name="gnufdl"></a>GNU Free Documentation License</h2>
+<p class="prem"><a href="gnu_fdl_en.html">Lire la licence GNU Free Documentation
+License couvrant ce document</a></p>
+
+</body>
+
+</html>

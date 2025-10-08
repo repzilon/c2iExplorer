@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>c2i Explorer : Projets</title>
+<meta name="Author" content="c2i - RICHARD CLARK" />
+<style type="text/css">
+<!--
+body, td     { font-family: Verdana, Arial, sans-serif; font-size: 8pt; color: #000000; 
+               background-color: #FFFFFF }
+.projects    { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 12pt; 
+               background-color: #FFFF00; border-width: thin }
+.components  { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10pt; 
+               font-style: italic }
+.members     { font-family: Verdana, Arial, sans-serif; font-size: 8pt }
+.descriptions { font-family: Verdana, Arial, sans-serif; font-size: 8pt }
+.descspecifiques { font-family: Verdana, Arial, sans-serif; font-size: 8pt; color: #006600 }
+.lines       { font-family: Verdana, Arial, sans-serif; font-size: 8pt; font-style: italic }
+-->
+</style>
+</head>
+
+<body>
+
+<table width="100%">
+  <tr>
+    <td valign="middle"><span class="lines">[c2iDate]</span></td>
+    <td align="right" valign="middle"><img src="img/logo.gif" border="1" width="180" height="40" /></td>
+  </tr>
+</table>
+
+<!-- Projects --> 
+<hr />
+[c2iProject-Img]<span class="projects">[c2iProject-Name]</span><br />
+<span class="descriptions">Le projet [c2iProject-Name] est enregistré dans le
+fichier : <b>[c2iProject-FileName]</b><br />
+Il crée un exécutable du nom de : <b>[c2iProject-BuildFileName]</b><br />
+Il contient [c2iProject-NbrComponent] composants.<br />
+<br />
+Vous trouverez ci-dessous la liste détaillée de ses composants.</span><br />
+<br />
+<table width="90%" border="0">
+  <!-- Components -->
+  <tr>
+    <td width="50">&nbsp;</td>
+    <td>
+      <p>[c2iComponent-Img]<span class="components">[c2iComponent-Name]</span><br />
+      <span class="descriptions">Ce composant possède [c2iComponent-NbrMember] membres. La totalité du
+      code tient sur [c2iComponent-NbrLines] lignes.</span></p>
+      <p class="descspecifiques">[c2iComponent-Description]</p>
+      <table width="90%" border="0" cellspacing="0" cellpadding="2">
+        <!-- Members --> 
+        <tr>
+          <td valign="middle" width="50">&nbsp;</td>
+          <td valign="middle" align="left" width="300">[c2iMember-Img]<span class="members">[c2iMember-Name]</span></td>
+          <td class="descspecifiques">[c2iMember-Description]</td>
+        </tr>
+        <!-- /Members --> 
+      </table>
+    </td>
+  </tr>
+  <!-- /Components --> 
+</table>
+<!-- /Projects --> <span class="projects"></span>
+
+</body>
+
+</html>
