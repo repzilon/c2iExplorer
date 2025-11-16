@@ -25,13 +25,13 @@
 
 [@Info]
 Translator="René Rhéaume"
-TranslatorEmail="rener@users.sourceforge.net"
+TranslatorEmail="6383002+repzilon@users.noreply.github.com"
 QAContact="René Rhéaume"
-QAEmail="rener@users.sourceforge.net"
+QAEmail="6383002+repzilon@users.noreply.github.com"
 ProgramName="c2iExplorer"
-ProgramVer="1.60.159"
+ProgramVer="1.60.160"
 XlationVer="1.16.159"
-LastModified="2005/09/06"
+LastModified="2025-11-15"
 Comment="Fichier de référence de la traduction. Sert uniquement de modèle."
 
 [frmBiblio]

@@ -25,14 +25,14 @@
 
 [@Info]
 Translator="René Rhéaume"
-TranslatorEmail="rener@users.sourceforge.net"
+TranslatorEmail="6383002+repzilon@users.noreply.github.com"
 QAContact="René Rhéaume"
-QAEmail="rener@users.sourceforge.net"
+QAEmail="6383002+repzilon@users.noreply.github.com"
 ProgramName="c2iExplorer"
-ProgramVer="1.60.159"
+ProgramVer="1.60.160"
 XlationVer="1.19.159"
-LastModified="2005/09/06"
-Comment="Reference translation file. Submit any mistake as a bug report at http://sourceforge.net/tracker/?func=add&group_id=42719&atid=433980 or by email at the address above."
+LastModified="2025-11-15"
+Comment="Reference translation file. Submit any mistake as a bug report at https://github.com/repzilon/c2iExplorer/issues."
 
 [frmBiblio]
 WProp.Caption="Details"

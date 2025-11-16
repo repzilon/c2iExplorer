@@ -29,14 +29,15 @@
 !ifndef VersionVB
   !define VersionVB 5
 !endif
-!define Revision 159
-!define CheminBase "E:\rene\Visual Basic\c2iExplorer"
+!define Revision 160
+!define CheminBase "D:\c2iExplorer"
+!define CheminSource "${CheminBase}\c2iexplorer-source"
 !define UninstRegKey "Software\Microsoft\Windows\CurrentVersion\Uninstall\c2iexplorerVB${VersionVB}"
 !define NomApp "c2iExplorer"
 !define Titre "${NomApp} 1.60.${Revision} for VB${VersionVB}"
 !define UninstProg "uninst-c2iexplorer.exe"
 !define en ;installation en anglais
-;!include "D:\Program Files\NSIS2\nsisconf.nsh" ;nécessaire si appelé de l'invite de commandes
+;!include "C:\Program Files\NSIS2\nsisconf.nsh" ;nécessaire si appelé de l'invite de commandes
 
 !macro Removec2iExRegKeys
   DeleteRegKey HKEY_CLASSES_ROOT "c2iexplorer.cElement"
@@ -53,15 +54,15 @@
 
 Name "${Titre}"
 Caption "${Titre}"
-OutFile "${CheminBase}\SourceForge\Fichiers\c2iExplorer-1.60.${Revision}-vb${VersionVB}.i586.exe"
+OutFile "${CheminBase}\c2iExplorer-1.60.${Revision}-vb${VersionVB}.i586.exe"
 CRCCheck On
 
-Icon "${CheminBase}\Source\c2iExplorer.ico"
-;EnabledBitmap "${CheminBase}\Source\checked16.bmp"
-;DisabledBitmap "${CheminBase}\Source\unchecked16.bmp"
+Icon "${CheminSource}\c2iExplorer.ico"
+;EnabledBitmap "${CheminSource}\checked16.bmp"
+;DisabledBitmap "${CheminSource}\unchecked16.bmp"
 
 LicenseText "Read this before continuing installation."
-LicenseData "${CheminBase}\Source\Modifications René Rhéaume.txt"
+LicenseData "${CheminSource}\Modifications René Rhéaume.txt"
 ComponentText "Select ${NomApp} components you want to install."
 DirText "Specify the folder where Visual Basic ${VersionVB}.0 is installed on your computer."
 UninstallText "This will delete ${NomApp} from your computer. Click on 'Uninstall' to uninstall or on 'Cancel' to exit."
@@ -81,16 +82,18 @@ Section "${NomApp} for VB${VersionVB}"
   SectionIn 2 RO
   SectionIn 3 RO
   SetCompress Auto
-  ; SetOverwrite ifnewer
-  ; Placé en commentaire à cause d'un règlement de sourceforge.net
-  ; SetOutPath $SYSDIR
-  ; UnRegDLL $SYSDIR\mscomctl.ocx
-  ; File "C:\Windows\Bureau\mdinote-setup\mscomctl.ocx"
-  ; RegDLL $SYSDIR\mscomctl.ocx
+  ;;Était en commentaire à cause d'un règlement de sourceforge.net
+  ;;Fait aussi presque doubler la taille de l'installateur
+  ;SetOverwrite ifnewer 
+  ;SetOutPath $SYSDIR
+  ;UnRegDLL $SYSDIR\mscomctl.ocx
+  ;File "C:\Windows\system\mscomctl.ocx"
+  ;RegDLL $SYSDIR\mscomctl.ocx
+  ;;Fin de mscomctl.ocx
   SetOverwrite On
   SetOutPath "$INSTDIR\Wizards"
-  File "${CheminBase}\Source\FredJust modifications.txt"
-  File "${CheminBase}\Source\Modifications René Rhéaume.txt"
+  File "${CheminSource}\FredJust modifications.txt"
+  File "${CheminSource}\Modifications René Rhéaume.txt"
   File "${CheminBase}\ReleaseVB${VersionVB}\c2iexplorer.dll"
   SetOutPath "$INSTDIR\Wizards\Data"
   File "${CheminBase}\Data\*.*"
@@ -132,25 +135,25 @@ Section "VB 5/6 source code"
   SectionIn 3
   SetOutPath "$INSTDIR\Wizards\c2iexplorer-source"
   ;Tri selon le type de fichier afin d'optimiser la compression
-  File "${CheminBase}\Source\*.dob"
-  File "${CheminBase}\Source\*.frm"
-  File "${CheminBase}\Source\*.cls"
-  File "${CheminBase}\Source\*.bas"
-  File "${CheminBase}\Source\*.ctl"
-  File "${CheminBase}\Source\*.vbp"
-  File "${CheminBase}\Source\*.rtf"
-  File "${CheminBase}\Source\*.htm"
-  File "${CheminBase}\Source\*.nsi"
-  File "${CheminBase}\Source\*.txt"
-  File "${CheminBase}\Source\*.scc"
-  File "${CheminBase}\Source\*.doc"
-  File "${CheminBase}\Source\*.dox"
-  File "${CheminBase}\Source\*.frx"
-  File "${CheminBase}\Source\*.ico"
-  File "${CheminBase}\Source\*.res"
-  File "${CheminBase}\Source\*.ctx"
-  File "${CheminBase}\Source\*.bmp"
-  File "${CheminBase}\Source\*.gz"
+  File "${CheminSource}\*.dob"
+  File "${CheminSource}\*.frm"
+  File "${CheminSource}\*.cls"
+  File "${CheminSource}\*.bas"
+  File "${CheminSource}\*.ctl"
+  File "${CheminSource}\*.vbp"
+  File "${CheminSource}\*.rtf"
+  File "${CheminSource}\*.html"
+  File "${CheminSource}\*.nsi"
+  File "${CheminSource}\*.txt"
+  File "${CheminSource}\LICENSE"
+  File "${CheminSource}\*.dox"
+  File "${CheminSource}\*.frx"
+  File "${CheminSource}\*.ico"
+  File "${CheminSource}\*.res"
+  File "${CheminSource}\*.ctx"
+  File "${CheminSource}\*.bmp"
+  File "${CheminSource}\*.odt"
+  File "${CheminSource}\*.7z"
 
   Exec "$WINDIR\explorer.exe /n,$INSTDIR\Wizards\c2iexplorer-source"
 SectionEnd
@@ -290,6 +293,7 @@ Section un.Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-vb5.vbp"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-vb6.vbp"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-vb?.vbw"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-vb5.vbg"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\archive.zip"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\archive.tar.gz"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\cDlgCom.cls"
@@ -306,6 +310,12 @@ Section un.Uninstall
   Delete "$INSTDIR\Wizards\c2iexplorer-source\ImporterDurees.vb?"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\modFonctions.bas"
   Delete "$INSTDIR\Wizards\c2iexplorer-source\modImporterDurees.bas"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\archive.7z"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\c2iExplorer-gif.7z"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\images.7z"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\InsertCode.odt"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\MiseAJourCode.odt"
+  Delete "$INSTDIR\Wizards\c2iexplorer-source\SauvegarderBibliotheque.odt"
   RmDir "$INSTDIR\Wizards\Data"
   RmDir "$INSTDIR\Wizards\Html\Img"
   RmDir "$INSTDIR\Wizards\Html"
